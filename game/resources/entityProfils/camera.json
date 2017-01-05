@@ -1,0 +1,30 @@
+{
+  "name": "cameraPhysic",
+  "type": "Camera",
+  "canvasId": "canvas",
+  "static": true,
+  "angle": 0,
+  "scale": 1,
+  "parts": [
+    {
+      "dx": 1,
+      "dy": 1,
+      "x": 0,
+      "y": 0,
+      "type": "rectangle"
+    }
+  ],
+  "config": [
+    {
+      "type": "action",
+      "context": "entities",
+      "id": "self",
+      "method": "setPhysicInterface",
+      "argument": {
+        "type": "resource",
+        "context": "physicInterface",
+        "id" : false
+      }
+    }
+  ]
+}

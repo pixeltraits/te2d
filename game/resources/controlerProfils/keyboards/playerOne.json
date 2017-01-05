@@ -1,0 +1,98 @@
+{
+  "config":{
+    "player": 1
+  },
+  "keys": {
+    "KeyD" : {
+      "config":{
+        "nameAction": "Direction Est",
+        "player": 1
+      },
+      "down":[
+        {
+          "type": "action",
+          "context": "entities",
+          "id": "50ib636f-8779-27d1-9fcb-ff98c8553dec",
+          "method": "setWalk",
+          "argument": {
+            "type": "simple",
+            "argument": {
+              "direction" : "right",
+              "acc" :  1500,
+              "speed" : 30
+            }
+          }
+        }
+      ],
+      "up":[
+        {
+          "type": "action",
+          "context": "entities",
+          "id": "50ib636f-8779-27d1-9fcb-ff98c8553dec",
+          "method": "unsetWalk",
+          "argument": {
+            "type": "simple",
+            "argument": "right"
+          }
+        }
+      ]
+    },
+    "KeyA" : {
+      "config":{
+        "nameAction": "Direction Ouest",
+        "player": 1
+      },
+      "down":[
+        {
+          "type": "action",
+          "context": "entities",
+          "id": "50ib636f-8779-27d1-9fcb-ff98c8553dec",
+          "method": "setWalk",
+          "argument": {
+            "type": "simple",
+            "argument": {
+              "direction" : "left",
+              "acc" :  1500,
+              "speed" : 30
+            }
+          }
+        }
+      ],
+      "up":[
+        {
+          "type": "action",
+          "context": "entities",
+          "id": "50ib636f-8779-27d1-9fcb-ff98c8553dec",
+          "method": "unsetWalk",
+          "argument": {
+            "type": "simple",
+            "argument": "left"
+          }
+        }
+      ]
+    },
+    "KeyE" : {
+      "config":{
+        "nameAction": "Saut",
+        "player": 1
+      },
+      "down":[
+        {
+          "type": "action",
+          "context": "entities",
+          "id": "50ib636f-8779-27d1-9fcb-ff98c8553dec",
+          "method": "spring",
+          "argument": {
+            "type": "simple",
+            "argument": {
+              "x" : 0,
+              "y" : 1000
+            }
+          }
+        }
+      ],
+      "up":[
+      ]
+    }
+  }
+}

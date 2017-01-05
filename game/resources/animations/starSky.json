@@ -1,0 +1,14 @@
+{
+  "name" : "starSky",
+  "bitmap" : "level",
+  "reverse" : false,
+  "x" : 0,
+  "y" : 0,
+  "dx" : 300,
+  "dy" : 346,
+  "repeatX" : 3,
+  "repeatY" : 3,
+  "frames" : 0,
+  "fps" : 33,
+  "sens" : "h"
+}

@@ -1,0 +1,19 @@
+{
+  "name" : "done",
+  "type" : "GraphicEntity",
+  "dz" : 0,
+  "z" : 2,
+  "config" : [
+    {
+      "type" : "action",
+      "context" : "entities",
+      "id" : "self",
+      "method" : "setBitmap",
+      "argument" : {
+        "type" : "resource",
+        "context" : "animations",
+        "id" : "done"
+      }
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "name" : "ground",
+  "bitmap" : "level",
+  "reverse" : false,
+  "x" : 0,
+  "y" : 346,
+  "dx" : 256,
+  "dy" : 32,
+  "repeatX" : 2,
+  "repeatY" : 1,
+  "frames" : 0,
+  "fps" : 33,
+  "sens" : "h"
+}

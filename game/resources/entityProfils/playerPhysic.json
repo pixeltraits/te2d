@@ -1,0 +1,66 @@
+{
+  "name": "playerPhysic",
+  "type": "Player2D",
+  "inertie": 0,
+  "mass": 0,
+  "dynamic": true,
+  "config": [
+    {
+      "type": "action",
+      "context": "entities",
+      "id": "self",
+      "method": "setPhysicInterface",
+      "argument": {
+        "type": "resource",
+        "context": "physicInterface",
+        "id" : false
+      }
+    },
+    {
+      "type": "action",
+      "context": "entities",
+      "id": "self",
+      "method": "addCollisionGeometry",
+      "argument": {
+        "type": "simple",
+        "argument" : {
+          "id" : "1",
+          "name" : "playerPhysic",
+          "sensor" : false,
+          "restitution" : 0,
+          "friction" : 1,
+          "density" : 10,
+          "shape" : "box",
+          "x" : 0,
+          "y" : 20,
+          "dx" : 10,
+          "dy" : 2
+        }
+      }
+    },
+    {
+      "type" : "action",
+      "context" : "entities",
+      "id" : "self",
+      "method" : "setGraphicEntity",
+      "argument" : {
+        "type" : "newObject",
+        "context" : "entityProfils",
+        "id" : "done",
+        "config" : [
+          {
+            "type" : "action",
+            "context": "entities",
+            "id": "self",
+            "method": "addToScene",
+            "argument": {
+              "type" : "resource",
+              "context": "scene",
+              "id": false
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

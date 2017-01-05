@@ -1,0 +1,62 @@
+{
+  "bitmapUrl" : "resources/bitmaps/interface.png",
+  "dx" : 65,
+  "infoFont" : {
+      "size" : 25,
+      "font" : "Courier New",
+      "color" : "white",
+      "weight" : "bold"
+  },
+  "pourcentFont" : {
+      "size" : 36,
+      "font" : "Courier New",
+      "color" : "white",
+      "weight" : "bold"
+  },
+  "emptyLoader" : {
+    "start" : {
+      "x" : 0,
+      "y" : 22,
+      "dx" : 11,
+      "dy" : 77
+    },
+    "varient" : {
+      "x" : 11,
+      "y" : 22,
+      "dx" : 1,
+      "dy" : 77
+    },
+    "end" : {
+      "x" : 12,
+      "y" : 22,
+      "dx" : 12,
+      "dy" : 77
+    }
+  },
+  "completedLoader" : {
+    "start" : {
+      "x" : 24,
+      "y" : 22,
+      "dx" : 11,
+      "dy" : 77
+    },
+    "varient" : {
+      "x" : 35,
+      "y" : 22,
+      "dx" : 1,
+      "dy" : 77
+    },
+    "end" : {
+      "x" : 36,
+      "y" : 22,
+      "dx" : 12,
+      "dy" : 77
+    }
+  },
+  "pourcentDesign" : {
+    "x" : 0,
+    "y" : 0,
+    "dx" : 73,
+    "dy" : 21
+  }
+}

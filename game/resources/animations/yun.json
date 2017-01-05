@@ -1,0 +1,14 @@
+{
+  "name" : "yun",
+  "bitmap" : "caracters",
+  "reverse" : false,
+  "x" : 0,
+  "y" : 54,
+  "dx" : 18,
+  "dy" : 53,
+  "repeatX" : 1,
+  "repeatY" : 1,
+  "frames" : 0,
+  "fps" : 33,
+  "sens" : "h"
+}

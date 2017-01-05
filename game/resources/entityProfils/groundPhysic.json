@@ -1,0 +1,65 @@
+{
+  "name": "groundPhysic",
+  "type": "PhysicEntity",
+  "dynamic": false,
+  "angle": 0,
+  "config": [
+    {
+      "type": "action",
+      "context": "entities",
+      "id": "self",
+      "method": "setPhysicInterface",
+      "argument": {
+        "type": "resource",
+        "context": "physicInterface",
+        "id" : false
+      }
+    },
+    {
+      "type": "action",
+      "context": "entities",
+      "id": "self",
+      "method": "addCollisionGeometry",
+      "argument": {
+        "type": "simple",
+        "argument" : {
+          "id" : "1",
+          "name" : "groundPhysic",
+          "sensor" : false,
+          "restitution" : 0,
+          "friction" : 0,
+          "density" : 1,
+          "shape" : "box",
+          "x" : 0,
+          "y" : 0,
+          "dx" : 500,
+          "dy" : 32
+        }
+      }
+    },
+    {
+      "type" : "action",
+      "context" : "entities",
+      "id" : "self",
+      "method" : "setGraphicEntity",
+      "argument" : {
+        "type" : "newObject",
+        "context" : "entityProfils",
+        "id" : "ground",
+        "config" : [
+          {
+            "type" : "action",
+            "context": "entities",
+            "id": "self",
+            "method": "addToScene",
+            "argument": {
+              "type" : "resource",
+              "context": "scene",
+              "id": false
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

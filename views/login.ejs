@@ -1,0 +1,6 @@
+<form action="/users/connection" method="post">
+    <input placeholder="Email" name="email" type="email" />
+    <input placeholder="Mot de passe" name="password" type="password" />
+    <input value="Connection" name="submit" type="submit" />
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+</form>

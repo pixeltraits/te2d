@@ -1,0 +1,9 @@
+{
+	"name": "lumiH",
+	"color": "rgba(64, 101, 177, 1)",
+	"width": 20,
+	"height": 40,
+	"type": "rectangle",
+	"borderSize": 0,
+	"borderColor": "rgba(45, 30, 69, 1)"
+}

@@ -1,0 +1,199 @@
+{
+  "levelInfo":{
+    "name": "theworld",
+    "widthCam": 800,
+    "heightCam": 600,
+    "widthScene": 2000,
+    "heightScene": 2000,
+    "ratioScene": 300,
+    "xCam": 0,
+    "yCam": 200,
+    "cameraId": "6de04c99-d92b-419f-ac4d-5552581554ab"
+  },
+  "physicProfils": [
+    {
+      "name" : "physicProfils",
+      "content" : "theworld.json"
+    }
+  ],
+  "bitmaps":[
+    {
+      "name" : "caracters",
+      "content" : "caracters.png"
+    },
+    {
+      "name" : "level",
+      "content" : "level.png"
+    }
+  ],
+  "animations":[
+    {
+      "name" : "done",
+      "content" : "done.json"
+    },
+    {
+      "name" : "yun",
+      "content" : "yun.json"
+    },
+    {
+      "name" : "starSky",
+      "content" : "starSky.json"
+    },
+    {
+      "name" : "ground",
+      "content" : "ground.json"
+    }
+  ],
+  "animationsGroups":[
+  ],
+  "audios":[
+    {
+      "name" : "level",
+      "content" : "level.mp3"
+    },
+    {
+      "name" : "jump",
+      "content" : "jump.mp3"
+    }
+  ],
+  "audioProfils":[
+    {
+      "name" : "level",
+      "content" : "level.json"
+    },
+    {
+      "name" : "jump",
+      "content" : "jump.json"
+    }
+  ],
+  "keyboard":[
+    {
+      "name" : "playerOne",
+      "content" : "playerOne.json"
+    }
+  ],
+  "entityGroups":[
+  ],
+  "entityProfils":[
+    {
+      "name" : "background",
+      "content" : "background.json"
+    },
+    {
+      "name" : "done",
+      "content" : "done.json"
+    },
+    {
+      "name" : "ground",
+      "content" : "ground.json"
+    },
+    {
+      "name" : "groundPhysic",
+      "content" : "groundPhysic.json"
+    },
+    {
+      "name" : "playerPhysic",
+      "content" : "playerPhysic.json"
+    },
+    {
+      "name" : "camera",
+      "content" : "camera.json"
+    }
+  ],
+  "entities":[
+    {
+      "id" : "6de04c99-d92b-419f-ac4d-5552581554ab",
+      "objectConf" : "camera"
+    },
+    {
+      "id" : "500b636f-8789-47d5-9fcb-ff54c823ee3c",
+      "objectConf" : "background"
+    },
+    {
+      "id" : "50ib636f-8779-47d5-9fcb-ff98c8583dec",
+      "objectConf" : "groundPhysic"
+    },
+    {
+      "id" : "50ib636f-8779-27d1-9fcb-ff98c8553dec",
+      "objectConf" : "playerPhysic"
+    }
+  ],
+  "texts":[
+    {
+      "name" : "game",
+      "content" : "game.json"
+    }
+  ],
+  "textProfils":[
+    {
+      "name" : "exemple",
+      "content" : "exemple.json"
+    }
+  ],
+  "startActions":[
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "50ib636f-8779-27d1-9fcb-ff98c8553dec",
+      "method": "setGraphicPosition",
+      "argument": {
+        "type": "simple",
+        "argument" : {
+          "x" : 200,
+          "y" : 100
+        }
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "50ib636f-8779-27d1-9fcb-ff98c8553dec",
+      "method": "addToPhysicContext",
+      "argument": false
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "50ib636f-8779-47d5-9fcb-ff98c8583dec",
+      "method": "setGraphicPosition",
+      "argument": {
+        "type": "simple",
+        "argument" : {
+          "x" : 0,
+          "y" : 300
+        }
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "50ib636f-8779-47d5-9fcb-ff98c8583dec",
+      "method": "addToPhysicContext",
+      "argument": false
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "500b636f-8789-47d5-9fcb-ff54c823ee3c",
+      "method": "setPosition",
+      "argument": {
+        "type": "simple",
+        "argument" : {
+          "x" : 0,
+          "y" : 0
+        }
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "500b636f-8789-47d5-9fcb-ff54c823ee3c",
+      "method": "addToScene",
+      "argument": {
+        "type" : "resource",
+        "context": "scene",
+        "id": false
+      }
+    }
+  ]
+}

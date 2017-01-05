@@ -1,0 +1,14 @@
+{
+  "name" : "done",
+  "bitmap" : "caracters",
+  "reverse" : false,
+  "x" : 0,
+  "y" : 0,
+  "dx" : 19,
+  "dy" : 54,
+  "repeatX" : 1,
+  "repeatY" : 1,
+  "frames" : 0,
+  "fps" : 33,
+  "sens" : "h"
+}
