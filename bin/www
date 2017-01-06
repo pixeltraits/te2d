@@ -1,33 +1,25 @@
-#!/usr/bin/env node
-
 /**
  * Module dependencies.
  */
-
 var app = require('../app'),
-debug = require('debug')('te2dMvc:server'),
-http = require('http'),
-UserSocket = require('../model/UserSocket'),
-jwt    = require('jsonwebtoken'),
-secret = 'chathonMignonPleinD****';
+    debug = require('debug')('te2dMvc:server'),
+    http = require('http'),
+    UserSocket = require('../model/UserSocket'),
+    jwt = require('jsonwebtoken'),
+    secret = 'chathonMignonPleinD****';
 
 /**
  * Get port from environment and store in Express.
  */
-
 var port = normalizePort('1338');
 app.set('port', port);
+
 /**
  * Create HTTP server.
  */
-
-var server = http.createServer(app);
-var io = require('socket.io')(server);
-/**
- * Listen on provided port, on all network interfaces.
- */
-
-var usersS = [];
+var server = http.createServer(app),
+    io = require('socket.io')(server),
+    usersS = [];
 
 // Si connection du client en mode socket
 io.on('connection', function (socket) {
@@ -57,39 +49,48 @@ io.on('connection', function (socket) {
   });
 });
 
-function addUser(userData){
+function addUser(userData) {
   var x = 0,
   lengthX = usersS.length;
-  for(;x<lengthX;x++){
-    if(usersS[x].pseudo == userData.pseudo){
+
+  for(; x < lengthX ; x++) {
+    if(usersS[x].pseudo == userData.pseudo) {
       usersS[x] = userData;
       return usersS[x];
     }
   }
+
   var x2 = usersS.length;
   usersS[x2] = userData;
+
   return usersS[x2];
 }
-function findUserByPseudo(pseudo){
+
+function findUserByPseudo(pseudo) {
   var x = 0,
   lengthX = usersS.length;
-  for(;x<lengthX;x++){
-    if(usersS[x].pseudo == pseudo){
+
+  for(;x<lengthX;x++) {
+    if(usersS[x].pseudo == pseudo) {
       return usersS[x].socketId;
     }
   }
+
   return false;
 }
-function deleteUserByPseudo(pseudo){
+
+function deleteUserByPseudo(pseudo) {
   var x = 0,
   lengthX = usersS.length;
-  for(;x<lengthX;x++){
-    if(typeof usersS[x] != "undefined"){
+
+  for(;x<lengthX;x++) {
+    if(typeof usersS[x] != "undefined") {
       if(usersS[x].pseudo == pseudo){
         usersS.splice(x, 1);
       }
     }
   }
+
 }
 
 server.listen(port);

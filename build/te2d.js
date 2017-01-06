@@ -1,4 +1,114 @@
 "use strict";/**
+ * Clone object
+ * @class Clone
+ */
+class Clone {
+  constructor() {
+  }
+  /**
+   * Clone object with Img object
+   * @method cloneComplexObject
+   * @param  {object} complexObject
+   * @return {object} clone
+   */
+  cloneComplexObject(complexObject) {
+    var clone = {},
+        i = 0;
+
+    for(i in complexObject) {
+      if (complexObject.hasOwnProperty(i)) {
+        if(typeof complexObject[i] != 'object' || complexObject[i] instanceof HTMLImageElement) {
+           clone[i] = complexObject[i];
+        } else {
+          clone[i] = this.cloneObject(complexObject[i]);
+        }
+      }
+    }
+
+    return clone;
+  }
+  /**
+   * Clone simple object
+   * @method cloneObject
+   * @param  {object} simpleObject
+   * @return {object}
+   */
+  cloneObject(simpleObject) {
+    return JSON.parse(JSON.stringify(simpleObject));
+  }
+}
+
+/**
+ * Math tool for geometry
+ * @class GeometricMath
+ */
+class GeometricMath {
+  constructor() {
+  }
+  /**
+   * Get size of a polygon
+   * @method getPolygonSize
+   * @param {position[]} vertices
+   * @return {size}
+   */
+  getPolygonSize(vertices) {
+    var x1 = 0,
+        x2 = 0,
+        y1 = 0,
+        y2 = 0,
+        i = 0,
+        length = this.vertices.length;
+
+    for(; i < length; i++) {
+      x1 = Math.min(this.vertices[0].x, x1);
+      x2 = Math.max(this.vertices[0].x, x2);
+      y1 = Math.min(this.vertices[0].y, y1);
+      y2 = Math.max(this.vertices[0].y, y2);
+    }
+
+    return {
+      dx : x2 - x1,
+      dy : y2 - y1
+    };
+  }
+  /**
+   * Get size of a circle
+   * @method getCircleSize
+   * @param {number} radius
+   * @return {size}
+   */
+  getCircleSize(radius) {
+    var diameter = radius * 2;
+
+    return {
+      dx : diameter,
+      dy : diameter
+    };
+  }
+  /**
+   * Get new position with angle
+   * @method getRotatedPoint
+   * @param {position} position
+   * @param {number} angle
+   * @param {position} center
+   * @return {position}
+   */
+  getRotatedPoint(position, angle, center) {
+    var distance = {
+          x : position.x - center.x,
+          y : position.y - center.y
+        },
+        cos = Math.cos(angle),
+        sin = Math.sin(angle);
+
+    return {
+      x : (cos * distance.x) - (sin * distance.y) + center.x,
+      y : (sin * distance.x) + (cos * distance.y) + center.y
+    };
+  }
+}
+
+/**
    * Generate unique ID
    * @class IdGenerator
    */
@@ -236,10 +346,10 @@ class Bitmap {
               },
               canvasSize
             ),
-            absX = img.x + (img.dx / 2),
-            absY = img.y + (img.dy / 2);
+            centerX = img.x + (img.dx / 2),
+            centerY = img.y + (img.dy / 2);
 
-        canvasCtx.translate(absX, absY);
+        canvasCtx.translate(centerX, centerY);
         canvasCtx.rotate(angle);
 
         if(this.animations[this.animation].reverse) {
@@ -270,7 +380,7 @@ class Bitmap {
         }
 
         canvasCtx.rotate(-angle);
-        canvasCtx.translate(-absX, -absY);
+        canvasCtx.translate(-centerX, -centerY);
       }
     }
   }
@@ -453,115 +563,6 @@ class Bitmap {
 }
 
 /**
- * Manage Geometry
- * @class Geometry
- */
-class Geometry {
-  constructor() {
-    this.type = "";
-    this.pause = false;
-  }
-  setPause() {
-    this.pause = true;
-  }
-  setContext(ctx) {
-    this.ctx.contexte = ctx;
-  }
-  setCtxPosition(ctx) {
-    this.ctx.x = ctx.x;
-    this.ctx.y = ctx.y;
-  }
-  getSize() {
-    return {dx:this.dx,dy:this.dy};
-  }
-  rectangle(geometry) {
-    this.type = "rectangle";
-    this.dx = geometry.width;
-    this.dy = geometry.height;
-    this.color = geometry.color;
-    this.borderColor = geometry.borderColor;
-    this.borderSize = geometry.borderSize;
-  }
-  showRectangle() {
-    //var canvas = document.createElement('canvas'),
-    //context = canvas.getContext('2d'),
-      //imgWidth = this.dx+(this.borderSize*2),
-      //imgHeight = this.dy+(this.borderSize*2);
-
-      //canvas.width = imgWidth;
-      //canvas.height = imgHeight;
-    //context.rotate(this.angle);
-    //context.fillStyle = this.borderColor;
-        //context.fillRect(0, 0, this.dx+(this.borderSize*2), this.dy+(this.borderSize*2));
-        //context.fillStyle = this.color;
-        //context.fillRect(0+this.borderSize, 0+this.borderSize, this.dx, this.dy);
-        this.test(this.ctx.contexte, this.objectAnimate.physic);
-    //this.ctx.contexte.drawImage(canvas, this.objectAnimate.x+this.borderSize-this.ctx.x, this.objectAnimate.y+this.borderSize-this.ctx.y);
-  }
-  test(c, body) {
-    var showInternalEdges = true;
-
-      // part polygon
-      var k;
-      for (k = body.parts.length > 1 ? 1 : 0; k < body.parts.length; k++) {
-
-            var part = body.parts[k];
-          if (part.circleRadius) {
-              c.beginPath();
-              c.arc(part.position.x, part.position.y, part.circleRadius, 0, 2 * Math.PI);
-          } else {
-              c.beginPath();
-              c.moveTo(part.vertices[0].x-this.ctx.x, part.vertices[0].y-this.ctx.y);
-
-              for (var j = 1; j < part.vertices.length; j++) {
-
-                  if (!part.vertices[j - 1].isInternal || showInternalEdges) {
-
-                      c.lineTo(part.vertices[j].x-this.ctx.x, part.vertices[j].y-this.ctx.y);
-                  } else {
-                    //console.log('test')
-                      c.moveTo(part.vertices[j].x-this.ctx.x, part.vertices[j].y-this.ctx.y);
-                  }
-
-                  if (part.vertices[j].isInternal && !showInternalEdges) {
-                      c.moveTo(part.vertices[(j + 1) % part.vertices.length].x-this.ctx.x, part.vertices[(j + 1) % part.vertices.length].y-this.ctx.y);
-                  }
-              }
-
-              c.lineTo(part.vertices[0].x-this.ctx.x, part.vertices[0].y-this.ctx.y);
-              c.closePath();
-          }
-
-          c.fillStyle = this.color;
-          c.lineWidth = this.borderSize;
-          c.strokeStyle = this.borderColor;
-          c.fill();
-
-          c.stroke();
-    }
-  }
-  circle(geometry) {
-    this.type = "circle";
-    this.rx = geometry.rayon;
-    this.color = geometry.color;
-    this.borderColor = geometry.borderColor;
-    this.borderSize = geometry.borderSize;
-  }
-  setGeometry(geometry) {
-    var self = this;
-    if(geometry.type == "rectangle"){
-      this.rectangle(geometry);
-    }
-    if(geometry.type == "circle"){
-      this.circle(geometry);
-    }
-  }
-  show(position, angle, canvasSize, canvasCtx) {
-    this.showRectangle();
-  }
-}
-
-/**
  * Manage text
  * @class Text
  */
@@ -647,6 +648,260 @@ class Text {
    */
   setPause(pause) {
     this.pause = pause;
+  }
+}
+
+/**
+ * Manage Geometry
+ * @class Geometry
+ */
+class Geometry {
+  constructor() {
+    this.type = "";
+    this.pause = false;
+    this.color = "";
+    this.borderColor = "";
+    this.borderSize = 0;
+    this.size = {
+      dx : 0,
+      dy : 0
+    };
+  }
+  /**
+   * Get size
+   * @method getSize
+   * @return {size}
+   */
+  getSize() {
+    return this.size;
+  }
+  /**
+   * Set geometry
+   * @method setGeometry
+   * @param {geometry} geometry
+   */
+  setGeometry(geometry) {
+    this.color = geometry.color;
+    this.borderColor = geometry.borderColor;
+    this.borderSize = geometry.borderSize;
+  }
+  /**
+   * Active/Desactive the pause
+   * @method setPause
+   * @param {boolean} pause
+   */
+  setPause(pause) {
+    this.pause = pause;
+  }
+  /**
+   * Show Geometry on the canvas context
+   * @method show
+   * @param {position} position
+   * @param {number} angle
+   * @param {size} canvasSize
+   * @param {canvas2dContext} canvasCtx
+   */
+  show(position, angle, canvasSize, canvasCtx) {
+  }
+}
+
+/**
+ * Manage Box
+ * @class Box
+ */
+class Box extends Geometry {
+  constructor() {
+    super();
+
+    this.type = "box";
+  }
+  /**
+   * Set geometry
+   * @method setGeometry
+   * @param {box} box
+   */
+  setGeometry(box) {
+    super.setGeometry(box);
+
+    this.size.dx = box.dx;
+    this.size.dy = box.dy;
+  }
+  /**
+   * Show Geometry on the canvas context
+   * @method show
+   * @param {position} position
+   * @param {number} angle
+   * @param {size} canvasSize
+   * @param {canvas2dContext} canvasCtx
+   */
+  show(position, angle, canvasSize, canvasCtx) {
+    super.show(position, angle, canvasSize, canvasCtx);
+
+    var centerX = position.x + (this.size.dx / 2),
+        centerY = position.y + (this.size.dy / 2);
+
+    canvasCtx.translate(centerX, centerY);
+    canvasCtx.rotate(angle);
+
+    canvasCtx.fillStyle = this.borderColor;
+    canvasCtx.fillRect(
+      position.x,
+      position.y,
+      this.dx + (this.borderSize * 2),
+      this.dy + (this.borderSize * 2)
+    );
+    canvasCtx.fillStyle = this.color;
+    canvasCtx.fillRect(
+      position.x + this.borderSize,
+      position.y + this.borderSize,
+      this.dx,
+      this.dy
+    );
+
+    canvasCtx.rotate(-angle);
+    canvasCtx.translate(-centerX, -centerY);
+  }
+}
+
+/**
+ * Manage Circle
+ * @class Circle
+ */
+class Circle extends Geometry {
+  constructor() {
+    super();
+
+    this.type = "circle";
+    this.radius = 0;
+    this.geometricMath = new GeometricMath();
+  }
+  /**
+   * Update the size of geometry
+   * @method updateSize
+   */
+  updateSize() {
+    this.size = this.geometricMath.getCircleSize(this.radius);
+  }
+  /**
+   * Set geometry
+   * @method setGeometry
+   * @param {circle} circle
+   */
+  setGeometry(circle) {
+    super.setGeometry(circle);
+
+    this.radius = circle.radius;
+    this.updateSize();
+  }
+  /**
+   * Show Geometry on the canvas context
+   * @method show
+   * @param {position} position
+   * @param {number} angle
+   * @param {size} canvasSize
+   * @param {canvas2dContext} canvasCtx
+   */
+  show(position, angle, canvasSize, canvasCtx) {
+    super.show(position, angle, canvasSize, canvasCtx);
+
+    var centerX = position.x + this.radius,
+        centerY = position.y + this.radius;
+
+    canvasCtx.translate(centerX, centerY);
+    canvasCtx.rotate(angle);
+
+    canvasCtx.beginPath();
+    canvasCtx.arc(
+      position.x,
+      position.y,
+      this.radius,
+      0,
+      2 * Math.PI
+    );
+    canvasCtx.fillStyle = this.color;
+    canvasCtx.lineWidth = this.borderSize;
+    canvasCtx.strokeStyle = this.borderColor;
+    canvasCtx.fill();
+
+    canvasCtx.stroke();
+
+    canvasCtx.rotate(-angle);
+    canvasCtx.translate(-centerX, -centerY);
+  }
+}
+
+/**
+ * Manage Polygon
+ * @class Polygon
+ */
+class Polygon extends Geometry {
+  constructor() {
+    super();
+
+    this.type = "Polygon";
+    this.geometricMath = new GeometricMath();
+    this.vertices = [];
+  }
+  /**
+   * Update the size of geometry
+   * @method updateSize
+   */
+  updateSize() {
+    this.size = this.geometricMath.getPolygonSize(this.vertices);
+  }
+  /**
+   * Set geometry
+   * @method setGeometry
+   * @param {polygon} polygon
+   */
+  setGeometry(polygon) {
+    super.setGeometry(polygon);
+
+    this.vertices = polygon.vertices;
+    this.updateSize();
+  }
+  /**
+   * Show Geometry on the canvas context
+   * @method show
+   * @param {position} position
+   * @param {number} angle
+   * @param {size} canvasSize
+   * @param {canvas2dContext} canvasCtx
+   */
+  show(position, angle, canvasSize, canvasCtx) {
+    super.show(position, angle, canvasSize, canvasCtx);
+
+    var centerX = position.x + (this.size.dx / 2),
+        centerY = position.y + (this.size.dy / 2)
+        x = 0,
+        length = this.vertices.length;
+
+    canvasCtx.translate(centerX, centerY);
+    canvasCtx.rotate(angle);
+
+    //Draw Geometry
+    canvasCtx.beginPath();
+
+    for (; x < length; x++) {
+      canvasCtx.moveTo(
+        this.vertices[x].x + position.x,
+        this.vertices[x].y + position.y
+      );
+    }
+
+    canvasCtx.lineTo(this.vertices[0].x + position.x, this.vertices[0].y + position.y);
+    canvasCtx.closePath();
+
+    //Style geometry
+    canvasCtx.fillStyle = this.color;
+    canvasCtx.lineWidth = this.borderSize;
+    canvasCtx.strokeStyle = this.borderColor;
+
+    canvasCtx.fill();
+    canvasCtx.stroke();
+
+    canvasCtx.rotate(-angle);
+    canvasCtx.translate(-centerX, -centerY);
   }
 }
 
@@ -822,11 +1077,14 @@ class Mouse {
 }
 
 /**
- * Physique engine implementation for PhysicPhysicsJS
- * @class PhysicPhysicsJS
+ * Physique engine implementation for Box2D
+ * @class PhysicBox2D
+ * @param {function} collisionStart
+ * @param {function} collisionEnd
  */
 class PhysicBox2D {
   constructor(collisionStart, collisionEnd) {
+    //Box2D implementation
     this.b2Vec2 = Box2D.Common.Math.b2Vec2;
     this.b2BodyDef = Box2D.Dynamics.b2BodyDef;
     this.b2Body = Box2D.Dynamics.b2Body;
@@ -841,21 +1099,20 @@ class PhysicBox2D {
        this.SetPositionAndAngle({x:xf.x, y:xf.y}, angle);
     };
 
+
+    //Physic context configuration
+    var listener = new Box2D.Dynamics.b2ContactListener;
+    listener.BeginContact = collisionStart;
     this.pixelMetterFactor = 0.2;
 
-    //Create world
     this.physicContext = new this.b2World(
        new this.b2Vec2(0, 100),
        true
     );
-
-    var listener = new Box2D.Dynamics.b2ContactListener;
-    listener.BeginContact = collisionStart;
-    //listener.BeginContact = collisionEnd;
     this.physicContext.SetContactListener(listener);
   }
   /**
-   * Get an object rectangle
+   * Get a body
    * @method getBody
    * @param {string} id
    * @param {number} x
@@ -876,7 +1133,6 @@ class PhysicBox2D {
       bodyDef.type = this.b2Body.b2_dynamicBody;
     }
 
-    //Position
     bodyDef.position.x = this.pixelToMetter(x);
     bodyDef.position.y = this.pixelToMetter(y);
     bodyDef.angle = angle;
@@ -888,7 +1144,7 @@ class PhysicBox2D {
     return this.addToPhysicContext(bodyDef);
   }
   /**
-   * Get an object box
+   * Get a box fixture
    * @method getBox
    * @param {string} id
    * @param {number} x
@@ -901,12 +1157,12 @@ class PhysicBox2D {
    * @param {number} friction
    * @param {number} density
    * @param {body} bodyRef
-   * @return fixture
+   * @return {fixture}
    */
   getBox(id, x, y, dx, dy, angle, sensor, restitution, friction, density, bodyRef) {
     var fixDef = new this.b2FixtureDef;
 
-    fixDef.density = friction;
+    fixDef.density = density;
     fixDef.friction = friction;
     fixDef.restitution = restitution;
     fixDef.isSensor = sensor;
@@ -915,32 +1171,79 @@ class PhysicBox2D {
     fixDef.shape = new this.b2PolygonShape;
     fixDef.shape.SetAsBox(this.pixelToMetter(dx+x), this.pixelToMetter(dy+y));
 
+    return bodyRef.CreateFixture(fixDef);
+  }
+  /**
+   * Get a circle fixture
+   * @method getCircle
+   * @param {string} id
+   * @param {number} x
+   * @param {number} y
+   * @param {number} radius
+   * @param {number} angle
+   * @param {boolean} sensor
+   * @param {number} restitution
+   * @param {number} friction
+   * @param {number} density
+   * @param {body} bodyRef
+   * @return {fixture}
+   */
+  getCircle(id, x, y, radius, angle, sensor, restitution, friction, density, bodyRef) {
+    var fixDef = new this.b2FixtureDef;
+
+    fixDef.density = density;
+    fixDef.friction = friction;
+    fixDef.restitution = restitution;
+    fixDef.isSensor = sensor;
+    fixDef.userData = id;
+
+    fixDef.shape = new this.b2CircleShape;
+    fixDef.shape.m_p.Set(this.pixelToMetter(x), this.pixelToMetter(y));
+    fixDef.shape.m_radius(radius);
 
     return bodyRef.CreateFixture(fixDef);
   }
   /**
-   * Get an object circle
-   * @method getCircle
-   * @param x
-   * @param y
-   * @param { radius of the circle } dr
-   * @param angle
-   * @param { id, for collision system } id
-   * @param { boolean, true if the object can move } movement
-   * @return circle object
+   * Get a polygon fixture
+   * @method getPolygon
+   * @param {string} id
+   * @param {number} x
+   * @param {number} y
+   * @param {position[]} vertices
+   * @param {number} angle
+   * @param {boolean} sensor
+   * @param {number} restitution
+   * @param {number} friction
+   * @param {number} density
+   * @param {body} bodyRef
+   * @return {fixture}
    */
-  getCircle(x, y, dr, angle, id, movement, ghost) {
-    return Physics.body('circle', {
-        x: x, // x-coordinate
-        y: y, // y-coordinate
-        radius: dr
-    });
+  getPolygon(id, x, y, vertices, angle, sensor, restitution, friction, density, bodyRef) {
+    var fixDef = new this.b2FixtureDef,
+        x = 0,
+        length = vertices.length;
+
+    for(; x < length; x++) {
+      vertices[x].x += x;
+      vertices[x].y += y;
+    }
+
+    fixDef.density = density;
+    fixDef.friction = friction;
+    fixDef.restitution = restitution;
+    fixDef.isSensor = sensor;
+    fixDef.userData = id;
+
+    fixDef.shape = new this.b2PolygonShape;
+    fixDef.shape.Set(vertices, length);
+
+    return bodyRef.CreateFixture(fixDef);
   }
   /**
    * Translate pixel to metter
    * @method pixelToMetter
-   * @param { pixel value } x
-   * @return { metter value }
+   * @param {number} x
+   * @return {number}
    */
   pixelToMetter(x) {
     return x * this.pixelMetterFactor;
@@ -948,36 +1251,36 @@ class PhysicBox2D {
   /**
    * Translate metter to pixel
    * @method metterToPixel
-   * @param { metter value } x
-   * @return { pixel value }
+   * @param {number} x
+   * @return {number}
    */
   metterToPixel(x) {
     return x / this.pixelMetterFactor;
   }
   /**
-   * Add the physic object to physic context
+   * Add the body to physic context
    * @method addToPhysicContext
-   * @param { array of physic object } physicObjects
+   * @param {body} bodyRef
    */
-  addToPhysicContext(physicObjects) {
-    return this.physicContext.CreateBody(physicObjects);
+  addToPhysicContext(bodyRef) {
+    return this.physicContext.CreateBody(bodyRef);
   }
   /**
-     * Delete the physic object to physic context
-     * @method removeToPhysicContext
-     * @param { array of physic object } physicObjects
-     */
-  deleteToPhysicContext(physicObjects) {
-    this.physicContext.DestroyBody(physicObjects);
+   * Delete the body to physic context
+   * @method deleteToPhysicContext
+   * @param {body} bodyRef
+   */
+  deleteToPhysicContext(bodyRef) {
+    this.physicContext.DestroyBody(bodyRef);
   }
   /**
-     * Set position of an physic object
-     * @method setPosition
-     * @param physicObject
-     * @param x
-     * @param y
-     */
-  setPosition(physicObject, x, y) {
+   * Set position of a body, teleportation ------ A revoir
+   * @method setPosition
+   * @param {body} bodyRef
+   * @param {number} x
+   * @param {number} y
+   */
+  setPosition(bodyRef, x, y) {
     //var position = new this.b2Vec2(0.02 * x, 0.02 * y);
     //this.removeToPhysicContext(physicObject.reference);
 
@@ -987,11 +1290,11 @@ class PhysicBox2D {
   /**
    * Get position of an physic object
    * @method getPosition
-   * @param {body} body
+   * @param {body} bodyRef
    * @return {position} position
    */
-  getPosition(body) {
-    var position = body.GetPosition();
+  getPosition(bodyRef) {
+    var position = bodyRef.GetPosition();
 
     return {
       x : this.metterToPixel(position.x),
@@ -999,114 +1302,116 @@ class PhysicBox2D {
     };
   }
   /**
-     * Set angle of an physic object
-     * @method setAngle
-     * @param physicObject
-     * @param angle
-     */
-  setAngle(physicObject, angle) {
+   * Set angle of a body, teleportation -------------- A revoir
+   * @method setAngle
+   * @param {body} bodyRef
+   * @param {number} angle
+   */
+  setAngle(bodyRef, angle) {
     //physicObject.state.angular.pos.set(angle);
   }
   /**
-     * Get angle of an physic object
+     * Get angle of a body
      * @method getAngle
-     * @param physicObject
-     * @return angle
+     * @param {body} bodyRef
+     * @return {number}
      */
-  getAngle(physicObject) {
-    return physicObject.state.angular.pos;
+  getAngle(bodyRef) {
+    return bodyRef.GetAngle();
   }
   /**
-     * Set velocity of an physic object
-     * @method stopForces
-     * @param physicObject
-     */
-  stopForces(physicObject) {
-    var velocity = physicObject.GetLinearVelocity(),
+   * Recalculate the physic context
+   * @method updateEngine
+   * @param {number} framerate - Time past since the last update
+   * @param {number} velocityPrecision - velocity iterations
+   * @param {number} positionPrecision - position iterations
+   */
+  updateEngine(framerate, velocityPrecision, positionPrecision) {
+    //console.log(framerate)
+    this.physicContext.Step(
+      framerate,
+      velocityPrecision,
+      positionPrecision
+    );
+    this.physicContext.ClearForces();
+  }
+  /**
+   * Set velocity of a body
+   * @method stopForces
+   * @param {body} bodyRef
+   */
+  stopForces(bodyRef) {
+    var velocity = bodyRef.GetLinearVelocity(),
         force = {
-          x : -(physicObject.GetMass() * velocity.x) * 4,
+          x : -(bodyRef.GetMass() * velocity.x) * 4,
           y : 0
         };
 
     //if(Math.abs(velocity.x) > 0.2) {
-      physicObject.ApplyForce(new this.b2Vec2(force.x, force.y), physicObject.GetWorldCenter());
+      bodyRef.ApplyForce(new this.b2Vec2(force.x, force.y), bodyRef.GetWorldCenter());
     //} else {
     //  velocity.x = 0;
     //  physicObject.SetLinearVelocity(velocity);
     //}
   }
   /**
-     * Set velocity of an physic object
-     * @method setVelocity
-     * @param physicObject
-     * @param vector
-     */
-  setImpulse(physicObject, vector) {
-    var velocity = physicObject.GetLinearVelocity();
+   * Set velocity of a body
+   * @method setVelocity
+   * @param {body} bodyRef
+   * @param vector
+   */
+  setImpulse(bodyRef, vector) {
+    var velocity = bodyRef.GetLinearVelocity();
     velocity.y = vector.y;
-    physicObject.SetLinearVelocity(velocity);
+    bodyRef.SetLinearVelocity(velocity);
   }
   /**
-     * Set velocity of an physic object
-     * @method setVelocity
-     * @param physicObject
-     * @param vector
-     */
-  setVelocity(physicObject, vector) {
+   * Set velocity of a body
+   * @method setVelocity
+   * @param {body} bodyRef
+   * @param {vector} vector
+   */
+  setVelocity(bodyRef, vector) {
     var velocity = physicObject.GetLinearVelocity(),
         force = {
           x : vector.x,
           y : vector.y
         };
 
-    physicObject.ApplyForce(new this.b2Vec2(force.x, force.y), physicObject.GetWorldCenter());
+    bodyRef.ApplyForce(new this.b2Vec2(force.x, force.y), bodyRef.GetWorldCenter());
   }
   /**
-     * Get velocity of an physic object
-     * @method getVelocity
-     * @param physicObject
-     * @return vector
-     */
-  getVelocity(physicObject) {
-    return physicObject.GetLinearVelocity();
+   * Get velocity of a body
+   * @method getVelocity
+   * @param {body} bodyRef
+   * @return vector
+   */
+  getVelocity(bodyRef) {
+    return bodyRef.GetLinearVelocity();
   }
   /**
-     * Get speed of an physic object
-     * @method getSpeed
-     * @param physicObject
-     * @return speed
-     */
+   * Get speed of an physic object ------------- A revoir
+   * @method getSpeed
+   * @param physicObject
+   * @return speed
+   */
   getSpeed(physicObject) {
     return 0;
-  }
-  /**
-     * Recalculate the physic context
-     * @method updateEngine
-     * @param {number} framerate - Time past since the last update
-     * @param {number} velocityPrecision - velocity iterations
-     * @param {number} positionPrecision - position iterations
-     */
-  updateEngine(framerate, velocityPrecision, positionPrecision) {
-      console.log(framerate)
-      this.physicContext.Step(
-        framerate,
-        velocityPrecision,
-        positionPrecision
-      );
-      this.physicContext.ClearForces();
   }
 }
 
 /**
    * Interface of physic API
    * @class PhysicInterface
+   * @param {function} collisionStart
+   * @param {function} collisionEnd
    */
 class PhysicInterface {
   constructor(collisionStart, collisionEnd) {
     this.physic = new PhysicBox2D(collisionStart, collisionEnd);
   }
   /**
-   * Get an object body
+   * Get a body
    * @method getBody
    * @param {string} id
    * @param {number} x
@@ -1116,7 +1421,7 @@ class PhysicInterface {
    * @param {boolean} angularConstraint
    * @param {number} angularInertia
    * @param {boolean} dynamic
-   * @return body object
+   * @return {body}
    */
   getBody(id, x, y, angle, mass, angularConstraint, angularInertia, dynamic) {
     return this.physic.getBody(
@@ -1131,7 +1436,7 @@ class PhysicInterface {
     );
   }
   /**
-   * Get an object box
+   * Get a box fixture
    * @method getBox
    * @param {string} id
    * @param {number} x
@@ -1144,7 +1449,7 @@ class PhysicInterface {
    * @param {number} friction
    * @param {number} density
    * @param {body} bodyRef
-   * @return fixture
+   * @return {fixture}
    */
   getBox(id, x, y, dx, dy, angle, sensor, restitution, friction, density, bodyRef) {
     return this.physic.getBox(
@@ -1162,610 +1467,175 @@ class PhysicInterface {
     );
   }
   /**
-     * Get an circle object
-     * @method getCircle
-     * @param x
-     * @param y
-     * @param { radius of the circle } dr
-     * @param angle
-     * @param { id, for collision system } id
-     * @param { boolean, true if the object can move } movement
-     * @return circle object
-     */
-  getCircle(x, y, dr, angle, id, movement, ghost) {
+   * Get an circle fixture
+   * @method getCircle
+   * @param {string} id
+   * @param {number} x
+   * @param {number} y
+   * @param {number} radius
+   * @param {number} angle
+   * @param {boolean} sensor
+   * @param {number} restitution
+   * @param {number} friction
+   * @param {number} density
+   * @param {body} bodyRef
+   * @return {fixture}
+   */
+  getCircle(id, x, y, radius, angle, sensor, restitution, friction, density, bodyRef) {
     return this.physic.getCircle(
+      id,
       x,
       y,
-      dr,
+      radius,
       angle,
-       id,
-      movement,
-      ghost
+      sensor,
+      restitution,
+      friction,
+      density,
+      bodyRef
     );
   }
   /**
-     * Add the physic object to physic context
-     * @method addToPhysicContext
-     * @param { array of physic object } physicObjects
-     */
-  addToPhysicContext(physicObjects) {
-    this.physic.addToPhysicContext(physicObjects);
-  }
-  /**
-     * Remove the physic object to physic context
-     * @method removeToPhysicContext
-     * @param { array of physic object } physicObjects
-     */
-  removeToPhysicContext(physicObjects) {
-    this.physic.removeToPhysicContext(physicObjects);
-  }
-  /**
-     * Set position of an physic object
-     * @method setPosition
-     * @param physicObject
-     * @param x
-     * @param y
-     */
-  setPosition(physicObject, x, y) {
-    this.physic.setPosition(physicObject, x, y);
-  }
-  /**
-   * Get position of an physic body
-   * @method getPosition
-   * @param physicBody
-   * @return {position} position
+   * Get an polygon fixture
+   * @method getPolygon
+   * @param {string} id
+   * @param {number} x
+   * @param {number} y
+   * @param {position[]} vertices
+   * @param {number} angle
+   * @param {boolean} sensor
+   * @param {number} restitution
+   * @param {number} friction
+   * @param {number} density
+   * @param {body} bodyRef
+   * @return {fixture}
    */
-  getPosition(physicBody) {
-    return this.physic.getPosition(physicBody);
+  getPolygon(id, x, y, vertices, angle, sensor, restitution, friction, density, bodyRef) {
+    return this.physic.getCircle(
+      id,
+      x,
+      y,
+      vertices,
+      angle,
+      sensor,
+      restitution,
+      friction,
+      density,
+      bodyRef
+    );
   }
   /**
-     * Set angle of an physic object
-     * @method setAngle
-     * @param physicObject
-     * @param angle
-     */
-  setAngle(physicObject, angle) {
-    this.physic.setAngle(physicObject, angle);
+   * Add the body to physic context
+   * @method addToPhysicContext
+   * @param {body} bodyRef
+   */
+  addToPhysicContext(bodyRef) {
+    this.physic.addToPhysicContext(bodyRef);
   }
   /**
-     * Get angle of an physic object
-     * @method getAngle
-     * @param physicObject
-     * @return angle
-     */
-  getAngle(physicObject) {
-    return this.physic.getAngle(physicObject);
+   * Remove the body to physic context
+   * @method removeToPhysicContext
+   * @param {body} bodyRef
+   */
+  removeToPhysicContext(bodyRef) {
+    this.physic.removeToPhysicContext(bodyRef);
   }
   /**
-     * Set velocity of an physic object
-     * @method setImpulse
-     * @param physicObject
-     * @param vector
-     */
+   * Set position of a body, teleportation
+   * @method setPosition
+   * @param {body} bodyRef
+   * @param {number} x
+   * @param {number} y
+   */
+  setPosition(bodyRef, x, y) {
+    this.physic.setPosition(bodyRef, x, y);
+  }
+  /**
+   * Get position of a body
+   * @method getPosition
+   * @param {body} bodyRef
+   * @return {position}
+   */
+  getPosition(bodyRef) {
+    return this.physic.getPosition(bodyRef);
+  }
+  /**
+   * Set angle of a body, teleportation
+   * @method setAngle
+   * @param {body} bodyRef
+   * @param {number} angle
+   */
+  setAngle(bodyRef, angle) {
+    this.physic.setAngle(bodyRef, angle);
+  }
+  /**
+   * Get angle of a body
+   * @method getAngle
+   * @param {body} bodyRef
+   * @return {number}
+   */
+  getAngle(bodyRef) {
+    return this.physic.getAngle(bodyRef);
+  }
+  /**
+   * Recalculate of the physic context
+   * @method updateEngine
+   * @param {number} framerate - Time past since the last update
+   * @param {number} velocityPrecision - velocity iterations
+   * @param {number} positionPrecision - position iterations
+   */
+  updateEngine(framerate, velocityPrecision, positionPrecision) {
+    this.physic.updateEngine(framerate, velocityPrecision, positionPrecision);
+  }
+  /**
+   * Set velocity of an physic object ------------------------Revision 0.8 final
+   * @method setImpulse
+   * @param physicObject
+   * @param vector
+   */
   setImpulse(physicObject, vector) {
     this.physic.setImpulse(physicObject, vector);
   }
   /**
-     * Set velocity of an physic object
-     * @method setVelocity
-     * @param physicObject
-     * @param vector
-     */
+   * Set velocity of an physic object
+   * @method setVelocity
+   * @param physicObject
+   * @param vector
+   */
   setVelocity(physicObject, vector) {
     this.physic.setVelocity(physicObject, vector);
   }
   /**
-     * Get velocity of an physic object
-     * @method getVelocity
-     * @param physicObject
-     * @return vector
-     */
+   * Get velocity of an physic object
+   * @method getVelocity
+   * @param physicObject
+   * @return vector
+   */
   getVelocity(physicObject) {
     return this.physic.getVelocity(physicObject);
   }
   /**
-     * Get speed of an physic object
-     * @method getSpeed
-     * @param physicObject
-     * @return speed
-     */
+   * Get speed of an physic object
+   * @method getSpeed
+   * @param physicObject
+   * @return speed
+   */
   getSpeed(physicObject) {
     return this.physic.getSpeed(physicObject);
   }
   /**
-     * Get speed of an physic object
-     * @method getSpeed
-     * @param physicObject
-     * @return speed
-     */
+   * Get speed of an physic object
+   * @method getSpeed
+   * @param physicObject
+   * @return speed
+   */
   stopForces(physicObject) {
     return this.physic.stopForces(physicObject);
   }
-  /**
-     * Get collisions of the physic context
-     * @method getCollision
-     * @return collision object
-     */
-  getCollision() {
-    var pairs = this.physic.getCollision();
-    return {
-        start : pairs.start,
-        active : pairs.active,
-        end : pairs.end
-    };
-  }
-  /**
-     * Recalculate of the physic context
-     * @method updateEngine
-     * @param {number} framerate - Time past since the last update
-     * @param {number} velocityPrecision - velocity iterations
-     * @param {number} positionPrecision - position iterations
-     */
-  updateEngine(framerate, velocityPrecision, positionPrecision) {
-      this.physic.updateEngine(framerate, velocityPrecision, positionPrecision);
-  }
 }
 
 /**
- * Physic Entity
- * @class PhysicEntity
- * @param {physicEntity} properties
- * @param {string} id
- */
-class PhysicEntity {
-  constructor(properties, id) {
-    /* Identity */
-    this.id = id;
-    this.name = properties.name;
-
-    /* Gravity point */
-    this.x;
-    this.y;
-
-    /* Calculated Size */
-    this.dx = 0;
-    this.dy = 0;
-
-    this.angle = 0;
-
-    /* Graphic position(top, left) */
-    this.graphicPosition = {
-      x : 0,
-      y : 0
-    };
-
-    /* Mouvement properties */
-    this.velocity = {
-      x : 0,
-      y : 0
-    };
-    this.angleConstraint = properties.angleConstraint != undefined ? properties.angleConstraint : true;
-    this.angularInertia = properties.rotateInertia != undefined ? properties.rotateInertia : 1;
-    this.mass = properties.mass != undefined ? properties.mass : 1;
-    this.dynamic = properties.dynamic != undefined ? properties.dynamic : false;
-
-    /* Physic ressource */
-    this.physicBody = null;
-    this.physicInterface;
-
-    /* Physic fixture */
-    this.collisionGeometries = [];
-
-    /* Object of scene reference */
-    this.graphicEntity = null;
-  }
-  /**
-   * Set scene entity reference
-   * @method setGraphicEntity
-   * @param {graphicEntity} graphicEntity
-   */
-  setGraphicEntity(graphicEntity) {
-    var self = this;
-
-    this.graphicEntity = graphicEntity;
-    this.graphicEntity.setUpdateCallback(function() {
-      self.update();
-    });
-  }
-  /**
-   * Set physic ressource and context
-   * @method setPhysicInterface
-   * @param {physicInterface} physicInterface
-   */
-  setPhysicInterface(physicInterface) {
-    this.physicInterface = physicInterface;
-  }
-  /**
-   * Set the position of the physic object.
-   * @method setGraphicPosition
-   * @param {position} graphicPosition
-   */
-  setGraphicPosition(graphicPosition) {
-    var physicPostion = this.graphicToPhysicPosition(graphicPosition);
-
-    this.x = physicPostion.x;
-    this.y = physicPostion.y;
-
-    if(this.physicBody != null) {
-
-    }
-    if(this.graphicEntity != null) {
-      var delta = this.getPositionDelta();
-      this.graphicPosition = graphicPosition;
-
-      this.graphicEntity.setPosition({
-        x : this.graphicPosition.x + delta.x,
-        y : this.graphicPosition.y + delta.y
-      });
-    }
-  }
-  /**
-   * Get the physic position of the object.
-   * @method getGraphicPosition
-   * @private
-   * @return {physicPosition} position
-   */
-  getGraphicPosition() {
-    return this.graphicPosition;
-  }
-  /**
-   * Get the physic position of the object.
-   * @method getPositionDelta
-   * @private
-   * @return {physicPosition} position
-   */
-  getPositionDelta() {
-    var graphicPosition = this.graphicEntity.getPosition();
-
-    return {
-      x : Math.abs(this.graphicPosition.x - graphicPosition.x),
-      y : Math.abs(this.graphicPosition.y - graphicPosition.y)
-    };
-  }
-  /**
-     * Translate graphic position to physic position.
-     * @method graphicToPhysicPosition
-     * @private
-     * @param {position} graphicPosition
-     * @return {position}
-     */
-  graphicToPhysicPosition(graphicPosition) {
-    return {
-      x : graphicPosition.x + (this.dx / 2),
-      y : graphicPosition.y + (this.dy / 2)
-    };
-  }
-  /**
-   * Translate physic position to graphic position.
-   * @method physicToGraphicPosition
-   * @private
-   * @param {position} physicPosition
-   * @return {position}
-   */
-  physicToGraphicPosition(physicPosition) {
-    return {
-      x : physicPosition.x - (this.dx / 2),
-      y : physicPosition.y - (this.dy / 2)
-    };
-  }
-  /**
-   * Add collision geometry to the gravity point
-   * @method addCollisionGeometry
-   * @param {collisionGeometry} collisionGeometry
-   */
-  addCollisionGeometry(collisionGeometry) {
-    if(!this.verifyCollisionGeometry(collisionGeometry.id)) {
-      this.collisionGeometries[this.collisionGeometries.length] = collisionGeometry;
-
-      if(this.physicBody != null) {
-        this.addFixtureToBody(this.collisionGeometries[x]);
-        this.updateSize();
-      }
-    }
-  }
-  /**
-   * Verify if collision geometry already exist
-   * @method verifyCollisionGeometry
-   * @param {string} id
-   * @return {boolean}
-   */
-  verifyCollisionGeometry(id) {
-    var length = this.collisionGeometries.length,
-    x=0;
-
-    for(; x < length; x++) {
-      if(this.collisionGeometries[x].id == id) {
-        return true;
-      }
-    }
-    return false;
-  }
-  /**
-   * Delete collision geometry to the gravity point
-   * @method deleteCollisionGeometry
-   * @param {string} id
-   */
-  deleteCollisionGeometry(id) {
-    var length = this.collisionGeometries.length,
-        x=0;
-
-    for(; x < length; x++) {
-      if(this.collisionGeometries[x].id == id) {
-        this.collisionGeometries.splice(x, 1);
-        return;
-      }
-    }
-  }
-  /**
-   * Update size
-   * @method updateSize
-   */
-  updateSize() {
-    var length = collisionGeometries.length,
-        x = 0,
-        minX = 0,
-        maxX = 0,
-        minY = 0,
-        maxY = 0,
-        x1 = 0,
-        x2 = 0,
-        y1 = 0,
-        y2 = 0;
-
-    for(; x < length; x++) {
-      switch(collisionGeometries[x].shape) {
-        case "circle" :
-
-          break;
-        case "box" :
-          x1 = collisionGeometries[x].x;
-          x2 = collisionGeometries[x].x + collisionGeometries[x].dx;
-          y1 = collisionGeometries[x].y;
-          y2 = collisionGeometries[x].y + collisionGeometries[x].dy;
-
-          break;
-        case "polygon" :
-
-          break;
-      }
-      if(x1 < minX) {
-        minX = x1;
-      }
-      if(y1 < minY) {
-        minY = y1;
-      }
-      if(x2 > maxY) {
-        maxX = x2;
-      }
-      if(y2 > maxY) {
-        maxY = y2;
-      }
-    }
-
-    this.dx = maxX - minX;
-    this.dy = maxY - minY;
-  }
-  /**
-   * Add collision geometry to the gravity point
-   * @method addFixtureToBody
-   * @param {collisionGeometry} collisionGeometry
-   */
-  addFixtureToBody(collisionGeometry) {
-    switch(collisionGeometry.shape) {
-      case "circle" :
-
-        break;
-      case "box" :
-        return this.physicInterface.getBox(
-          collisionGeometry.id,
-          collisionGeometry.x,
-          collisionGeometry.y,
-          collisionGeometry.dx,
-          collisionGeometry.dy,
-          collisionGeometry.angle,
-          collisionGeometry.sensor,
-          collisionGeometry.restitution,
-          collisionGeometry.friction,
-          collisionGeometry.density,
-          this.physicBody
-        );
-        break;
-      case "polygon" :
-
-        break;
-    }
-  }
-  /**
-     * Add the physic object to the physic context
-     * @method addToPhysicContext
-     */
-  addToPhysicContext() {
-    if(this.physicBody == null) {
-      this.physicBody = this.physicInterface.getBody(
-        this.id,
-        this.x,
-        this.y,
-        this.angle,
-        this.mass,
-        this.angularConstraint,
-        this.angularInertia,
-        this.dynamic
-      );
-      var length = this.collisionGeometries.length,
-          x = 0;
-
-      for(; x < length; x++) {
-        this.addFixtureToBody(this.collisionGeometries[x]);
-      }
-    }
-  }
-  /**
-     * Delete the physic object to the physic context
-     * @method deleteToPhysicContext
-     */
-  deleteToPhysicContext() {
-    if(this.physicBody != null) {
-
-    }
-  }
-  setAngle(angle) {
-    this.angle = angle;
-  }
-  getAngle() {
-    return this.angle;
-  }
-  setVelocity(vector) {
-    this.physicInterface.setVelocity(this.physicBody, {
-      x : vector.x,
-      y : vector.y
-    });
-  }
-  getVelocity() {
-    return this.physicInterface.getVelocity(this.physicBody);
-  }
-  show() {
-  }
-  hide() {
-  }
-  update() {
-    if(this.physicBody != null) {
-      this.physicPosition = this.physicInterface.getPosition(this.physicBody);
-      if(this.name == "playerPhysic"){
-        //console.log(this.getVelocity())
-      }
-      var graphicPosition = this.physicToGraphicPosition(this.physicPosition);
-
-      if(this.graphicEntity != null) {
-        var delta = this.getPositionDelta();
-
-        this.graphicEntity.setPosition({
-          x : graphicPosition.x + delta.x,
-          y : graphicPosition.y + delta.y
-        });
-      }
-      this.graphicPosition = graphicPosition;
-    }
-  }
-}
-
-/**
- * Scene Manager
- * @class Scene
- * @param {size} size
- * @param {number} ratio
- */
-﻿class Scene {
-  constructor(size, ratio) {
-    this.map = [];
-    this.ratio = ratio;
-
-    this.cases = {
-      x : Math.ceil(size.dx / this.ratio),
-      y : Math.ceil(size.dy / this.ratio)
-    };
-
-    for(var x = 0; x < this.cases.x; x++) {
-      this.map[x] = [];
-      for(var y = 0; y < this.cases.y; y++) {
-        this.map[x][y] = [];
-      }
-    }
-  }
-  /**
-   * Get objects in the zone defined
-   * @method getObjects
-   * @param {zone} zone
-   * @return {tableObject} objectsInZone
-   */
-  getObjects(zone) {
-    var firstCaseX = Math.floor(zone.x / this.ratio),
-        firstCaseY = Math.floor(zone.y / this.ratio),
-        lastCaseX = Math.ceil((zone.x + zone.dx) / this.ratio),
-        lastCaseY = Math.ceil((zone.y + zone.dy) / this.ratio),
-        objectsInZone = [],
-        list = [],
-        x = firstCaseX;
-
-    for(; x < lastCaseX; x++) {
-      /* Read every cases in x between zone.x and zone.dx */
-      for(var y = firstCaseY; y < lastCaseY; y++) {
-        /* Read every cases in y between zone.y and zone.dy */
-        var length = this.map[x][y].length,
-            z=0;
-
-        for(;z < length; z++) {
-          /* Read every object in this case */
-          if(typeof list[this.map[x][y][z]] == "undefined") {
-            /* The object is not set yet */
-            objectsInZone[objectsInZone.length] = this.map[x][y][z];
-            list[this.map[x][y][z]] = true;
-          }
-        }
-      }
-    }
-
-    return objectsInZone;
-  }
-  /**
-   * Update object position
-   * @method update
-   * @param {zone} oldZone
-   * @param {zone} newZone
-   * @param {string} id
-   */
-  update(oldZone, newZone, id) {
-    this.delete(oldZone, id);
-    this.add(newZone, id);
-  }
-  /**
-   * Add object in map
-   * @method add
-   * @param {zone} zone
-   * @param {string} id
-   */
-  add(zone, id) {
-    var firstCaseX = Math.floor(zone.x / this.ratio),
-        firstCaseY = Math.floor(zone.y / this.ratio),
-        lastCaseX = Math.ceil((zone.x + zone.dx) / this.ratio),
-        lastCaseY = Math.ceil((zone.y + zone.dy) / this.ratio),
-        x = firstCaseX;
-
-    for(; x < lastCaseX; x++) {
-      for(var y = firstCaseY; y < lastCaseY; y++) {
-        this.map[x][y][this.map[x][y].length] = id;
-      }
-    }
-  }
-  /**
-   * Delete object in map
-   * @method delete
-   * @param {zone} zone
-   * @param {string} id
-   */
-  delete(zone, id) {
-    var firstCaseX = Math.floor(zone.x / this.ratio),
-      firstCaseY = Math.floor(zone.y / this.ratio),
-      lastCaseX = Math.ceil((zone.x + zone.dx) / this.ratio),
-      lastCaseY = Math.ceil((zone.y + zone.dy) / this.ratio),
-      x = firstCaseX;
-
-    for(;x < lastCaseX;x++){
-      for(var y = firstCaseY; y < lastCaseY; y++) {
-        var length = this.map[x][y].length,
-            z = 0;
-
-        for(; z < length; z++) {
-          if(this.map[x][y][z] == id) {
-            this.map[x][y].splice(z, 1);
-          }
-        }
-      }
-    }
-  }
-}
-
-/**
- * Scene Entity
+ * Graphic Entity
  * @class GraphicEntity
  * @param {graphicEntity} properties
  * @param {string} id
@@ -1784,33 +1654,32 @@ class GraphicEntity {
     this.dy = 0;
     this.dz = properties.dz;
 
-    /* Sub object properties */
+    /* Sub Graphic entities properties */
     this.parent = null;
-    this.subObjectOfScene = [];
-
-    this.updateCallback = function() {};
+    this.subGraphicEntities = [];
+    this.graphicObject = null;
 
     /* Other */
     this.pause = false;
     this.scene = null;
   }
   /**
-   * Set the graphic position of the object, subOject
+   * Set the graphic position of the entity and subGraphicEntities
    * @method setPosition
    * @param {position} position
    */
   setPosition(position) {
-    /* Update position of subObject */
-    if(typeof this.subObjects != "undefined"){
+    /* Update position of subGraphicEntity */
+    if(typeof this.subGraphicEntities != "undefined"){
       var x=0,
-          length = this.subObjects.length;
+          length = this.subGraphicEntities.length;
 
       for(; x < length; x++) {
-        this.subObjects[x].addPosition({
+        this.subGraphicEntities[x].addPosition({
           x : position.x - this.x,
           y : position.y - this.y
         });
-        this.subObjects[x].addZ(position.y - this.y);
+        this.subGraphicEntities[x].addZ(position.y - this.y);
       }
     }
 
@@ -1907,7 +1776,7 @@ class GraphicEntity {
     this.updateZ();
   }
   /**
-   * Set the graphic size of the object
+   * Set the graphic size of the entity
    * @method setSize
    * @param {size} size
    */
@@ -1935,7 +1804,7 @@ class GraphicEntity {
     this.dy = size.dy;
   }
   /**
-   * Get the graphic position of the object.
+   * Get the graphic position of the entity.
    * @method getPosition
    * @return {position}
    */
@@ -1946,7 +1815,7 @@ class GraphicEntity {
     };
   }
   /**
-   * Get the graphic size of the object.
+   * Get the graphic size of the entity.
    * @method getSize
    * @return {size}
    */
@@ -1967,14 +1836,10 @@ class GraphicEntity {
         x = 0;
 
     for(; x < length; x++) {
-      bitmap[x] = this.cloneComplexObject(animation[x]);
+      bitmap[x] = animation[x];
     }
 
-    if(this.graphicType != "bitmap") {
-      this.graphicObject = new Bitmap();
-      this.graphicType = "bitmap";
-    }
-
+    this.graphicObject = new Bitmap();
     this.graphicObject.setAnimation(bitmap);
 
     this.setSize(this.graphicObject.getSize());
@@ -1985,11 +1850,7 @@ class GraphicEntity {
    * @param {text} text
    */
   setText(text) {
-    if(this.graphicType != "text") {
-      this.graphicObject = new Text();
-      this.graphicType = "text";
-    }
-
+    this.graphicObject = new Text();
     this.graphicObject.setText(text.words, text.style);
 
     this.setSize(this.graphicObject.getSize());
@@ -1998,31 +1859,40 @@ class GraphicEntity {
    * Set new geometry
    * @method setGeometry
    */
-  setGeometry() {
-    //if(this.type != "geometry"){
-    //  this.skinMachine = new Geometry();
-    //}
-    //this.type = "geometry";
-    //this.skinMachine.setGeometry(skinName);
+  setGeometry(geometry) {
+    switch(geometry.type) {
+      case "box" :
+        this.graphicObject = new Box(geometry);
+        this.graphicObject.setGeometry(geometry);
+        break;
+      case "circle" :
+        this.graphicObject = new Circle(geometry);
+        this.graphicObject.setGeometry(geometry);
+        break;
+      case "polygon" :
+        this.graphicObject = new Polygon(geometry);
+        this.graphicObject.setGeometry(geometry);
+        break;
+    }
+    this.setSize(this.graphicObject.getSize());
   }
   /**
-   * Set update callback
-   * @method setUpdateCallback
-   * @param {function} callback
+   * Set new graphic object
+   * @method setGraphicObject
    */
-  setUpdateCallback(callback) {
-    this.updateCallback = callback;
+  setGraphicObject(graphicObject) {
+    this.graphicObject = graphicObject;
+
+    this.setSize(this.graphicObject.getSize());
   }
   /**
    * Update graphic object
-   * @method update
+   * @method updateGraphicObject
    * @param {canvasCtx} canvasCtx
    * @param {size} canvasSize
    * @param {position} cameraPosition
    */
-  update(canvasCtx, canvasSize, cameraPosition) {
-    this.updateCallback();
-
+  updateGraphicObject(canvasCtx, canvasSize, cameraPosition) {
     var mapPosition = this.getPosition(),
         relativePosition = {
           x : mapPosition.x - cameraPosition.x,
@@ -2050,7 +1920,7 @@ class GraphicEntity {
     this.audio.unsetAudio();
   }
   /**
-   * Add the object to the graphic map, Scene
+   * Add the entity from the Scene
    * @method addToScene
    * @param {scene} scene
    */
@@ -2068,16 +1938,16 @@ class GraphicEntity {
       );
 
       /* Update subObject */
-      var length = this.subObjectOfScene.length,
+      var length = this.subGraphicEntity.length,
           x=0;
 
       for(; x < length; x++) {
-        this.subObjectOfScene[x].addToScene(this.scene);
+        this.subGraphicEntity[x].addToScene(this.scene);
       }
     }
   }
   /**
-   * Delete the object to the graphic map, Scene
+   * Delete the entity from the Scene
    * @method deleteToScene
    */
   deleteToScene() {
@@ -2094,11 +1964,11 @@ class GraphicEntity {
       this.scene = null;
 
       /* Update subObject */
-      var length = this.subObjectOfScene.length,
+      var length = this.subGraphicEntity.length,
           x = 0;
 
       for(; x < length; x++) {
-        this.subObjectOfScene[x].deleteToScene();
+        this.subGraphicEntity[x].deleteToScene();
       }
     }
   }
@@ -2117,70 +1987,719 @@ class GraphicEntity {
     this.pause = true;
   }
   /**
-   * Add sub object
-   * @method addSubObject
-   * @param {graphicEntity} subObject
+   * Add sub graphic entity
+   * @method addSubEntity
+   * @param {graphicEntity} subGraphicEntity
    */
-  addSubObject(subObject) {
-    if(subObject.parent == null) {
-      subObject.setPosition({
-        x: this.x + subObject.x,
-        y: this.y + subObject.y
+  addSubEntity(subGraphicEntity) {
+    if(subGraphicEntity.parent == null) {
+      subGraphicEntity.setPosition({
+        x: this.x + subGraphicEntity.x,
+        y: this.y + subGraphicEntity.y
       });
 
-      subObject.parent = this;
-      subObject.dz = 0;
+      subGraphicEntity.parent = this;
+      subGraphicEntity.dz = 0;
 
-      this.subObjectOfScene[this.subObjectOfScene.length] = subObject;
+      this.subGraphicEntities[this.subGraphicEntities.length] = subGraphicEntity;
     }
   }
   /**
-   * Delete sub object
+   * Delete sub grphic entity
    * @method deleteSubObject
-   * @param {graphicEntity} subObject
+   * @param {graphicEntity} subGraphicEntity
    */
-  deleteSubObject(subObject) {
-    var length = this.subObjectOfScene.length,
+  deleteSubEntity(subGraphicEntity) {
+    var length = this.subGraphicEntities.length,
         x = 0;
 
     for(; x < length; x++) {
-      if(this.subObjectOfScene[x].id == subObject.id) {
-        subObject.parent = null;
-        this.subObjectOfScene.splice(x, 1);
+      if(this.subGraphicEntities[x].id == subGraphicEntity.id) {
+        subGraphicEntity.parent = null;
+        this.subGraphicEntities.splice(x, 1);
+        return;
+      }
+    }
+  }
+}
+
+/**
+ * Physic Entity
+ * @class PhysicEntity
+ * @param {physicEntity} properties
+ * @param {string} id
+ */
+class PhysicEntity {
+  constructor(properties, id) {
+    /* Identity */
+    this.id = id;
+    this.name = properties.name;
+
+    /* Gravity point */
+    this.position = {
+      x : 0,
+      y : 0
+    };
+    /* Graphic position(top, left) */
+    this.graphicPosition = {
+      x : 0,
+      y : 0
+    };
+
+    /* Calculated Size */
+    this.originalSize = {
+      dx : 0,
+      dy : 0
+    };
+    /* Calculated Size with angle */
+    this.size = {
+      dx : 0,
+      dy : 0
+    };
+
+    this.angle = 0;
+
+    /* Mouvement properties */
+    this.velocity = {
+      x : 0,
+      y : 0
+    };
+    this.angleConstraint = properties.angleConstraint != undefined ? properties.angleConstraint : true;
+    this.angularInertia = properties.rotateInertia != undefined ? properties.rotateInertia : 1;
+    this.mass = properties.mass != undefined ? properties.mass : 1;
+    this.dynamic = properties.dynamic != undefined ? properties.dynamic : false;
+
+    /* Physic ressource */
+    this.physicBody = null;
+    this.physicInterface;
+    this.geometricMath = new GeometricMath();
+
+    /* Physic fixture */
+    this.collisionGeometries = [];
+
+    /* Scene Entity reference */
+    this.graphicEntity = null;
+    this.scene = null;
+  }
+  /**
+   * Set scene entity reference
+   * @method setGraphicEntity
+   * @param {graphicEntity} graphicEntity
+   */
+  setGraphicEntity(graphicEntity) {
+    this.graphicEntity = graphicEntity;
+  }
+  /**
+   * Set physic ressource and context
+   * @method setPhysicInterface
+   * @param {physicInterface} physicInterface
+   */
+  setPhysicInterface(physicInterface) {
+    this.physicInterface = physicInterface;
+  }
+  /**
+   * Set original size
+   * @method setOriginalSize
+   * @private
+   * @param {size} originalSize
+   */
+  setOriginalSize(originalSize) {
+    this.originalSize = originalSize;
+    this.updateSize();
+  }
+  /**
+   * Get original size
+   * @method getOriginalSize
+   * @return {size}
+   */
+  getOriginalSize() {
+    this.originalSize;
+  }
+  /**
+   * Set size with angle
+   * @method setSize
+   * @private
+   * @param {size} size
+   */
+  setSize(size) {
+    /* Map update */
+    if(this.scene != null) {
+      this.scene.update(
+        {
+          position : this.position,
+          size : this.size
+        },
+        {
+          position : this.position,
+          size : size
+        },
+        this.id
+      );
+    }
+
+    this.size = size;
+  }
+  /**
+   * Get size with angle
+   * @method getSize
+   * @return {size}
+   */
+  getSize() {
+    return this.size;
+  }
+  /**
+   * Set the graphic position of the physic entity.
+   * @method setGraphicPosition
+   * @param {position} graphicPosition
+   */
+  setGraphicPosition(graphicPosition) {
+    var physicPostion = this.graphicToPhysicPosition(graphicPosition);
+
+    this.x = physicPostion.x;
+    this.y = physicPostion.y;
+
+    if(this.physicBody != null) {
+
+    }
+    if(this.graphicEntity != null) {
+      var delta = this.getPositionDelta();
+      this.graphicPosition = graphicPosition;
+
+      this.graphicEntity.setPosition({
+        x : this.graphicPosition.x + delta.x,
+        y : this.graphicPosition.y + delta.y
+      });
+    }
+  }
+  /**
+   * Get the graphic position of the Entity.
+   * @method getGraphicPosition
+   * @return {position} position
+   */
+  getGraphicPosition() {
+    return this.graphicPosition;
+  }
+  /**
+   * Get position between Scene and Physic ????
+   * @method getPositionDelta
+   * @private
+   * @return {physicPosition} position
+   */
+  getPositionDelta() {
+    var graphicPosition = this.graphicEntity.getPosition();
+
+    return {
+      x : Math.abs(this.graphicPosition.x - graphicPosition.x),
+      y : Math.abs(this.graphicPosition.y - graphicPosition.y)
+    };
+  }
+  /**
+   * Translate graphic position to physic position.
+   * @method graphicToPhysicPosition
+   * @private
+   * @param {position} graphicPosition
+   * @return {position}
+   */
+  graphicToPhysicPosition(graphicPosition) {
+    return {
+      x : graphicPosition.x + (this.dx / 2),
+      y : graphicPosition.y + (this.dy / 2)
+    };
+  }
+  /**
+   * Translate physic position to graphic position.
+   * @method physicToGraphicPosition
+   * @private
+   * @param {position} physicPosition
+   * @return {position}
+   */
+  physicToGraphicPosition(physicPosition) {
+    return {
+      x : physicPosition.x - (this.dx / 2),
+      y : physicPosition.y - (this.dy / 2)
+    };
+  }
+  /**
+   * Add hitbox to the gravity point
+   * @method addHitbox
+   * @param {hitbox} hitbox
+   */
+  addHitbox(hitbox) {
+    if(!this.verifyHitbox(hitbox.id)) {
+      var entity = new GraphicEntity({
+            z : hitbox.z,
+            dz : hitbox.dz
+          }),
+          size = {
+            dx : 0,
+            dy : 0
+          },
+          length = this.hitbox.length;
+
+      entity.setGeometry(hitbox);
+
+      switch(hitbox.type) {
+        case "circle" :
+          size = this.geometricMath.getCircleSize(hitbox.radius);
+          break;
+        case "box" :
+          size = hitbox.size;
+          break;
+        case "polygon" :
+          size = this.geometricMath.getPolygonSize(hitbox.vertices);
+          break;
+      }
+
+      this.hitboxes[length] = {
+        fixture : hitbox,
+        graphicEntity : entity,
+        originalSize : size,
+        id : hitbox.id
+      };
+
+      if(this.physicBody != null) {
+        this.addFixtureToBody(this.hitboxes[length].fixture);
+        this.updateOriginalSize();
+      }
+    }
+  }
+  /**
+   * Verify if hitbox already exist
+   * @method verifyHitbox
+   * @param {string} id
+   * @return {boolean}
+   */
+  verifyHitbox(id) {
+    var length = this.hitboxes.length,
+        x = 0;
+
+    for(; x < length; x++) {
+      if(this.hitboxes[x].id == id) {
+        return true;
+      }
+    }
+    return false;
+  }
+  /**
+   * Delete hitbox to the gravity point
+   * @method deleteHitbox
+   * @param {string} id
+   */
+  deleteHitbox(id) {
+    var length = this.hitboxes.length,
+        x = 0;
+
+    for(; x < length; x++) {
+      if(this.hitboxes[x].id == id) {
+        this.hitboxes.splice(x, 1);
         return;
       }
     }
   }
   /**
-   * Clone object with Img object
-   * @method cloneComplexObject
-   * @param  {object} complexObject
-   * @return {object} clone
+   * Update size with angle
+   * @method updateSize
    */
-  cloneComplexObject(complexObject) {
-    var clone = {},
-        i = 0;
+  updateSize() {
+    var x = 0,
+        length = this.perimeter.length,
+        polygon = [];
 
-    for(i in complexObject) {
-      if (complexObject.hasOwnProperty(i)) {
-        if(typeof complexObject[i] != 'object' || complexObject[i] instanceof HTMLImageElement) {
-           clone[i] = complexObject[i];
-        } else {
-          clone[i] = this.cloneObject(complexObject[i]);
+    for(; x < length; x++) {
+      polygon[x] = this.geometricMath.getRotatedPoint(
+        this.perimeter[x],
+        this.angle,
+        {
+          x : 0,
+          y : 0
+        }
+      );
+    }
+
+    this.setSize(this.geometricMath.getPolygonSize(polygon));
+  }
+  /**
+   * Update original size
+   * @method updateOriginalSize
+   */
+  updateOriginalSize() {
+    var length = this.hitboxes.length,
+        x = 0,
+        minX = 0,
+        maxX = 0,
+        minY = 0,
+        maxY = 0;
+
+    for(; x < length; x++) {
+      switch(this.hitboxes[x].graphicEntity.type) {
+        case "circle" :
+          minX = Math.min(minX, this.hitboxes[x].x - this.hitboxes[x].radius);
+          maxX = Math.max(maxX, this.hitboxes[x].x + this.hitboxes[x].radius);
+          minY = Math.min(minY, this.hitboxes[x].y - this.hitboxes[x].radius);
+          maxY = Math.max(maxY, this.hitboxes[x].y + this.hitboxes[x].radius);
+          break;
+        case "box" :
+          minX = Math.min(minX, this.hitboxes[x].x);
+          maxX = Math.max(maxX, this.hitboxes[x].x + this.hitboxes[x].dx);
+          minY = Math.min(minY, this.hitboxes[x].y);
+          maxY = Math.max(maxY, this.hitboxes[x].y + this.hitboxes[x].dy);
+          break;
+        case "polygon" :
+          minX = Math.min(minX, this.hitboxes[x].x);
+          maxX = Math.max(maxX, this.hitboxes[x].x + this.hitboxes[x].dx);
+          minY = Math.min(minY, this.hitboxes[x].y);
+          maxY = Math.max(maxY, this.hitboxes[x].y + this.hitboxes[x].dy);
+          break;
+      }
+    }
+
+    this.perimeter[0] = {
+      x : minX,
+      y : minY
+    };
+    this.perimeter[1] = {
+      x : maxX,
+      y : minY
+    };
+    this.perimeter[2] = {
+      x : minX,
+      y : maxY
+    };
+    this.perimeter[3] = {
+      x : maxX,
+      y : maxY
+    };
+
+    this.setOriginalSize({
+      dx : maxX - minX,
+      dy : maxY - minY
+    });
+  }
+  /**
+   * Add collision geometry to the gravity point
+   * @method addFixtureToBody
+   * @param {collisionGeometry} collisionGeometry
+   */
+  addFixtureToBody(collisionGeometry) {
+    switch(collisionGeometry.shape) {
+      case "circle" :
+        return this.physicInterface.getCircle(
+          collisionGeometry.id,
+          collisionGeometry.x,
+          collisionGeometry.y,
+          collisionGeometry.radius,
+          collisionGeometry.angle,
+          collisionGeometry.sensor,
+          collisionGeometry.restitution,
+          collisionGeometry.friction,
+          collisionGeometry.density,
+          this.physicBody
+        );
+        break;
+      case "box" :
+        return this.physicInterface.getBox(
+          collisionGeometry.id,
+          collisionGeometry.x,
+          collisionGeometry.y,
+          collisionGeometry.dx,
+          collisionGeometry.dy,
+          collisionGeometry.angle,
+          collisionGeometry.sensor,
+          collisionGeometry.restitution,
+          collisionGeometry.friction,
+          collisionGeometry.density,
+          this.physicBody
+        );
+        break;
+      case "polygon" :
+        return this.physicInterface.getPolygon(
+          collisionGeometry.id,
+          collisionGeometry.x,
+          collisionGeometry.y,
+          collisionGeometry.vertices,
+          collisionGeometry.angle,
+          collisionGeometry.sensor,
+          collisionGeometry.restitution,
+          collisionGeometry.friction,
+          collisionGeometry.density,
+          this.physicBody
+        );
+        break;
+    }
+  }
+  /**
+   * Add the physic object to the physic context
+   * @method addToPhysicContext
+   * @param {scene} scene
+   */
+  addToPhysicContext(scene) {
+    if(this.physicBody == null) {
+      this.addToScene(scene);
+      this.physicBody = this.physicInterface.getBody(
+        this.id,
+        this.x,
+        this.y,
+        this.angle,
+        this.mass,
+        this.angularConstraint,
+        this.angularInertia,
+        this.dynamic
+      );
+
+      var length = this.collisionGeometries.length,
+          x = 0;
+
+      for(; x < length; x++) {
+        this.addFixtureToBody(this.collisionGeometries[x]);
+      }
+    }
+  }
+  /**
+   * Delete the physic object to the physic context
+   * @method deleteToPhysicContext
+   */
+  deleteToPhysicContext() {
+    if(this.physicBody != null) {
+      this.deleteToScene();
+    }
+  }
+  /**
+   * Add the object to the Scene
+   * @method addToScene
+   * @private
+   * @param {scene} scene
+   */
+  addToScene(scene) {
+    if(this.scene == null) {
+      this.scene = scene;
+      this.scene.add(
+        {
+          x : this.x,
+          y : this.y,
+          dx : this.dx,
+          dy : this.dy
+        },
+        this.id
+      );
+    }
+  }
+  /**
+   * Delete the object to the Scene
+   * @method deleteToScene
+   * @private
+   */
+  deleteToScene() {
+    if(this.scene != null) {
+      this.scene.delete(
+        {
+          x : this.x,
+          y : this.y,
+          dx : this.dx,
+          dy : this.dy
+        },
+        this.id
+      );
+      this.scene = null;
+    }
+  }
+  /**
+   * Set angle
+   * @method setAngle
+   * @param {number} angle
+   */
+  setAngle(angle) {
+    this.angle = angle;
+  }
+  /**
+   * Get angle
+   * @method getAngle
+   * @return {number} angle
+   */
+  getAngle() {
+    return this.angle;
+  }
+  /**
+   * Set velocity
+   * @method setVelocity
+   * @param {vector} vector
+   */
+  setVelocity(vector) {
+    this.physicInterface.setVelocity(this.physicBody, {
+      x : vector.x,
+      y : vector.y
+    });
+  }
+  /**
+   * Get velocity
+   * @method getVelocity
+   * @return {vector} vector
+   */
+  getVelocity() {
+    return this.physicInterface.getVelocity(this.physicBody);
+  }
+  /**
+   * Show collision geometries
+   * @method show
+   * @param {scene} scene
+   */
+  show(scene) {
+    var length = collisionGeometries.length,
+        x = 0;
+
+    for(; x < length; x++) {
+      collisionGeometries[x].entity.addToScene(scene);
+    }
+  }
+  /**
+   * Hide collision geometries
+   * @method hide
+   */
+  hide() {
+    var length = collisionGeometries.length,
+        x = 0;
+
+    for(; x < length; x++) {
+      collisionGeometries[x].entity.deleteToScene();
+    }
+  }
+  /**
+   * Update the physic position
+   * @method updatePhysicPosition
+   */
+  updatePhysicPosition() {
+    if(this.physicBody != null) {
+      this.physicPosition = this.physicInterface.getPosition(this.physicBody);
+      if(this.name == "playerPhysic"){
+        //console.log(this.getVelocity())
+      }
+      var graphicPosition = this.physicToGraphicPosition(this.physicPosition);
+
+      if(this.graphicEntity != null) {
+        var delta = this.getPositionDelta();
+
+        this.graphicEntity.setPosition({
+          x : graphicPosition.x + delta.x,
+          y : graphicPosition.y + delta.y
+        });
+      }
+      this.graphicPosition = graphicPosition;
+    }
+  }
+}
+
+/**
+ * Scene Manager
+ * @class Scene
+ * @param {size} size
+ * @param {number} ratio
+ */
+﻿class Scene {
+  constructor(size, ratio) {
+    this.map = [];
+    this.ratio = ratio;
+
+    this.cases = {
+      x : Math.ceil(size.dx / this.ratio),
+      y : Math.ceil(size.dy / this.ratio)
+    };
+
+    for(var x = 0; x < this.cases.x; x++) {
+      this.map[x] = [];
+      for(var y = 0; y < this.cases.y; y++) {
+        this.map[x][y] = [];
+      }
+    }
+  }
+  /**
+   * Get entities in the zone defined
+   * @method getEntities
+   * @param {zone} zone
+   * @return {entity[]} entities
+   */
+  getEntities(zone) {
+    var firstCaseX = Math.floor(zone.x / this.ratio),
+        firstCaseY = Math.floor(zone.y / this.ratio),
+        lastCaseX = Math.ceil((zone.x + zone.dx) / this.ratio),
+        lastCaseY = Math.ceil((zone.y + zone.dy) / this.ratio),
+        entities = [],
+        list = [],
+        x = firstCaseX;
+
+    for(; x < lastCaseX; x++) {
+      /* Read every cases in x between zone.x and zone.dx */
+      for(var y = firstCaseY; y < lastCaseY; y++) {
+        /* Read every cases in y between zone.y and zone.dy */
+        var length = this.map[x][y].length,
+            z=0;
+
+        for(; z < length; z++) {
+          /* Read every entity in this case */
+          if(typeof list[this.map[x][y][z]] == "undefined") {
+            /* The entity is not set yet */
+            entities[objectsInZone.length] = this.map[x][y][z];
+            list[this.map[x][y][z]] = true;
+          }
         }
       }
     }
 
-    return clone;
+    return entities;
   }
   /**
-   * Clone simple object
-   * @method cloneObject
-   * @param  {object} simpleObject
-   * @return {object}
+   * Update entity position
+   * @method update
+   * @param {zone} oldZone
+   * @param {zone} newZone
+   * @param {string} id
    */
-  cloneObject(simpleObject) {
-    return JSON.parse(JSON.stringify(simpleObject));
+  update(oldZone, newZone, id) {
+    this.delete(oldZone, id);
+    this.add(newZone, id);
+  }
+  /**
+   * Add entity in map
+   * @method add
+   * @param {zone} zone
+   * @param {string} id
+   */
+  add(zone, id) {
+    var firstCaseX = Math.floor(zone.x / this.ratio),
+        firstCaseY = Math.floor(zone.y / this.ratio),
+        lastCaseX = Math.ceil((zone.x + zone.dx) / this.ratio),
+        lastCaseY = Math.ceil((zone.y + zone.dy) / this.ratio),
+        x = firstCaseX;
+
+    for(; x < lastCaseX; x++) {
+      for(var y = firstCaseY; y < lastCaseY; y++) {
+        this.map[x][y][this.map[x][y].length] = id;
+      }
+    }
+  }
+  /**
+   * Delete entity in map
+   * @method delete
+   * @param {zone} zone
+   * @param {string} id
+   */
+  delete(zone, id) {
+    var firstCaseX = Math.floor(zone.x / this.ratio),
+      firstCaseY = Math.floor(zone.y / this.ratio),
+      lastCaseX = Math.ceil((zone.x + zone.dx) / this.ratio),
+      lastCaseY = Math.ceil((zone.y + zone.dy) / this.ratio),
+      x = firstCaseX;
+
+    for(;x < lastCaseX;x++){
+      for(var y = firstCaseY; y < lastCaseY; y++) {
+        var length = this.map[x][y].length,
+            z = 0;
+
+        for(; z < length; z++) {
+          if(this.map[x][y][z] == id) {
+            this.map[x][y].splice(z, 1);
+          }
+        }
+      }
+    }
   }
 }
 
@@ -3126,8 +3645,16 @@ class Game {
           );
         }
 
-        //Creation of the scene
-        self.scene = new Scene(
+        //Creation of the graphic scene
+        self.scene['graphic'] = new Scene(
+          {
+            dx: self.level.widthScene,
+            dy: self.level.heightScene
+          },
+          self.level.ratioScene
+        );
+        //Creation of the physic scene
+        self.scene['physic'] = new Scene(
           {
             dx: self.level.widthScene,
             dy: self.level.heightScene
@@ -3185,7 +3712,13 @@ class Game {
     var self = this;
 
     this.entities[this.level.cameraId].setDisplayUpdateMethod(function(framerate) {
-      var inView = self.scene.getObjects({
+      var inView = self.scene['graphic'].getEntities({
+            x : self.entities[self.level.cameraId].graphicPosition.x,
+            y : self.entities[self.level.cameraId].graphicPosition.y,
+            dx : self.entities[self.level.cameraId].dx,
+            dy : self.entities[self.level.cameraId].dy
+          }),
+          inPhysic = self.scene['physic'].getEntities({
             x : self.entities[self.level.cameraId].graphicPosition.x,
             y : self.entities[self.level.cameraId].graphicPosition.y,
             dx : self.entities[self.level.cameraId].dx,
@@ -3208,9 +3741,9 @@ class Game {
         self.entities[self.level.cameraId].dy + self.entities[self.level.cameraId].dy
       );
 
-      //Call of objects scene graphic system
+      //Call of entities graphic system
       for(; x < length; x++) {
-        self.entities[inView[x]].update(
+        self.entities[inView[x]].updateGraphicObject(
           self.entities[self.level.cameraId].ctx,
           {
             dx : self.entities[self.level.cameraId].dx,
@@ -3221,6 +3754,14 @@ class Game {
             y : self.entities[self.level.cameraId].graphicPosition.y
           }
         );
+      }
+
+      x = 0;
+      length = inPhysic.length;
+
+      //Call of entities graphic system
+      for(; x < length; x++) {
+        self.entities[inView[x]].updatePhysicPosition();
       }
 
       self.physicInterface.updateEngine(framerate, 10, 10);
@@ -3278,7 +3819,7 @@ class Game {
      * @return the result function called by the action
      */
   setAction(action, self, him) {
-    //try {
+    try {
       switch(action.type) {
         case "action":
           if(action.id != false) {
@@ -3347,13 +3888,13 @@ class Game {
           return this.entities[id];
           break;
       }
-    //} catch(e) {
-    //  console.log("Une action est buguée : ", e.message);
-    //  console.log("Son context : ", action.context);
-    //  console.log("Son objet : ", action.id);
-    //  console.log("Sa methode : ", action.method);
-    //  console.log("Son Argument : ", action.argument);
-    //}
+    } catch(e) {
+      console.log("Une action est buguée : ", e.message);
+      console.log("Son context : ", action.context);
+      console.log("Son objet : ", action.id);
+      console.log("Sa methode : ", action.method);
+      console.log("Son Argument : ", action.argument);
+    }
   }
   /**
      * Generate an objectofscene

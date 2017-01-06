@@ -483,7 +483,7 @@ class Game {
      * @return the result function called by the action
      */
   setAction(action, self, him) {
-    //try {
+    try {
       switch(action.type) {
         case "action":
           if(action.id != false) {
@@ -552,13 +552,13 @@ class Game {
           return this.entities[id];
           break;
       }
-    //} catch(e) {
-    //  console.log("Une action est buguée : ", e.message);
-    //  console.log("Son context : ", action.context);
-    //  console.log("Son objet : ", action.id);
-    //  console.log("Sa methode : ", action.method);
-    //  console.log("Son Argument : ", action.argument);
-    //}
+    } catch(e) {
+      console.log("Une action est buguée : ", e.message);
+      console.log("Son context : ", action.context);
+      console.log("Son objet : ", action.id);
+      console.log("Sa methode : ", action.method);
+      console.log("Son Argument : ", action.argument);
+    }
   }
   /**
      * Generate an objectofscene
