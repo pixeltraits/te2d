@@ -19,7 +19,7 @@
       "type": "action",
       "context": "entities",
       "id": "self",
-      "method": "addCollisionGeometry",
+      "method": "addHitbox",
       "argument": {
         "type": "simple",
         "argument" : {

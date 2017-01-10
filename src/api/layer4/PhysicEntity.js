@@ -50,7 +50,7 @@ class PhysicEntity {
     this.geometricMath = new GeometricMath();
 
     /* Physic fixture */
-    this.collisionGeometries = [];
+    this.hitboxes = [];
 
     /* Scene Entity reference */
     this.graphicEntity = null;
@@ -421,11 +421,11 @@ class PhysicEntity {
         this.dynamic
       );
 
-      var length = this.collisionGeometries.length,
+      var length = this.hitboxes.length,
           x = 0;
 
       for(; x < length; x++) {
-        this.addFixtureToBody(this.collisionGeometries[x]);
+        this.addFixtureToBody(this.hitboxes[x]);
       }
     }
   }
@@ -518,11 +518,11 @@ class PhysicEntity {
    * @param {scene} scene
    */
   show(scene) {
-    var length = collisionGeometries.length,
+    var length = hitboxes.length,
         x = 0;
 
     for(; x < length; x++) {
-      collisionGeometries[x].entity.addToScene(scene);
+      hitboxes[x].graphicEntity.addToScene(scene);
     }
   }
   /**
@@ -530,11 +530,11 @@ class PhysicEntity {
    * @method hide
    */
   hide() {
-    var length = collisionGeometries.length,
+    var length = hitboxes.length,
         x = 0;
 
     for(; x < length; x++) {
-      collisionGeometries[x].entity.deleteToScene();
+      hitboxes[x].graphicEntity.deleteToScene();
     }
   }
   /**
