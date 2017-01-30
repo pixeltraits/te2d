@@ -22,20 +22,44 @@
       "id": "self",
       "method": "addHitbox",
       "argument": {
-        "type": "simple",
-        "argument" : {
-          "id" : "1",
-          "name" : "playerPhysic",
-          "sensor" : false,
-          "restitution" : 0,
-          "friction" : 1,
-          "density" : 10,
-          "shape" : "box",
-          "x" : 0,
-          "y" : 20,
-          "dx" : 10,
-          "dy" : 2
-        }
+        "type" : "object",
+        "properties" : [
+          {
+            "name" : "hitbox",
+            "content" : {
+              "type" : "simple",
+              "argument" : {
+                "id" : "1",
+                "name" : "playerPhysic",
+                "sensor" : false,
+                "restitution" : 0,
+                "friction" : 1,
+                "density" : 10,
+                "shape" : "box",
+                "color" : "blue",
+                "borderColor" : "red",
+                "borderSize" : "2px",
+                "x" : 0,
+                "y" : 20,
+                "dx" : 10,
+                "dy" : 2
+              }
+            }
+          },
+          {
+            "name" : "graphicEntity",
+            "content" : {
+              "type" : "newObject",
+              "context" : false,
+              "argument" : {
+                "name" : "hitbox",
+                "type" : "GraphicEntity",
+                "dz" : 0,
+                "z" : 5
+              }
+            }
+          }
+        ]
       }
     },
     {
@@ -56,7 +80,7 @@
             "argument": {
               "type" : "resource",
               "context": "scene",
-              "id": false
+              "id": "graphic"
             }
           }
         ]

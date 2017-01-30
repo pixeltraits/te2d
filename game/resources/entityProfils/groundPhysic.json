@@ -16,28 +16,6 @@
       }
     },
     {
-      "type": "action",
-      "context": "entities",
-      "id": "self",
-      "method": "addHitbox",
-      "argument": {
-        "type": "simple",
-        "argument" : {
-          "id" : "1",
-          "name" : "groundPhysic",
-          "sensor" : false,
-          "restitution" : 0,
-          "friction" : 0,
-          "density" : 1,
-          "shape" : "box",
-          "x" : 0,
-          "y" : 0,
-          "dx" : 500,
-          "dy" : 32
-        }
-      }
-    },
-    {
       "type" : "action",
       "context" : "entities",
       "id" : "self",
@@ -55,10 +33,67 @@
             "argument": {
               "type" : "resource",
               "context": "scene",
-              "id": false
+              "id": "graphic"
             }
           }
         ]
+      }
+    },
+    {
+      "type": "action",
+      "context": "entities",
+      "id": "self",
+      "method": "addHitbox",
+      "argument": {
+        "type" : "object",
+        "properties" : [
+          {
+            "name" : "hitbox",
+            "content" : {
+              "type": "simple",
+              "argument" : {
+                "id" : "1",
+                "name" : "groundPhysic",
+                "sensor" : false,
+                "restitution" : 0,
+                "friction" : 0,
+                "density" : 1,
+                "shape" : "box",
+                "color" : "blue",
+                "borderColor" : "green",
+                "borderSize" : "2px",
+                "x" : 0,
+                "y" : 0,
+                "dx" : 500,
+                "dy" : 32
+              }
+            }
+          },
+          {
+            "name" : "graphicEntity",
+            "content" : {
+              "type" : "newObject",
+              "context" : false,
+              "argument" : {
+                "name": "hitboxPlayer",
+                "type": "GraphicEntity",
+                "dz": 0,
+                "z": 5
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type" : "action",
+      "context" : "entities",
+      "id" : "self",
+      "method" : "show",
+      "argument" : {
+        "type" : "resource",
+        "context": "scene",
+        "id": "graphic"
       }
     }
   ]

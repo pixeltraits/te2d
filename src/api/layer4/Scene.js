@@ -47,7 +47,7 @@
           /* Read every entity in this case */
           if(typeof list[this.map[x][y][z]] == "undefined") {
             /* The entity is not set yet */
-            entities[objectsInZone.length] = this.map[x][y][z];
+            entities[entities.length] = this.map[x][y][z];
             list[this.map[x][y][z]] = true;
           }
         }

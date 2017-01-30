@@ -1860,7 +1860,7 @@ class GraphicEntity {
    * @method setGeometry
    */
   setGeometry(geometry) {
-    switch(geometry.type) {
+    switch(geometry.shape) {
       case "box" :
         this.graphicObject = new Box(geometry);
         this.graphicObject.setGeometry(geometry);
@@ -1938,11 +1938,11 @@ class GraphicEntity {
       );
 
       /* Update subObject */
-      var length = this.subGraphicEntity.length,
+      var length = this.subGraphicEntities.length,
           x=0;
 
       for(; x < length; x++) {
-        this.subGraphicEntity[x].addToScene(this.scene);
+        this.subGraphicEntities[x].addToScene(this.scene);
       }
     }
   }
@@ -1964,11 +1964,11 @@ class GraphicEntity {
       this.scene = null;
 
       /* Update subObject */
-      var length = this.subGraphicEntity.length,
+      var length = this.subGraphicEntities.length,
           x = 0;
 
       for(; x < length; x++) {
-        this.subGraphicEntity[x].deleteToScene();
+        this.subGraphicEntities[x].deleteToScene();
       }
     }
   }
@@ -2075,7 +2075,7 @@ class PhysicEntity {
     this.geometricMath = new GeometricMath();
 
     /* Physic fixture */
-    this.collisionGeometries = [];
+    this.hitboxes = [];
 
     /* Scene Entity reference */
     this.graphicEntity = null;
@@ -2155,8 +2155,8 @@ class PhysicEntity {
   setGraphicPosition(graphicPosition) {
     var physicPostion = this.graphicToPhysicPosition(graphicPosition);
 
-    this.x = physicPostion.x;
-    this.y = physicPostion.y;
+    this.position.x = physicPostion.x;
+    this.position.y = physicPostion.y;
 
     if(this.physicBody != null) {
 
@@ -2202,8 +2202,8 @@ class PhysicEntity {
    */
   graphicToPhysicPosition(graphicPosition) {
     return {
-      x : graphicPosition.x + (this.dx / 2),
-      y : graphicPosition.y + (this.dy / 2)
+      x : graphicPosition.x + (this.size.dx / 2),
+      y : graphicPosition.y + (this.size.dy / 2)
     };
   }
   /**
@@ -2215,8 +2215,8 @@ class PhysicEntity {
    */
   physicToGraphicPosition(physicPosition) {
     return {
-      x : physicPosition.x - (this.dx / 2),
-      y : physicPosition.y - (this.dy / 2)
+      x : physicPosition.x - (this.size.dx / 2),
+      y : physicPosition.y - (this.size.dy / 2)
     };
   }
   /**
@@ -2225,36 +2225,32 @@ class PhysicEntity {
    * @param {hitbox} hitbox
    */
   addHitbox(hitbox) {
-    if(!this.verifyHitbox(hitbox.id)) {
-      var entity = new GraphicEntity({
-            z : hitbox.z,
-            dz : hitbox.dz
-          }),
-          size = {
+    if(!this.verifyHitbox(hitbox.hitbox.id)) {
+      var size = {
             dx : 0,
             dy : 0
           },
-          length = this.hitbox.length;
+          length = this.hitboxes.length;
 
-      entity.setGeometry(hitbox);
-
-      switch(hitbox.type) {
+      hitbox.graphicEntity.setGeometry(hitbox.hitbox);
+      console.log(hitbox)
+      switch(hitbox.hitbox.type) {
         case "circle" :
-          size = this.geometricMath.getCircleSize(hitbox.radius);
+          size = this.geometricMath.getCircleSize(hitbox.hitbox.radius);
           break;
         case "box" :
-          size = hitbox.size;
+          size = hitbox.hitbox.size;
           break;
         case "polygon" :
-          size = this.geometricMath.getPolygonSize(hitbox.vertices);
+          size = this.geometricMath.getPolygonSize(hitbox.hitbox.vertices);
           break;
       }
 
       this.hitboxes[length] = {
-        fixture : hitbox,
-        graphicEntity : entity,
+        fixture : hitbox.hitbox,
+        graphicEntity : hitbox.graphicEntity,
         originalSize : size,
-        id : hitbox.id
+        id : hitbox.hitbox.id
       };
 
       if(this.physicBody != null) {
@@ -2437,8 +2433,8 @@ class PhysicEntity {
       this.addToScene(scene);
       this.physicBody = this.physicInterface.getBody(
         this.id,
-        this.x,
-        this.y,
+        this.position.x,
+        this.position.y,
         this.angle,
         this.mass,
         this.angularConstraint,
@@ -2446,11 +2442,11 @@ class PhysicEntity {
         this.dynamic
       );
 
-      var length = this.collisionGeometries.length,
+      var length = this.hitboxes.length,
           x = 0;
 
       for(; x < length; x++) {
-        this.addFixtureToBody(this.collisionGeometries[x]);
+        this.addFixtureToBody(this.hitboxes[x]);
       }
     }
   }
@@ -2474,10 +2470,10 @@ class PhysicEntity {
       this.scene = scene;
       this.scene.add(
         {
-          x : this.x,
-          y : this.y,
-          dx : this.dx,
-          dy : this.dy
+          x : this.position.x,
+          y : this.position.y,
+          dx : this.size.dx,
+          dy : this.size.dy
         },
         this.id
       );
@@ -2492,10 +2488,10 @@ class PhysicEntity {
     if(this.scene != null) {
       this.scene.delete(
         {
-          x : this.x,
-          y : this.y,
-          dx : this.dx,
-          dy : this.dy
+          x : this.position.x,
+          y : this.position.y,
+          dx : this.size.dx,
+          dy : this.size.dy
         },
         this.id
       );
@@ -2543,11 +2539,11 @@ class PhysicEntity {
    * @param {scene} scene
    */
   show(scene) {
-    var length = collisionGeometries.length,
+    var length = this.hitboxes.length,
         x = 0;
 
     for(; x < length; x++) {
-      collisionGeometries[x].entity.addToScene(scene);
+      this.hitboxes[x].graphicEntity.addToScene(scene);
     }
   }
   /**
@@ -2555,11 +2551,11 @@ class PhysicEntity {
    * @method hide
    */
   hide() {
-    var length = collisionGeometries.length,
+    var length = this.hitboxes.length,
         x = 0;
 
     for(; x < length; x++) {
-      collisionGeometries[x].entity.deleteToScene();
+      this.hitboxes[x].graphicEntity.deleteToScene();
     }
   }
   /**
@@ -2569,8 +2565,9 @@ class PhysicEntity {
   updatePhysicPosition() {
     if(this.physicBody != null) {
       this.physicPosition = this.physicInterface.getPosition(this.physicBody);
-      if(this.name == "playerPhysic"){
-        //console.log(this.getVelocity())
+
+      if(this.name == "playerPhysic") {
+        //console.log(this.physicPosition);
       }
       var graphicPosition = this.physicToGraphicPosition(this.physicPosition);
 
@@ -2636,7 +2633,7 @@ class PhysicEntity {
           /* Read every entity in this case */
           if(typeof list[this.map[x][y][z]] == "undefined") {
             /* The entity is not set yet */
-            entities[objectsInZone.length] = this.map[x][y][z];
+            entities[entities.length] = this.map[x][y][z];
             list[this.map[x][y][z]] = true;
           }
         }
@@ -3743,6 +3740,9 @@ class Game {
 
       //Call of entities graphic system
       for(; x < length; x++) {
+        if(self.entities[inView[x]].name == "hitboxPlayer") {
+        //  console.log(self.entities[inView[x]])
+        }
         self.entities[inView[x]].updateGraphicObject(
           self.entities[self.level.cameraId].ctx,
           {
@@ -3755,13 +3755,12 @@ class Game {
           }
         );
       }
-
       x = 0;
       length = inPhysic.length;
 
       //Call of entities graphic system
       for(; x < length; x++) {
-        self.entities[inView[x]].updatePhysicPosition();
+        self.entities[inPhysic[x]].updatePhysicPosition();
       }
 
       self.physicInterface.updateEngine(framerate, 10, 10);
@@ -3819,7 +3818,7 @@ class Game {
      * @return the result function called by the action
      */
   setAction(action, self, him) {
-    try {
+    //try {
       switch(action.type) {
         case "action":
           if(action.id != false) {
@@ -3867,34 +3866,39 @@ class Game {
           return resource;
           break;
         case "newObject":
-          if(action.id != false) {
-            switch(action.id) {
-              case "self":
-                action.id = self;
-                break;
-              case "him":
-                action.id = him;
-                break;
+          if(action.context != false) {
+            if(action.id != false) {
+              switch(action.id) {
+                case "self":
+                  action.id = self;
+                  break;
+                case "him":
+                  action.id = him;
+                  break;
+              }
+              var objectReference = this[action.context][action.id];
+            } else {
+              var objectReference = this[action.context];
             }
-            var objectReference = this[action.context][action.id];
-          }  else {
-            var objectReference = this[action.context];
+            var id = this.createSceneObject(objectReference, "auto");
+            this.setObjectOfSceneConfig(objectReference.config, id);
+            if(typeof action.config != 'undefined') {
+              this.setObjectOfSceneConfig(action.config, id);
+            }
+          } else {
+            var id = this.createSceneObject(action.argument, "auto");
           }
-          var id = this.createSceneObject(objectReference, "auto");
-          this.setObjectOfSceneConfig(objectReference.config, id);
-          if(typeof action.config != 'undefined') {
-            this.setObjectOfSceneConfig(action.config, id);
-          }
+
           return this.entities[id];
           break;
       }
-    } catch(e) {
-      console.log("Une action est buguée : ", e.message);
-      console.log("Son context : ", action.context);
-      console.log("Son objet : ", action.id);
-      console.log("Sa methode : ", action.method);
-      console.log("Son Argument : ", action.argument);
-    }
+    //} catch(e) {
+      //console.log("Une action est buguée : ", e.message);
+      //console.log("Son context : ", action.context);
+      //console.log("Son objet : ", action.id);
+      //console.log("Sa methode : ", action.method);
+      //console.log("Son Argument : ", action.argument);
+    //}
   }
   /**
      * Generate an objectofscene

@@ -224,7 +224,7 @@ class GraphicEntity {
    * @method setGeometry
    */
   setGeometry(geometry) {
-    switch(geometry.type) {
+    switch(geometry.shape) {
       case "box" :
         this.graphicObject = new Box(geometry);
         this.graphicObject.setGeometry(geometry);
@@ -302,11 +302,11 @@ class GraphicEntity {
       );
 
       /* Update subObject */
-      var length = this.subGraphicEntity.length,
+      var length = this.subGraphicEntities.length,
           x=0;
 
       for(; x < length; x++) {
-        this.subGraphicEntity[x].addToScene(this.scene);
+        this.subGraphicEntities[x].addToScene(this.scene);
       }
     }
   }
@@ -328,11 +328,11 @@ class GraphicEntity {
       this.scene = null;
 
       /* Update subObject */
-      var length = this.subGraphicEntity.length,
+      var length = this.subGraphicEntities.length,
           x = 0;
 
       for(; x < length; x++) {
-        this.subGraphicEntity[x].deleteToScene();
+        this.subGraphicEntities[x].deleteToScene();
       }
     }
   }

@@ -1,5 +1,5 @@
 {
-  "levelInfo":{
+  "levelInfo": {
     "name": "theworld",
     "widthCam": 800,
     "heightCam": 600,
@@ -16,7 +16,7 @@
       "content" : "theworld.json"
     }
   ],
-  "bitmaps":[
+  "bitmaps": [
     {
       "name" : "caracters",
       "content" : "caracters.png"
@@ -26,7 +26,7 @@
       "content" : "level.png"
     }
   ],
-  "animations":[
+  "animations": [
     {
       "name" : "done",
       "content" : "done.json"
@@ -149,7 +149,11 @@
       "context": "entities",
       "id": "50ib636f-8779-27d1-9fcb-ff98c8553dec",
       "method": "addToPhysicContext",
-      "argument": false
+      "argument": {
+        "type" : "resource",
+        "context": "scene",
+        "id": "physic"
+      }
     },
     {
       "type" : "action",
@@ -169,7 +173,11 @@
       "context": "entities",
       "id": "50ib636f-8779-47d5-9fcb-ff98c8583dec",
       "method": "addToPhysicContext",
-      "argument": false
+      "argument": {
+        "type" : "resource",
+        "context": "scene",
+        "id": "physic"
+      }
     },
     {
       "type" : "action",
@@ -192,7 +200,7 @@
       "argument": {
         "type" : "resource",
         "context": "scene",
-        "id": false
+        "id": "graphic"
       }
     }
   ]

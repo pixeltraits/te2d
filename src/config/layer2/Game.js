@@ -407,6 +407,9 @@ class Game {
 
       //Call of entities graphic system
       for(; x < length; x++) {
+        if(self.entities[inView[x]].name == "hitboxPlayer") {
+        //  console.log(self.entities[inView[x]])
+        }
         self.entities[inView[x]].updateGraphicObject(
           self.entities[self.level.cameraId].ctx,
           {
@@ -419,13 +422,12 @@ class Game {
           }
         );
       }
-
       x = 0;
       length = inPhysic.length;
 
       //Call of entities graphic system
       for(; x < length; x++) {
-        self.entities[inView[x]].updatePhysicPosition();
+        self.entities[inPhysic[x]].updatePhysicPosition();
       }
 
       self.physicInterface.updateEngine(framerate, 10, 10);
@@ -483,7 +485,7 @@ class Game {
      * @return the result function called by the action
      */
   setAction(action, self, him) {
-    try {
+    //try {
       switch(action.type) {
         case "action":
           if(action.id != false) {
@@ -496,7 +498,7 @@ class Game {
                 break;
             }
             var objectReference = this[action.context][action.id];
-          }  else {
+          } else {
             var objectReference = this[action.context];
           }
           return objectReference[action.method](this.setAction(action.argument, self, him));
@@ -531,34 +533,39 @@ class Game {
           return resource;
           break;
         case "newObject":
-          if(action.id != false) {
-            switch(action.id) {
-              case "self":
-                action.id = self;
-                break;
-              case "him":
-                action.id = him;
-                break;
+          if(action.context != false) {
+            if(action.id != false) {
+              switch(action.id) {
+                case "self":
+                  action.id = self;
+                  break;
+                case "him":
+                  action.id = him;
+                  break;
+              }
+              var objectReference = this[action.context][action.id];
+            } else {
+              var objectReference = this[action.context];
             }
-            var objectReference = this[action.context][action.id];
-          }  else {
-            var objectReference = this[action.context];
+            var id = this.createSceneObject(objectReference, "auto");
+            this.setObjectOfSceneConfig(objectReference.config, id);
+            if(typeof action.config != 'undefined') {
+              this.setObjectOfSceneConfig(action.config, id);
+            }
+          } else {
+            var id = this.createSceneObject(action.argument, "auto");
           }
-          var id = this.createSceneObject(objectReference, "auto");
-          this.setObjectOfSceneConfig(objectReference.config, id);
-          if(typeof action.config != 'undefined') {
-            this.setObjectOfSceneConfig(action.config, id);
-          }
+
           return this.entities[id];
           break;
       }
-    } catch(e) {
-      console.log("Une action est buguée : ", e.message);
-      console.log("Son context : ", action.context);
-      console.log("Son objet : ", action.id);
-      console.log("Sa methode : ", action.method);
-      console.log("Son Argument : ", action.argument);
-    }
+    //} catch(e) {
+      //console.log("Une action est buguée : ", e.message);
+      //console.log("Son context : ", action.context);
+      //console.log("Son objet : ", action.id);
+      //console.log("Sa methode : ", action.method);
+      //console.log("Son Argument : ", action.argument);
+    //}
   }
   /**
      * Generate an objectofscene
@@ -583,13 +590,13 @@ class Game {
      */
   createSceneObject(objectConf, id) {
     var objectId = id != "auto" ? id : this.idGenerator.generate(),
-    objectConf = this.clone(objectConf);
+        objectConf = this.clone(objectConf);
 
     this.entities[objectId] = this.entitiesFactory.getInstance(
       objectConf.type,
       {
         properties : objectConf,
-        id: objectId
+        id : objectId
       }
     );
 
