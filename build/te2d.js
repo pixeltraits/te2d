@@ -747,15 +747,15 @@ class Box extends Geometry {
     canvasCtx.fillRect(
       position.x,
       position.y,
-      this.dx + (this.borderSize * 2),
-      this.dy + (this.borderSize * 2)
+      this.size.dx + (this.borderSize * 2),
+      this.size.dy + (this.borderSize * 2)
     );
     canvasCtx.fillStyle = this.color;
     canvasCtx.fillRect(
       position.x + this.borderSize,
       position.y + this.borderSize,
-      this.dx,
-      this.dy
+      this.size.dx,
+      this.size.dy
     );
 
     canvasCtx.rotate(-angle);
@@ -1653,6 +1653,7 @@ class GraphicEntity {
     this.dx = 0;
     this.dy = 0;
     this.dz = properties.dz;
+    this.angle = 0;
 
     /* Sub Graphic entities properties */
     this.parent = null;
@@ -2036,7 +2037,7 @@ class PhysicEntity {
     this.name = properties.name;
 
     /* Gravity point */
-    this.position = {
+    this.physicPosition = {
       x : 0,
       y : 0
     };
@@ -2058,6 +2059,7 @@ class PhysicEntity {
     };
 
     this.angle = 0;
+    this.perimeter = [];
 
     /* Mouvement properties */
     this.velocity = {
@@ -2126,11 +2128,11 @@ class PhysicEntity {
     if(this.scene != null) {
       this.scene.update(
         {
-          position : this.position,
+          position : this.physicPosition,
           size : this.size
         },
         {
-          position : this.position,
+          position : this.physicPosition,
           size : size
         },
         this.id
@@ -2155,8 +2157,8 @@ class PhysicEntity {
   setGraphicPosition(graphicPosition) {
     var physicPostion = this.graphicToPhysicPosition(graphicPosition);
 
-    this.position.x = physicPostion.x;
-    this.position.y = physicPostion.y;
+    this.physicPosition.x = physicPostion.x;
+    this.physicPosition.y = physicPostion.y;
 
     if(this.physicBody != null) {
 
@@ -2201,6 +2203,7 @@ class PhysicEntity {
    * @return {position}
    */
   graphicToPhysicPosition(graphicPosition) {
+    //console.log()
     return {
       x : graphicPosition.x + (this.size.dx / 2),
       y : graphicPosition.y + (this.size.dy / 2)
@@ -2233,13 +2236,14 @@ class PhysicEntity {
           length = this.hitboxes.length;
 
       hitbox.graphicEntity.setGeometry(hitbox.hitbox);
-      console.log(hitbox)
+
       switch(hitbox.hitbox.type) {
         case "circle" :
           size = this.geometricMath.getCircleSize(hitbox.hitbox.radius);
           break;
         case "box" :
-          size = hitbox.hitbox.size;
+          size.dx = hitbox.hitbox.dx;
+          size.dy = hitbox.hitbox.dx;
           break;
         case "polygon" :
           size = this.geometricMath.getPolygonSize(hitbox.hitbox.vertices);
@@ -2255,7 +2259,6 @@ class PhysicEntity {
 
       if(this.physicBody != null) {
         this.addFixtureToBody(this.hitboxes[length].fixture);
-        this.updateOriginalSize();
       }
     }
   }
@@ -2366,6 +2369,11 @@ class PhysicEntity {
       y : maxY
     };
 
+    console.log({
+      dx : maxX - minX,
+      dy : maxY - minY
+    })
+
     this.setOriginalSize({
       dx : maxX - minX,
       dy : maxY - minY
@@ -2422,6 +2430,7 @@ class PhysicEntity {
         );
         break;
     }
+    this.updateOriginalSize();
   }
   /**
    * Add the physic object to the physic context
@@ -2433,8 +2442,8 @@ class PhysicEntity {
       this.addToScene(scene);
       this.physicBody = this.physicInterface.getBody(
         this.id,
-        this.position.x,
-        this.position.y,
+        this.physicPosition.x,
+        this.physicPosition.y,
         this.angle,
         this.mass,
         this.angularConstraint,
@@ -2470,8 +2479,8 @@ class PhysicEntity {
       this.scene = scene;
       this.scene.add(
         {
-          x : this.position.x,
-          y : this.position.y,
+          x : this.physicPosition.x,
+          y : this.physicPosition.y,
           dx : this.size.dx,
           dy : this.size.dy
         },
@@ -2488,8 +2497,8 @@ class PhysicEntity {
     if(this.scene != null) {
       this.scene.delete(
         {
-          x : this.position.x,
-          y : this.position.y,
+          x : this.physicPosition.x,
+          y : this.physicPosition.y,
           dx : this.size.dx,
           dy : this.size.dy
         },
@@ -2566,10 +2575,12 @@ class PhysicEntity {
     if(this.physicBody != null) {
       this.physicPosition = this.physicInterface.getPosition(this.physicBody);
 
-      if(this.name == "playerPhysic") {
-        //console.log(this.physicPosition);
-      }
       var graphicPosition = this.physicToGraphicPosition(this.physicPosition);
+
+      if(this.name == "groundPhysic") {
+        console.log(this.physicPosition)
+        console.log(this.graphicPosition)
+      }
 
       if(this.graphicEntity != null) {
         var delta = this.getPositionDelta();
@@ -2579,6 +2590,17 @@ class PhysicEntity {
           y : graphicPosition.y + delta.y
         });
       }
+
+      var x = 0,
+          length = this.hitboxes.length;
+
+      for(; x < length; x++) {
+        this.hitboxes[x].graphicEntity.setPosition({
+          x : this.hitboxes[x].fixture.x + this.graphicPosition.x,
+          y : this.hitboxes[x].fixture.y + this.graphicPosition.y
+        });
+      }
+
       this.graphicPosition = graphicPosition;
     }
   }
@@ -3729,6 +3751,8 @@ class Game {
         return (self.entities[a].z > self.entities[b].z) ? 1 : -1;
       });
 
+        console.log(self.entities['50ib636f-8779-47d5-9fcb-ff98c8583dec'])
+
       //Update of display------------------------------------
       //Clear display
       self.entities[self.level.cameraId].ctx.clearRect(
@@ -3741,7 +3765,7 @@ class Game {
       //Call of entities graphic system
       for(; x < length; x++) {
         if(self.entities[inView[x]].name == "hitboxPlayer") {
-        //  console.log(self.entities[inView[x]])
+          //console.log(self.entities[inView[x]])
         }
         self.entities[inView[x]].updateGraphicObject(
           self.entities[self.level.cameraId].ctx,
@@ -3814,13 +3838,14 @@ class Game {
   /**
      * Json actions
      * @method setObjectOfSceneConfig
-     * @param {action} action
+     * @param {action} actionConfiguration
      * @return the result function called by the action
      */
-  setAction(action, self, him) {
+  setAction(actionConfiguration, self, him) {
+    var action = this.clone(actionConfiguration);
     //try {
       switch(action.type) {
-        case "action":
+        case "action" :
           if(action.id != false) {
             switch(action.id) {
               case "self":
@@ -3831,15 +3856,15 @@ class Game {
                 break;
             }
             var objectReference = this[action.context][action.id];
-          }  else {
+          } else {
             var objectReference = this[action.context];
           }
           return objectReference[action.method](this.setAction(action.argument, self, him));
           break;
-        case "simple":
+        case "simple" :
           return action.argument;
           break;
-        case "resource":
+        case "resource" :
           if(action.id != false) {
             switch(action.id) {
               case "self":
@@ -3854,10 +3879,10 @@ class Game {
             return this[action.context];
           }
           break;
-        case "object":
+        case "object" :
           var resource = {},
-          x = 0,
-          length = action.properties.length;
+              x = 0,
+              length = action.properties.length;
 
           for(; x < length; x++) {
             resource[action.properties[x].name] = this.setAction(action.properties[x].content, self, him);
@@ -3865,7 +3890,7 @@ class Game {
 
           return resource;
           break;
-        case "newObject":
+        case "newObject" :
           if(action.context != false) {
             if(action.id != false) {
               switch(action.id) {
@@ -3921,15 +3946,15 @@ class Game {
      * @param id
      * @return objectId
      */
-  createSceneObject(objectConf, id) {
+  createSceneObject(configuration, id) {
     var objectId = id != "auto" ? id : this.idGenerator.generate(),
-    objectConf = this.clone(objectConf);
+        objectConf = this.clone(configuration);
 
     this.entities[objectId] = this.entitiesFactory.getInstance(
       objectConf.type,
       {
         properties : objectConf,
-        id: objectId
+        id : objectId
       }
     );
 

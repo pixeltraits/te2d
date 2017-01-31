@@ -53,7 +53,7 @@
               "type": "simple",
               "argument" : {
                 "id" : "1",
-                "name" : "groundPhysic",
+                "name" : "hitboxGround",
                 "sensor" : false,
                 "restitution" : 0,
                 "friction" : 0,
@@ -61,7 +61,7 @@
                 "shape" : "box",
                 "color" : "blue",
                 "borderColor" : "green",
-                "borderSize" : "2px",
+                "borderSize" : 2,
                 "x" : 0,
                 "y" : 0,
                 "dx" : 500,
@@ -75,10 +75,10 @@
               "type" : "newObject",
               "context" : false,
               "argument" : {
-                "name": "hitboxPlayer",
+                "name": "hitboxGround",
                 "type": "GraphicEntity",
                 "dz": 0,
-                "z": 5
+                "z": 4
               }
             }
           }

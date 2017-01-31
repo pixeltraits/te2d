@@ -30,7 +30,7 @@
               "type" : "simple",
               "argument" : {
                 "id" : "1",
-                "name" : "playerPhysic",
+                "name" : "hitboxPlayer",
                 "sensor" : false,
                 "restitution" : 0,
                 "friction" : 1,
@@ -38,7 +38,7 @@
                 "shape" : "box",
                 "color" : "blue",
                 "borderColor" : "red",
-                "borderSize" : "2px",
+                "borderSize" : 2,
                 "x" : 0,
                 "y" : 20,
                 "dx" : 10,
@@ -52,7 +52,7 @@
               "type" : "newObject",
               "context" : false,
               "argument" : {
-                "name" : "hitbox",
+                "name" : "hitboxPlayer",
                 "type" : "GraphicEntity",
                 "dz" : 0,
                 "z" : 5
@@ -84,6 +84,17 @@
             }
           }
         ]
+      }
+    },
+    {
+      "type" : "action",
+      "context" : "entities",
+      "id" : "self",
+      "method" : "show",
+      "argument" : {
+        "type" : "resource",
+        "context": "scene",
+        "id": "graphic"
       }
     }
   ]

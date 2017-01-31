@@ -17,6 +17,7 @@ class GraphicEntity {
     this.dx = 0;
     this.dy = 0;
     this.dz = properties.dz;
+    this.angle = 0;
 
     /* Sub Graphic entities properties */
     this.parent = null;

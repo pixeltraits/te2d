@@ -11,7 +11,7 @@ class PhysicEntity {
     this.name = properties.name;
 
     /* Gravity point */
-    this.position = {
+    this.physicPosition = {
       x : 0,
       y : 0
     };
@@ -33,6 +33,7 @@ class PhysicEntity {
     };
 
     this.angle = 0;
+    this.perimeter = [];
 
     /* Mouvement properties */
     this.velocity = {
@@ -101,11 +102,11 @@ class PhysicEntity {
     if(this.scene != null) {
       this.scene.update(
         {
-          position : this.position,
+          position : this.physicPosition,
           size : this.size
         },
         {
-          position : this.position,
+          position : this.physicPosition,
           size : size
         },
         this.id
@@ -130,8 +131,8 @@ class PhysicEntity {
   setGraphicPosition(graphicPosition) {
     var physicPostion = this.graphicToPhysicPosition(graphicPosition);
 
-    this.position.x = physicPostion.x;
-    this.position.y = physicPostion.y;
+    this.physicPosition.x = physicPostion.x;
+    this.physicPosition.y = physicPostion.y;
 
     if(this.physicBody != null) {
 
@@ -176,6 +177,7 @@ class PhysicEntity {
    * @return {position}
    */
   graphicToPhysicPosition(graphicPosition) {
+    //console.log()
     return {
       x : graphicPosition.x + (this.size.dx / 2),
       y : graphicPosition.y + (this.size.dy / 2)
@@ -214,7 +216,8 @@ class PhysicEntity {
           size = this.geometricMath.getCircleSize(hitbox.hitbox.radius);
           break;
         case "box" :
-          size = hitbox.hitbox.size;
+          size.dx = hitbox.hitbox.dx;
+          size.dy = hitbox.hitbox.dx;
           break;
         case "polygon" :
           size = this.geometricMath.getPolygonSize(hitbox.hitbox.vertices);
@@ -230,7 +233,6 @@ class PhysicEntity {
 
       if(this.physicBody != null) {
         this.addFixtureToBody(this.hitboxes[length].fixture);
-        this.updateOriginalSize();
       }
     }
   }
@@ -341,6 +343,11 @@ class PhysicEntity {
       y : maxY
     };
 
+    console.log({
+      dx : maxX - minX,
+      dy : maxY - minY
+    })
+
     this.setOriginalSize({
       dx : maxX - minX,
       dy : maxY - minY
@@ -397,6 +404,7 @@ class PhysicEntity {
         );
         break;
     }
+    this.updateOriginalSize();
   }
   /**
    * Add the physic object to the physic context
@@ -408,8 +416,8 @@ class PhysicEntity {
       this.addToScene(scene);
       this.physicBody = this.physicInterface.getBody(
         this.id,
-        this.position.x,
-        this.position.y,
+        this.physicPosition.x,
+        this.physicPosition.y,
         this.angle,
         this.mass,
         this.angularConstraint,
@@ -445,8 +453,8 @@ class PhysicEntity {
       this.scene = scene;
       this.scene.add(
         {
-          x : this.position.x,
-          y : this.position.y,
+          x : this.physicPosition.x,
+          y : this.physicPosition.y,
           dx : this.size.dx,
           dy : this.size.dy
         },
@@ -463,8 +471,8 @@ class PhysicEntity {
     if(this.scene != null) {
       this.scene.delete(
         {
-          x : this.position.x,
-          y : this.position.y,
+          x : this.physicPosition.x,
+          y : this.physicPosition.y,
           dx : this.size.dx,
           dy : this.size.dy
         },
@@ -541,10 +549,12 @@ class PhysicEntity {
     if(this.physicBody != null) {
       this.physicPosition = this.physicInterface.getPosition(this.physicBody);
 
-      if(this.name == "playerPhysic") {
-        //console.log(this.physicPosition);
-      }
       var graphicPosition = this.physicToGraphicPosition(this.physicPosition);
+
+      if(this.name == "groundPhysic") {
+        console.log(this.physicPosition)
+        console.log(this.graphicPosition)
+      }
 
       if(this.graphicEntity != null) {
         var delta = this.getPositionDelta();
@@ -554,6 +564,17 @@ class PhysicEntity {
           y : graphicPosition.y + delta.y
         });
       }
+
+      var x = 0,
+          length = this.hitboxes.length;
+
+      for(; x < length; x++) {
+        this.hitboxes[x].graphicEntity.setPosition({
+          x : this.hitboxes[x].fixture.x + this.graphicPosition.x,
+          y : this.hitboxes[x].fixture.y + this.graphicPosition.y
+        });
+      }
+
       this.graphicPosition = graphicPosition;
     }
   }

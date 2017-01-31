@@ -20,10 +20,10 @@ class GeometricMath {
         length = this.vertices.length;
 
     for(; i < length; i++) {
-      x1 = Math.min(this.vertices[0].x, x1);
-      x2 = Math.max(this.vertices[0].x, x2);
-      y1 = Math.min(this.vertices[0].y, y1);
-      y2 = Math.max(this.vertices[0].y, y2);
+      x1 = Math.min(this.vertices[i].x, x1);
+      x2 = Math.max(this.vertices[i].x, x2);
+      y1 = Math.min(this.vertices[i].y, y1);
+      y2 = Math.max(this.vertices[i].y, y2);
     }
 
     return {

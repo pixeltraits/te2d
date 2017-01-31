@@ -396,6 +396,8 @@ class Game {
         return (self.entities[a].z > self.entities[b].z) ? 1 : -1;
       });
 
+        console.log(self.entities['50ib636f-8779-47d5-9fcb-ff98c8583dec'])
+
       //Update of display------------------------------------
       //Clear display
       self.entities[self.level.cameraId].ctx.clearRect(
@@ -408,7 +410,7 @@ class Game {
       //Call of entities graphic system
       for(; x < length; x++) {
         if(self.entities[inView[x]].name == "hitboxPlayer") {
-        //  console.log(self.entities[inView[x]])
+          //console.log(self.entities[inView[x]])
         }
         self.entities[inView[x]].updateGraphicObject(
           self.entities[self.level.cameraId].ctx,
@@ -481,13 +483,14 @@ class Game {
   /**
      * Json actions
      * @method setObjectOfSceneConfig
-     * @param {action} action
+     * @param {action} actionConfiguration
      * @return the result function called by the action
      */
-  setAction(action, self, him) {
+  setAction(actionConfiguration, self, him) {
+    var action = this.clone(actionConfiguration);
     //try {
       switch(action.type) {
-        case "action":
+        case "action" :
           if(action.id != false) {
             switch(action.id) {
               case "self":
@@ -503,10 +506,10 @@ class Game {
           }
           return objectReference[action.method](this.setAction(action.argument, self, him));
           break;
-        case "simple":
+        case "simple" :
           return action.argument;
           break;
-        case "resource":
+        case "resource" :
           if(action.id != false) {
             switch(action.id) {
               case "self":
@@ -521,10 +524,10 @@ class Game {
             return this[action.context];
           }
           break;
-        case "object":
+        case "object" :
           var resource = {},
-          x = 0,
-          length = action.properties.length;
+              x = 0,
+              length = action.properties.length;
 
           for(; x < length; x++) {
             resource[action.properties[x].name] = this.setAction(action.properties[x].content, self, him);
@@ -532,7 +535,7 @@ class Game {
 
           return resource;
           break;
-        case "newObject":
+        case "newObject" :
           if(action.context != false) {
             if(action.id != false) {
               switch(action.id) {
@@ -588,9 +591,9 @@ class Game {
      * @param id
      * @return objectId
      */
-  createSceneObject(objectConf, id) {
+  createSceneObject(configuration, id) {
     var objectId = id != "auto" ? id : this.idGenerator.generate(),
-        objectConf = this.clone(objectConf);
+        objectConf = this.clone(configuration);
 
     this.entities[objectId] = this.entitiesFactory.getInstance(
       objectConf.type,

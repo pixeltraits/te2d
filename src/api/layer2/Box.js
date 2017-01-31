@@ -40,15 +40,15 @@ class Box extends Geometry {
     canvasCtx.fillRect(
       position.x,
       position.y,
-      this.dx + (this.borderSize * 2),
-      this.dy + (this.borderSize * 2)
+      this.size.dx + (this.borderSize * 2),
+      this.size.dy + (this.borderSize * 2)
     );
     canvasCtx.fillStyle = this.color;
     canvasCtx.fillRect(
       position.x + this.borderSize,
       position.y + this.borderSize,
-      this.dx,
-      this.dy
+      this.size.dx,
+      this.size.dy
     );
 
     canvasCtx.rotate(-angle);
