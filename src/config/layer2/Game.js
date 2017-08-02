@@ -209,25 +209,25 @@ class Game {
           "resources/audios/",
           levelConfig.audios,
           self.audioLoader,
-          function(audios){//When all contents are loaded
+          function(audios) {//When all contents are loaded
             self.audios = audios;
             //load profils
             self.loadContent(
               "resources/audioProfils/",
               levelConfig.audioProfils,
               self.jsonLoader,
-              function(audioProfils){//When all contents are loaded
+              function(audioProfils) {//When all contents are loaded
                 self.audioProfils = audioProfils;
                 self.loader.addPourcentLoaded(10);
               },
-              function(audioProfil){//When One content is loaded
+              function(audioProfil) {//When One content is loaded
                 audioProfil.audio = self.audios[audioProfil.audio];
                 self.loader.upTextInfo("La configuration du fichier audio "+audioProfil.name+" a été chargé.");
               }
             );
             self.loader.addPourcentLoaded(10);
           },
-          function(audio){//When One content is loaded
+          function(audio) {//When One content is loaded
             self.loader.upTextInfo("Le fichier audio "+audio.name+" a été chargé.");
           }
         );
@@ -375,6 +375,51 @@ class Game {
   startLevel() {
     var self = this;
 
+    var myMap = new Map([
+      [ "id1", "test1" ],
+      [ "id2", "test2" ],
+    ]);
+
+    var myObject = {
+      "test1": "value",
+      "test2": "value",
+      "test3": "value",
+      "test4": "value",
+      "test5": "value",
+      "test6": "value",
+      "test7": "value",
+      "test8": "value",
+      "test9": "value",
+      "test10": "value",
+      "test11": "value",
+      "test12": "value",
+      "test13": "value",
+      "test14": "value",
+      "test15": "value",
+      "test16": "value",
+      "test17": "value",
+      "test18": "value",
+      "test19": "value",
+      "test20": "value"
+    };
+    var myTab = [];
+    for(var y=0; y<10000;y++) {
+      myTab[y] = "value";
+    }
+
+    var time = new Date();
+    for (var prop in myObject) {
+
+    }
+    console.log("FORIN", new Date() - time);
+    time = new Date();
+    var length = myTab.length,
+        x=0;
+    for(; x<length;x++) {
+
+    }
+    console.log("FOR", new Date() - time);
+
     this.entities[this.level.cameraId].setDisplayUpdateMethod(function(framerate) {
       var inView = self.scene['graphic'].getEntities({
             x : self.entities[self.level.cameraId].graphicPosition.x,
@@ -390,13 +435,13 @@ class Game {
           }),
           x=0,
           length = inView.length;
-
+        //console.log(self.scene['physic'])
       //Increase sort of the objects by z propertie
       inView.sort(function(a, b) {
         return (self.entities[a].z > self.entities[b].z) ? 1 : -1;
       });
 
-        console.log(self.entities['50ib636f-8779-47d5-9fcb-ff98c8583dec'])
+        //console.log(self.entities['50ib636f-8779-47d5-9fcb-ff98c8583dec'])
 
       //Update of display------------------------------------
       //Clear display
@@ -409,9 +454,6 @@ class Game {
 
       //Call of entities graphic system
       for(; x < length; x++) {
-        if(self.entities[inView[x]].name == "hitboxPlayer") {
-          //console.log(self.entities[inView[x]])
-        }
         self.entities[inView[x]].updateGraphicObject(
           self.entities[self.level.cameraId].ctx,
           {

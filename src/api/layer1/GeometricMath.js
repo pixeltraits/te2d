@@ -12,18 +12,18 @@ class GeometricMath {
    * @return {size}
    */
   getPolygonSize(vertices) {
-    var x1 = 0,
-        x2 = 0,
-        y1 = 0,
-        y2 = 0,
-        i = 0,
-        length = this.vertices.length;
+    var x1 = vertices[0].x,
+        x2 = vertices[0].x,
+        y1 = vertices[0].y,
+        y2 = vertices[0].y,
+        i = 1,
+        length = vertices.length;
 
     for(; i < length; i++) {
-      x1 = Math.min(this.vertices[i].x, x1);
-      x2 = Math.max(this.vertices[i].x, x2);
-      y1 = Math.min(this.vertices[i].y, y1);
-      y2 = Math.max(this.vertices[i].y, y2);
+      x1 = Math.min(vertices[i].x, x1);
+      x2 = Math.max(vertices[i].x, x2);
+      y1 = Math.min(vertices[i].y, y1);
+      y2 = Math.max(vertices[i].y, y2);
     }
 
     return {

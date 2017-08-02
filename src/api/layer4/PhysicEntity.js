@@ -20,6 +20,10 @@ class PhysicEntity {
       x : 0,
       y : 0
     };
+    this.graphicDelta = {
+      x : 0,
+      y : 0
+    };
 
     /* Calculated Size */
     this.originalSize = {
@@ -64,6 +68,14 @@ class PhysicEntity {
    */
   setGraphicEntity(graphicEntity) {
     this.graphicEntity = graphicEntity;
+  }
+  /**
+   * Set scene entity reference
+   * @method setGraphicEntity
+   * @param {position} position
+   */
+  setGraphicDelta(position) {
+    this.graphicDelta = position;
   }
   /**
    * Set physic ressource and context
@@ -129,21 +141,20 @@ class PhysicEntity {
    * @param {position} graphicPosition
    */
   setGraphicPosition(graphicPosition) {
-    var physicPostion = this.graphicToPhysicPosition(graphicPosition);
+    var physicPosition = this.graphicToPhysicPosition(graphicPosition);
 
-    this.physicPosition.x = physicPostion.x;
-    this.physicPosition.y = physicPostion.y;
+    this.physicPosition.x = physicPosition.x;
+    this.physicPosition.y = physicPosition.y;
 
     if(this.physicBody != null) {
 
     }
     if(this.graphicEntity != null) {
-      var delta = this.getPositionDelta();
       this.graphicPosition = graphicPosition;
 
       this.graphicEntity.setPosition({
-        x : this.graphicPosition.x + delta.x,
-        y : this.graphicPosition.y + delta.y
+        x : this.physicPosition.x + this.graphicDelta.x,
+        y : this.physicPosition.y + this.graphicDelta.y
       });
     }
   }
@@ -297,58 +308,55 @@ class PhysicEntity {
    */
   updateOriginalSize() {
     var length = this.hitboxes.length,
-        x = 0,
-        minX = 0,
-        maxX = 0,
-        minY = 0,
-        maxY = 0;
+        x = 0;
 
-    for(; x < length; x++) {
-      switch(this.hitboxes[x].graphicEntity.type) {
+    if(length > 0) {
+      switch(this.hitboxes[0].fixture.shape) {
         case "circle" :
-          minX = Math.min(minX, this.hitboxes[x].x - this.hitboxes[x].radius);
-          maxX = Math.max(maxX, this.hitboxes[x].x + this.hitboxes[x].radius);
-          minY = Math.min(minY, this.hitboxes[x].y - this.hitboxes[x].radius);
-          maxY = Math.max(maxY, this.hitboxes[x].y + this.hitboxes[x].radius);
+          var minX = this.hitboxes[0].fixture.x,
+              maxX = this.hitboxes[0].fixture.x - this.hitboxes[0].fixture.radius,
+              minY = this.hitboxes[0].fixture.y,
+              maxY = this.hitboxes[0].fixture.y - this.hitboxes[0].fixture.radius;
           break;
         case "box" :
-          minX = Math.min(minX, this.hitboxes[x].x);
-          maxX = Math.max(maxX, this.hitboxes[x].x + this.hitboxes[x].dx);
-          minY = Math.min(minY, this.hitboxes[x].y);
-          maxY = Math.max(maxY, this.hitboxes[x].y + this.hitboxes[x].dy);
+          var minX = this.hitboxes[0].fixture.x,
+              maxX = this.hitboxes[0].fixture.x + this.hitboxes[0].fixture.dx,
+              minY = this.hitboxes[0].fixture.y,
+              maxY = this.hitboxes[0].fixture.y + this.hitboxes[0].fixture.dy;
           break;
         case "polygon" :
-          minX = Math.min(minX, this.hitboxes[x].x);
-          maxX = Math.max(maxX, this.hitboxes[x].x + this.hitboxes[x].dx);
-          minY = Math.min(minY, this.hitboxes[x].y);
-          maxY = Math.max(maxY, this.hitboxes[x].y + this.hitboxes[x].dy);
+          var minX = this.hitboxes[0].fixture.x,
+              maxX = this.hitboxes[0].fixture.x + this.hitboxes[0].fixture.dx,
+              minY = this.hitboxes[0].fixture.y,
+              maxY = this.hitboxes[0].fixture.y + this.hitboxes[0].fixture.dy;
           break;
       }
     }
 
-    this.perimeter[0] = {
-      x : minX,
-      y : minY
-    };
-    this.perimeter[1] = {
-      x : maxX,
-      y : minY
-    };
-    this.perimeter[2] = {
-      x : minX,
-      y : maxY
-    };
-    this.perimeter[3] = {
-      x : maxX,
-      y : maxY
-    };
+    for(; x < length; x++) {
+      switch(this.hitboxes[x].fixture.shape) {
+        case "circle" :
+          minX = Math.min(minX, this.hitboxes[x].fixture.x - this.hitboxes[x].fixture.radius);
+          maxX = Math.max(maxX, this.hitboxes[x].fixture.x + this.hitboxes[x].fixture.radius);
+          minY = Math.min(minY, this.hitboxes[x].fixture.y - this.hitboxes[x].fixture.radius);
+          maxY = Math.max(maxY, this.hitboxes[x].fixture.y + this.hitboxes[x].fixture.radius);
+          break;
+        case "box" :
+          minX = Math.min(minX, this.hitboxes[x].fixture.x);
+          maxX = Math.max(maxX, this.hitboxes[x].fixture.x + this.hitboxes[x].fixture.dx);
+          minY = Math.min(minY, this.hitboxes[x].fixture.y);
+          maxY = Math.max(maxY, this.hitboxes[x].fixture.y + this.hitboxes[x].fixture.dy);
+          break;
+        case "polygon" :
+          minX = Math.min(minX, this.hitboxes[x].fixture.x);
+          maxX = Math.max(maxX, this.hitboxes[x].fixture.x + this.hitboxes[x].fixture.dx);
+          minY = Math.min(minY, this.hitboxes[x].fixture.y);
+          maxY = Math.max(maxY, this.hitboxes[x].fixture.y + this.hitboxes[x].fixture.dy);
+          break;
+      }
+    }
 
-    console.log({
-      dx : maxX - minX,
-      dy : maxY - minY
-    })
-
-    this.setOriginalSize({
+    this.setSize({
       dx : maxX - minX,
       dy : maxY - minY
     });
@@ -413,7 +421,6 @@ class PhysicEntity {
    */
   addToPhysicContext(scene) {
     if(this.physicBody == null) {
-      this.addToScene(scene);
       this.physicBody = this.physicInterface.getBody(
         this.id,
         this.physicPosition.x,
@@ -431,15 +438,17 @@ class PhysicEntity {
       for(; x < length; x++) {
         this.addFixtureToBody(this.hitboxes[x]);
       }
+
+      this.addToScene(scene);
     }
   }
   /**
    * Delete the physic object to the physic context
    * @method deleteToPhysicContext
    */
-  deleteToPhysicContext() {
+  deleteToPhysicContext(scene) {
     if(this.physicBody != null) {
-      this.deleteToScene();
+      this.deleteToScene(scene);
     }
   }
   /**
@@ -451,6 +460,9 @@ class PhysicEntity {
   addToScene(scene) {
     if(this.scene == null) {
       this.scene = scene;
+      if(this.name == "groundPhysic") {
+        console.log(this.size, this.hitboxes)
+      }
       this.scene.add(
         {
           x : this.physicPosition.x,
@@ -458,7 +470,8 @@ class PhysicEntity {
           dx : this.size.dx,
           dy : this.size.dy
         },
-        this.id
+        this.id,
+        "physic"
       );
     }
   }
@@ -550,18 +563,15 @@ class PhysicEntity {
       this.physicPosition = this.physicInterface.getPosition(this.physicBody);
 
       var graphicPosition = this.physicToGraphicPosition(this.physicPosition);
-
       if(this.name == "groundPhysic") {
-        console.log(this.physicPosition)
-        console.log(this.graphicPosition)
+        console.log("physic", this.physicPosition)
+        console.log("graphic", this.graphicPosition)
       }
 
       if(this.graphicEntity != null) {
-        var delta = this.getPositionDelta();
-
         this.graphicEntity.setPosition({
-          x : graphicPosition.x + delta.x,
-          y : graphicPosition.y + delta.y
+          x : graphicPosition.x + this.graphicDelta.x,
+          y : graphicPosition.y + this.graphicDelta.y
         });
       }
 

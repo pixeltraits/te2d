@@ -5,8 +5,9 @@
 class Audio {
   constructor() {
     this.active = false;
-    this.pannerNode;
+    this.pannerNode = null;
     this.pause = false;
+    this.source = null;
   }
   /**
    * Play audio
@@ -22,10 +23,11 @@ class Audio {
 
       /* Audio content implementation */
       this.source = audioContext.createBufferSource();
-      this.source.buffer = audioProfil.audio;
       this.pannerNode = audioContext.createPanner();
       this.source.connect(this.pannerNode);
       this.pannerNode.connect(audioContext.destination);
+
+      this.source.buffer = audioProfil.audio;
 
       /* Audio spacialisation for 1.0
        * this.pannerNode.setPosition(0, 1, 1);

@@ -30,9 +30,9 @@ class Timer {
 
       return true;
     } else {
-      timePast = Date.now()-this.t1;
+      timePast = Date.now() - this.t1;
 
-      if(timePast>=this.delta) {
+      if(timePast >= this.delta) {
         this.t1 = Date.now();
 
         return true;
@@ -43,7 +43,7 @@ class Timer {
   }
   /**
    * If delta time is past, true
-   * With late compensation
+   * With late !!! @refactor !!!
    * @method whatTimeIsItWithLate
    * @param {boolean}
    */
@@ -59,7 +59,7 @@ class Timer {
 
       if(timePast + this.t2 >= this.delta) {
         this.t1 += this.delta;
-        this.t2 = timePast-this.delta;
+        this.t2 = timePast - this.delta;
 
         return true;
       } else {

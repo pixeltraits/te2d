@@ -16,30 +16,6 @@
       }
     },
     {
-      "type" : "action",
-      "context" : "entities",
-      "id" : "self",
-      "method" : "setGraphicEntity",
-      "argument" : {
-        "type" : "newObject",
-        "context" : "entityProfils",
-        "id" : "ground",
-        "config" : [
-          {
-            "type" : "action",
-            "context": "entities",
-            "id": "self",
-            "method": "addToScene",
-            "argument": {
-              "type" : "resource",
-              "context": "scene",
-              "id": "graphic"
-            }
-          }
-        ]
-      }
-    },
-    {
       "type": "action",
       "context": "entities",
       "id": "self",
@@ -83,6 +59,43 @@
             }
           }
         ]
+      }
+    },
+    {
+      "type" : "action",
+      "context" : "entities",
+      "id" : "self",
+      "method" : "setGraphicEntity",
+      "argument" : {
+        "type" : "newObject",
+        "context" : "entityProfils",
+        "id" : "ground",
+        "config" : [
+          {
+            "type" : "action",
+            "context": "entities",
+            "id": "self",
+            "method": "addToScene",
+            "argument": {
+              "type" : "resource",
+              "context": "scene",
+              "id": "graphic"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "action",
+      "context": "entities",
+      "id": "self",
+      "method": "setGraphicDelta",
+      "argument": {
+        "type": "simple",
+        "argument" : {
+          "x" : 250,
+          "y" : 0
+        }
       }
     },
     {

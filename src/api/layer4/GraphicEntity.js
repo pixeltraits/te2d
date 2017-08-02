@@ -53,11 +53,15 @@ class GraphicEntity {
       this.scene.update(
         {
           x : this.x,
-          y : this.y
+          y : this.y,
+          dx : this.dx,
+          dy : this.dy
         },
         {
           x : position.x,
-          y : position.y
+          y : position.y,
+          dx : this.dx,
+          dy : this.dy
         },
         this.id
       );
