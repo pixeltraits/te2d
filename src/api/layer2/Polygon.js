@@ -40,7 +40,7 @@ class Polygon extends Geometry {
     super.show(position, angle, canvasSize, canvasCtx);
 
     var centerX = position.x + (this.size.dx / 2),
-        centerY = position.y + (this.size.dy / 2)
+        centerY = position.y + (this.size.dy / 2),
         x = 0,
         length = this.vertices.length;
 

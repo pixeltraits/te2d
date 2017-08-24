@@ -67,8 +67,8 @@ describe('Box', function () {
 
           box = new Box();
           box.setGeometry(boxProperties);
-          center.x = position.x + (boxProperties.dx / 2);
-          center.y = position.y + (boxProperties.dy / 2);
+          center.x = position.x + (box.size.dx / 2);
+          center.y = position.y + (box.size.dy / 2);
 
           // When
           spyOn(canvasCtx, 'translate');
@@ -81,18 +81,18 @@ describe('Box', function () {
           expect(canvasCtx.rotate).toHaveBeenCalledWith(angle);
 
           expect(canvasCtx.fillRect).toHaveBeenCalledWith(
-            -boxProperties.dx / 2,
-            -boxProperties.dy / 2,
-            boxProperties.dx + (boxProperties.borderSize * 2),
-            boxProperties.dy + (boxProperties.borderSize * 2)
+            -box.size.dx / 2,
+            -box.size.dy / 2,
+            box.size.dx + (box.borderSize * 2),
+            box.size.dy + (box.borderSize * 2)
           );
 
-          expect(canvasCtx.fillStyle).toEqual(boxProperties.color);
+          expect(canvasCtx.fillStyle).toEqual(box.color);
           expect(canvasCtx.fillRect).toHaveBeenCalledWith(
-            boxProperties.borderSize - (boxProperties.dx / 2),
-            boxProperties.borderSize - (boxProperties.dy / 2),
-            boxProperties.dx,
-            boxProperties.dy
+            box.borderSize - (box.size.dx / 2),
+            box.borderSize - (box.size.dy / 2),
+            box.size.dx,
+            box.size.dy
           );
 
           expect(canvasCtx.translate).toHaveBeenCalledWith(-center.x, -center.y);

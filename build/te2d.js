@@ -18,7 +18,7 @@ class Clone {
     for(i in complexObject) {
       if (complexObject.hasOwnProperty(i)) {
         if(typeof complexObject[i] != 'object' || complexObject[i] instanceof HTMLImageElement) {
-           clone[i] = complexObject[i];
+          clone[i] = complexObject[i];
         } else {
           clone[i] = this.cloneObject(complexObject[i]);
         }
@@ -52,18 +52,18 @@ class GeometricMath {
    * @return {size}
    */
   getPolygonSize(vertices) {
-    var x1 = 0,
-        x2 = 0,
-        y1 = 0,
-        y2 = 0,
-        i = 0,
-        length = this.vertices.length;
+    var x1 = vertices[0].x,
+        x2 = vertices[0].x,
+        y1 = vertices[0].y,
+        y2 = vertices[0].y,
+        i = 1,
+        length = vertices.length;
 
     for(; i < length; i++) {
-      x1 = Math.min(this.vertices[0].x, x1);
-      x2 = Math.max(this.vertices[0].x, x2);
-      y1 = Math.min(this.vertices[0].y, y1);
-      y2 = Math.max(this.vertices[0].y, y2);
+      x1 = Math.min(vertices[i].x, x1);
+      x2 = Math.max(vertices[i].x, x2);
+      y1 = Math.min(vertices[i].y, y1);
+      y2 = Math.max(vertices[i].y, y2);
     }
 
     return {
@@ -167,9 +167,9 @@ class Timer {
 
       return true;
     } else {
-      timePast = Date.now()-this.t1;
+      timePast = Date.now() - this.t1;
 
-      if(timePast>=this.delta) {
+      if(timePast >= this.delta) {
         this.t1 = Date.now();
 
         return true;
@@ -180,7 +180,7 @@ class Timer {
   }
   /**
    * If delta time is past, true
-   * With late compensation
+   * With late !!! @refactor !!!
    * @method whatTimeIsItWithLate
    * @param {boolean}
    */
@@ -196,7 +196,7 @@ class Timer {
 
       if(timePast + this.t2 >= this.delta) {
         this.t1 += this.delta;
-        this.t2 = timePast-this.delta;
+        this.t2 = timePast - this.delta;
 
         return true;
       } else {
@@ -213,8 +213,9 @@ class Timer {
 class Audio {
   constructor() {
     this.active = false;
-    this.pannerNode;
+    this.pannerNode = null;
     this.pause = false;
+    this.source = null;
   }
   /**
    * Play audio
@@ -230,10 +231,11 @@ class Audio {
 
       /* Audio content implementation */
       this.source = audioContext.createBufferSource();
-      this.source.buffer = audioProfil.audio;
       this.pannerNode = audioContext.createPanner();
       this.source.connect(this.pannerNode);
       this.pannerNode.connect(audioContext.destination);
+
+      this.source.buffer = audioProfil.audio;
 
       /* Audio spacialisation for 1.0
        * this.pannerNode.setPosition(0, 1, 1);
@@ -737,29 +739,31 @@ class Box extends Geometry {
   show(position, angle, canvasSize, canvasCtx) {
     super.show(position, angle, canvasSize, canvasCtx);
 
-    var centerX = position.x + (this.size.dx / 2),
-        centerY = position.y + (this.size.dy / 2);
+    var center = {
+      x : position.x + (this.size.dx / 2),
+      y : position.y + (this.size.dy / 2)
+    };
 
-    canvasCtx.translate(centerX, centerY);
+    canvasCtx.translate(center.x, center.y);
     canvasCtx.rotate(angle);
 
     canvasCtx.fillStyle = this.borderColor;
     canvasCtx.fillRect(
-      position.x,
-      position.y,
+      -this.size.dx / 2,
+      -this.size.dy / 2,
       this.size.dx + (this.borderSize * 2),
       this.size.dy + (this.borderSize * 2)
     );
     canvasCtx.fillStyle = this.color;
     canvasCtx.fillRect(
-      position.x + this.borderSize,
-      position.y + this.borderSize,
+      this.borderSize - (this.size.dx / 2),
+      this.borderSize - (this.size.dy / 2),
       this.size.dx,
       this.size.dy
     );
 
     canvasCtx.rotate(-angle);
-    canvasCtx.translate(-centerX, -centerY);
+    canvasCtx.translate(-center.x, -center.y);
   }
 }
 
@@ -872,7 +876,7 @@ class Polygon extends Geometry {
     super.show(position, angle, canvasSize, canvasCtx);
 
     var centerX = position.x + (this.size.dx / 2),
-        centerY = position.y + (this.size.dy / 2)
+        centerY = position.y + (this.size.dy / 2),
         x = 0,
         length = this.vertices.length;
 
@@ -1689,11 +1693,15 @@ class GraphicEntity {
       this.scene.update(
         {
           x : this.x,
-          y : this.y
+          y : this.y,
+          dx : this.dx,
+          dy : this.dy
         },
         {
           x : position.x,
-          y : position.y
+          y : position.y,
+          dx : this.dx,
+          dy : this.dy
         },
         this.id
       );
@@ -2046,6 +2054,10 @@ class PhysicEntity {
       x : 0,
       y : 0
     };
+    this.graphicDelta = {
+      x : 0,
+      y : 0
+    };
 
     /* Calculated Size */
     this.originalSize = {
@@ -2090,6 +2102,14 @@ class PhysicEntity {
    */
   setGraphicEntity(graphicEntity) {
     this.graphicEntity = graphicEntity;
+  }
+  /**
+   * Set scene entity reference
+   * @method setGraphicEntity
+   * @param {position} position
+   */
+  setGraphicDelta(position) {
+    this.graphicDelta = position;
   }
   /**
    * Set physic ressource and context
@@ -2155,21 +2175,20 @@ class PhysicEntity {
    * @param {position} graphicPosition
    */
   setGraphicPosition(graphicPosition) {
-    var physicPostion = this.graphicToPhysicPosition(graphicPosition);
+    var physicPosition = this.graphicToPhysicPosition(graphicPosition);
 
-    this.physicPosition.x = physicPostion.x;
-    this.physicPosition.y = physicPostion.y;
+    this.physicPosition.x = physicPosition.x;
+    this.physicPosition.y = physicPosition.y;
 
     if(this.physicBody != null) {
 
     }
     if(this.graphicEntity != null) {
-      var delta = this.getPositionDelta();
       this.graphicPosition = graphicPosition;
 
       this.graphicEntity.setPosition({
-        x : this.graphicPosition.x + delta.x,
-        y : this.graphicPosition.y + delta.y
+        x : this.physicPosition.x + this.graphicDelta.x,
+        y : this.physicPosition.y + this.graphicDelta.y
       });
     }
   }
@@ -2323,58 +2342,55 @@ class PhysicEntity {
    */
   updateOriginalSize() {
     var length = this.hitboxes.length,
-        x = 0,
-        minX = 0,
-        maxX = 0,
-        minY = 0,
-        maxY = 0;
+        x = 0;
 
-    for(; x < length; x++) {
-      switch(this.hitboxes[x].graphicEntity.type) {
+    if(length > 0) {
+      switch(this.hitboxes[0].fixture.shape) {
         case "circle" :
-          minX = Math.min(minX, this.hitboxes[x].x - this.hitboxes[x].radius);
-          maxX = Math.max(maxX, this.hitboxes[x].x + this.hitboxes[x].radius);
-          minY = Math.min(minY, this.hitboxes[x].y - this.hitboxes[x].radius);
-          maxY = Math.max(maxY, this.hitboxes[x].y + this.hitboxes[x].radius);
+          var minX = this.hitboxes[0].fixture.x,
+              maxX = this.hitboxes[0].fixture.x - this.hitboxes[0].fixture.radius,
+              minY = this.hitboxes[0].fixture.y,
+              maxY = this.hitboxes[0].fixture.y - this.hitboxes[0].fixture.radius;
           break;
         case "box" :
-          minX = Math.min(minX, this.hitboxes[x].x);
-          maxX = Math.max(maxX, this.hitboxes[x].x + this.hitboxes[x].dx);
-          minY = Math.min(minY, this.hitboxes[x].y);
-          maxY = Math.max(maxY, this.hitboxes[x].y + this.hitboxes[x].dy);
+          var minX = this.hitboxes[0].fixture.x,
+              maxX = this.hitboxes[0].fixture.x + this.hitboxes[0].fixture.dx,
+              minY = this.hitboxes[0].fixture.y,
+              maxY = this.hitboxes[0].fixture.y + this.hitboxes[0].fixture.dy;
           break;
         case "polygon" :
-          minX = Math.min(minX, this.hitboxes[x].x);
-          maxX = Math.max(maxX, this.hitboxes[x].x + this.hitboxes[x].dx);
-          minY = Math.min(minY, this.hitboxes[x].y);
-          maxY = Math.max(maxY, this.hitboxes[x].y + this.hitboxes[x].dy);
+          var minX = this.hitboxes[0].fixture.x,
+              maxX = this.hitboxes[0].fixture.x + this.hitboxes[0].fixture.dx,
+              minY = this.hitboxes[0].fixture.y,
+              maxY = this.hitboxes[0].fixture.y + this.hitboxes[0].fixture.dy;
           break;
       }
     }
 
-    this.perimeter[0] = {
-      x : minX,
-      y : minY
-    };
-    this.perimeter[1] = {
-      x : maxX,
-      y : minY
-    };
-    this.perimeter[2] = {
-      x : minX,
-      y : maxY
-    };
-    this.perimeter[3] = {
-      x : maxX,
-      y : maxY
-    };
+    for(; x < length; x++) {
+      switch(this.hitboxes[x].fixture.shape) {
+        case "circle" :
+          minX = Math.min(minX, this.hitboxes[x].fixture.x - this.hitboxes[x].fixture.radius);
+          maxX = Math.max(maxX, this.hitboxes[x].fixture.x + this.hitboxes[x].fixture.radius);
+          minY = Math.min(minY, this.hitboxes[x].fixture.y - this.hitboxes[x].fixture.radius);
+          maxY = Math.max(maxY, this.hitboxes[x].fixture.y + this.hitboxes[x].fixture.radius);
+          break;
+        case "box" :
+          minX = Math.min(minX, this.hitboxes[x].fixture.x);
+          maxX = Math.max(maxX, this.hitboxes[x].fixture.x + this.hitboxes[x].fixture.dx);
+          minY = Math.min(minY, this.hitboxes[x].fixture.y);
+          maxY = Math.max(maxY, this.hitboxes[x].fixture.y + this.hitboxes[x].fixture.dy);
+          break;
+        case "polygon" :
+          minX = Math.min(minX, this.hitboxes[x].fixture.x);
+          maxX = Math.max(maxX, this.hitboxes[x].fixture.x + this.hitboxes[x].fixture.dx);
+          minY = Math.min(minY, this.hitboxes[x].fixture.y);
+          maxY = Math.max(maxY, this.hitboxes[x].fixture.y + this.hitboxes[x].fixture.dy);
+          break;
+      }
+    }
 
-    console.log({
-      dx : maxX - minX,
-      dy : maxY - minY
-    })
-
-    this.setOriginalSize({
+    this.setSize({
       dx : maxX - minX,
       dy : maxY - minY
     });
@@ -2439,7 +2455,6 @@ class PhysicEntity {
    */
   addToPhysicContext(scene) {
     if(this.physicBody == null) {
-      this.addToScene(scene);
       this.physicBody = this.physicInterface.getBody(
         this.id,
         this.physicPosition.x,
@@ -2457,15 +2472,17 @@ class PhysicEntity {
       for(; x < length; x++) {
         this.addFixtureToBody(this.hitboxes[x]);
       }
+
+      this.addToScene(scene);
     }
   }
   /**
    * Delete the physic object to the physic context
    * @method deleteToPhysicContext
    */
-  deleteToPhysicContext() {
+  deleteToPhysicContext(scene) {
     if(this.physicBody != null) {
-      this.deleteToScene();
+      this.deleteToScene(scene);
     }
   }
   /**
@@ -2477,6 +2494,9 @@ class PhysicEntity {
   addToScene(scene) {
     if(this.scene == null) {
       this.scene = scene;
+      if(this.name == "groundPhysic") {
+        console.log(this.size, this.hitboxes)
+      }
       this.scene.add(
         {
           x : this.physicPosition.x,
@@ -2484,7 +2504,8 @@ class PhysicEntity {
           dx : this.size.dx,
           dy : this.size.dy
         },
-        this.id
+        this.id,
+        "physic"
       );
     }
   }
@@ -2576,18 +2597,15 @@ class PhysicEntity {
       this.physicPosition = this.physicInterface.getPosition(this.physicBody);
 
       var graphicPosition = this.physicToGraphicPosition(this.physicPosition);
-
       if(this.name == "groundPhysic") {
-        console.log(this.physicPosition)
-        console.log(this.graphicPosition)
+        console.log("physic", this.physicPosition)
+        console.log("graphic", this.graphicPosition)
       }
 
       if(this.graphicEntity != null) {
-        var delta = this.getPositionDelta();
-
         this.graphicEntity.setPosition({
-          x : graphicPosition.x + delta.x,
-          y : graphicPosition.y + delta.y
+          x : graphicPosition.x + this.graphicDelta.x,
+          y : graphicPosition.y + this.graphicDelta.y
         });
       }
 
@@ -2681,12 +2699,16 @@ class PhysicEntity {
    * @param {zone} zone
    * @param {string} id
    */
-  add(zone, id) {
+  add(zone, id, scene) {
     var firstCaseX = Math.floor(zone.x / this.ratio),
         firstCaseY = Math.floor(zone.y / this.ratio),
         lastCaseX = Math.ceil((zone.x + zone.dx) / this.ratio),
         lastCaseY = Math.ceil((zone.y + zone.dy) / this.ratio),
         x = firstCaseX;
+
+    if(id == "50ib636f-8779-47d5-9fcb-ff98c8583dec"){
+      console.log(scene, zone, id)
+    }
 
     for(; x < lastCaseX; x++) {
       for(var y = firstCaseY; y < lastCaseY; y++) {
@@ -3564,25 +3586,25 @@ class Game {
           "resources/audios/",
           levelConfig.audios,
           self.audioLoader,
-          function(audios){//When all contents are loaded
+          function(audios) {//When all contents are loaded
             self.audios = audios;
             //load profils
             self.loadContent(
               "resources/audioProfils/",
               levelConfig.audioProfils,
               self.jsonLoader,
-              function(audioProfils){//When all contents are loaded
+              function(audioProfils) {//When all contents are loaded
                 self.audioProfils = audioProfils;
                 self.loader.addPourcentLoaded(10);
               },
-              function(audioProfil){//When One content is loaded
+              function(audioProfil) {//When One content is loaded
                 audioProfil.audio = self.audios[audioProfil.audio];
                 self.loader.upTextInfo("La configuration du fichier audio "+audioProfil.name+" a été chargé.");
               }
             );
             self.loader.addPourcentLoaded(10);
           },
-          function(audio){//When One content is loaded
+          function(audio) {//When One content is loaded
             self.loader.upTextInfo("Le fichier audio "+audio.name+" a été chargé.");
           }
         );
@@ -3730,6 +3752,51 @@ class Game {
   startLevel() {
     var self = this;
 
+    var myMap = new Map([
+      [ "id1", "test1" ],
+      [ "id2", "test2" ],
+    ]);
+
+    var myObject = {
+      "test1": "value",
+      "test2": "value",
+      "test3": "value",
+      "test4": "value",
+      "test5": "value",
+      "test6": "value",
+      "test7": "value",
+      "test8": "value",
+      "test9": "value",
+      "test10": "value",
+      "test11": "value",
+      "test12": "value",
+      "test13": "value",
+      "test14": "value",
+      "test15": "value",
+      "test16": "value",
+      "test17": "value",
+      "test18": "value",
+      "test19": "value",
+      "test20": "value"
+    };
+    var myTab = [];
+    for(var y=0; y<10000;y++) {
+      myTab[y] = "value";
+    }
+
+    var time = new Date();
+    for (var prop in myObject) {
+
+    }
+    console.log("FORIN", new Date() - time);
+    time = new Date();
+    var length = myTab.length,
+        x=0;
+    for(; x<length;x++) {
+
+    }
+    console.log("FOR", new Date() - time);
+
     this.entities[this.level.cameraId].setDisplayUpdateMethod(function(framerate) {
       var inView = self.scene['graphic'].getEntities({
             x : self.entities[self.level.cameraId].graphicPosition.x,
@@ -3745,13 +3812,13 @@ class Game {
           }),
           x=0,
           length = inView.length;
-
+        //console.log(self.scene['physic'])
       //Increase sort of the objects by z propertie
       inView.sort(function(a, b) {
         return (self.entities[a].z > self.entities[b].z) ? 1 : -1;
       });
 
-        console.log(self.entities['50ib636f-8779-47d5-9fcb-ff98c8583dec'])
+        //console.log(self.entities['50ib636f-8779-47d5-9fcb-ff98c8583dec'])
 
       //Update of display------------------------------------
       //Clear display
@@ -3764,9 +3831,6 @@ class Game {
 
       //Call of entities graphic system
       for(; x < length; x++) {
-        if(self.entities[inView[x]].name == "hitboxPlayer") {
-          //console.log(self.entities[inView[x]])
-        }
         self.entities[inView[x]].updateGraphicObject(
           self.entities[self.level.cameraId].ctx,
           {

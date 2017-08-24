@@ -261,7 +261,7 @@ class Bitmap {
     );
 
     var imageData = context.getImageData(0, 0, animation.dx, animation.dy),
-    i=0;
+        i = 0;
 
     /* Bitmap flipping */
     for (; i < imageData.height; i++) {
@@ -269,6 +269,7 @@ class Bitmap {
             var index = (i * 4) * imageData.width + (j * 4),
                 mirrorIndex = ((i + 1) * 4) * imageData.width - ((j + 1) * 4),
                 p = 0;
+
             for (; p < 4; p++) {
                 var temp = imageData.data[index + p];
                 imageData.data[index + p] = imageData.data[mirrorIndex + p];
