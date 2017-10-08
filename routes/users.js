@@ -10,9 +10,9 @@ User = require('../model/user');
 router.use(function(req, res, next) {
   var token = req.cookies.auth;
   if (token) {
-    jwt.verify(token, secret, function(err, decoded) {      
+    jwt.verify(token, secret, function(err, decoded) {
       if (err) {
-        next();  
+        next();
       } else {
         res.redirect('../game');
       }
@@ -147,8 +147,8 @@ router.post('/connection', function(req, res) {
         });
 
         res.cookie('auth', token, {maxAge : 60*60*24}).redirect('../game');
-       
-      }   
+
+      }
 
     }
 

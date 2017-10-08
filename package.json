@@ -5,7 +5,8 @@
   "private": false,
   "scripts": {
     "start": "node ./bin/www --use_strict",
-    "test": "grunt test"
+    "test": "grunt test",
+    "lint": "eslint app.js"
   },
   "dependencies": {
     "body-parser": "1.15.2",
@@ -32,7 +33,11 @@
     "jasmine-core": "2.5.2",
     "karma-chrome-launcher": "2.0.0",
     "karma-jasmine": "1.1.0",
-    "karma-coverage": "1.1.1"
+    "karma-coverage": "1.1.1",
+    "eslint": "4.8.0",
+    "eslint-plugin-import": "2.7.0",
+    "eslint-config-airbnb": "16.0.0",
+    "process-nextick-args": "1.0.8"
   },
   "author": "pixelTraits",
   "license": "MIT"

@@ -12,29 +12,29 @@ describe('Bitmap', function () {
             canvas = document.createElement('canvas'),
             canvasCtx = canvas.getContext('2d');
 
-        canvas.width = 5;
-        canvas.height = 5;
+        canvas.width = 3;
+        canvas.height = 3;
 
         canvasCtx.fillStyle = "#ffa500";
         canvasCtx.fillRect(
-          -2 / 1,
-          -2 / 1,
-          2 + (2 * 1),
-          2 + (2 * 1)
+          0,
+          0,
+          1,
+          1
         );
         canvasCtx.fillStyle = "#ffa500";
         canvasCtx.fillRect(
-          2 - (2 / 2),
-          2 - (2 / 2),
           2,
-          2
+          0,
+          1,
+          1
         );
         canvasCtx.fillStyle = "#fdb600";
         canvasCtx.fillRect(
+          2,
+          2,
           1,
-          1,
-          1,
-          3
+          1
         );
 
         imageTestA.src = canvas.toDataURL("image/png");
@@ -71,10 +71,10 @@ describe('Bitmap', function () {
         ];
         animationCallbacks = [
           function() {
-            console.log("The animation Done is complete")
+            console.log("The animation Done is complete");
           },
           function() {
-            console.log("The animation Yun is complete")
+            console.log("The animation Yun is complete");
           }
         ];
     });
@@ -401,39 +401,39 @@ describe('Bitmap', function () {
           var canvas = document.createElement('canvas'),
               canvasCtx = canvas.getContext('2d');
 
-          canvas.width = 10;
-          canvas.height = 10;
+          canvas.width = 3;
+          canvas.height = 3;
 
           canvasCtx.fillStyle = "#ffa500";
           canvasCtx.fillRect(
-            -2 / 2,
-            -2 / 2,
-            2 + (2 * 1),
-            2 + (2 * 1)
+            2,
+            0,
+            1,
+            1
           );
           canvasCtx.fillStyle = "#ffa500";
           canvasCtx.fillRect(
-            2 - (2 / 2),
-            2 - (2 / 2),
-            2,
-            2
+            0,
+            0,
+            1,
+            1
           );
           canvasCtx.fillStyle = "#fdb600";
           canvasCtx.fillRect(
-            3,
-            3,
+            0,
+            2,
             1,
-            3
+            1
           );
 
-          reverseImage = canvasCtx.getImageData(0, 0, 10, 10);
+          reverseImage = canvasCtx.getImageData(0, 0, 3, 3);
 
           animation = {
             bitmap : animations[0].bitmap,
             ix : 0,
             iy : 0,
-            dx : 5,
-            dy : 5
+            dx : 3,
+            dy : 3
           };
         });
 
@@ -443,8 +443,8 @@ describe('Bitmap', function () {
               canvas = document.createElement('canvas'),
               canvasCtx = canvas.getContext('2d');
 
-          canvas.width = 10;
-          canvas.height = 10;
+          canvas.width = 3;
+          canvas.height = 3;
 
           // When
           reversedImage = bitmap.flipBitmap(animation);
@@ -452,20 +452,26 @@ describe('Bitmap', function () {
             reversedImage,
             0,
             0,
-            10,
-            10,
+            3,
+            3,
             0,
             0,
-            10,
-            10
+            3,
+            3
           );
 
-          reversedImage = canvasCtx.getImageData(0, 0, 10, 10);
+          reversedImage = canvasCtx.getImageData(0, 0, 3, 3);
 
           // Then
           expect(reversedImage.width).toEqual(reverseImage.width);
           expect(reversedImage.height).toEqual(reverseImage.height);
           expect(reversedImage.data).toEqual(reverseImage.data);
+        });
+    });
+
+    describe('updateAnimationFrame', function () {
+
+        it('should display bitmap on canvas with no repeat AND no reverse image', function() {
         });
     });
 });
