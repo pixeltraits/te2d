@@ -3,17 +3,15 @@
  * @class Clone
  */
 class Clone {
-  constructor() {
-  }
   /**
    * Clone object with Img object
    * @method cloneComplexObject
-   * @param  {object} complexObject
+   * @param  {object} complexObject, an object like Image
    * @return {object} clone
    */
   cloneComplexObject(complexObject) {
-    var clone = {},
-        i = 0;
+    const clone = {};
+    let i = 0;
 
     for(i in complexObject) {
       if (complexObject.hasOwnProperty(i)) {
@@ -30,8 +28,8 @@ class Clone {
   /**
    * Clone simple object
    * @method cloneObject
-   * @param  {object} simpleObject
-   * @return {object}
+   * @param  {object} simpleObject, js basic object
+   * @return {object} clone of the simpleObject
    */
   cloneObject(simpleObject) {
     return JSON.parse(JSON.stringify(simpleObject));
