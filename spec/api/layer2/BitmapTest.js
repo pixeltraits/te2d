@@ -468,10 +468,5 @@ describe('Bitmap', function () {
           expect(reversedImage.data).toEqual(reverseImage.data);
         });
     });
-
-    describe('updateAnimationFrame', function () {
-
-        it('should display bitmap on canvas with no repeat AND no reverse image', function() {
-        });
-    });
+    
 });
