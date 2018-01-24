@@ -73,7 +73,7 @@
    * @param {zone} zone
    * @param {string} id
    */
-  add(zone, id, scene) {
+  add(zone, id) {
     var firstCaseX = Math.floor(zone.x / this.ratio),
         firstCaseY = Math.floor(zone.y / this.ratio),
         lastCaseX = Math.ceil((zone.x + zone.dx) / this.ratio),
@@ -81,7 +81,7 @@
         x = firstCaseX;
 
     if(id == "50ib636f-8779-47d5-9fcb-ff98c8583dec"){
-      console.log(scene, zone, id)
+      console.log(zone, id);
     }
 
     for(; x < lastCaseX; x++) {
