@@ -43,7 +43,7 @@ class Keyboard {
   keydown(event) {
     var keyInfo = {
       code : event.code,
-      key : event.key,
+      key : event.key
     };
 
     if(!this.isActive(keyInfo)) {
@@ -60,7 +60,7 @@ class Keyboard {
   keyup(event) {
     var keyInfo = {
       code : event.code,
-      key : event.key,
+      key : event.key
     };
 
     this.deleteKey(keyInfo);
@@ -126,7 +126,7 @@ class Keyboard {
     for(; x < length; x++) {
       if(this.activeKey[x].code == keyInfo.code) {
         this.activeKey.splice(x, 1);
-        
+
         return;
       }
     }

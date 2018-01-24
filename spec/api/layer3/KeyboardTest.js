@@ -89,11 +89,11 @@ describe('Keyboard', () => {
           // Given
           let event = {
             code : 10,
-            key : "E",
+            key : "E"
           };
           let keyInfo = {
             code : event.code,
-            key : event.key,
+            key : event.key
           };
 
           // When
@@ -114,11 +114,11 @@ describe('Keyboard', () => {
           // Given
           let event = {
             code : 10,
-            key : "E",
+            key : "E"
           };
           let keyInfo = {
             code : event.code,
-            key : event.key,
+            key : event.key
           };
 
           // When
@@ -169,6 +169,184 @@ describe('Keyboard', () => {
           expect(keyboard.domELement.removeEventListener).toHaveBeenCalledWith('keyup', keyboard, false);
           expect(keyboard.domELement.removeEventListener).toHaveBeenCalledWith('blur', keyboard, false);
           expect(keyboard.active).toBeFalsy();
+        });
+
+    });
+
+    describe('deleteAllKeys', () => {
+
+        it('should clear activeKey array', () => {
+          // Given
+          let activeKey = [];
+
+          // When
+          keyboard.deleteAllKeys();
+
+          // Then
+          expect(keyboard.activeKey).toEqual(activeKey);
+        });
+
+    });
+
+    describe('isActive', () => {
+
+        it('should return true if keyinfo.code is in activeKey array', () => {
+          // Given
+          let activeKey = [
+            {
+              code : 10,
+              key : "E"
+            },
+            {
+              code : 11,
+              key : "R"
+            }
+          ];
+
+          keyboard.activeKey = activeKey;
+
+          // When
+          const isActive = keyboard.isActive({
+            code : 10,
+            key : "E"
+          });
+
+          // Then
+          expect(isActive).toBeTruthy();
+        });
+
+        it('should return false if keyinfo.code is not in activeKey array', () => {
+          // Given
+          let activeKey = [
+            {
+              code : 10,
+              key : "E"
+            },
+            {
+              code : 11,
+              key : "R"
+            }
+          ];
+
+          keyboard.activeKey = activeKey;
+
+          // When
+          const isActive = keyboard.isActive({
+            code : 13,
+            key : "E"
+          });
+
+          // Then
+          expect(isActive).toBeFalsy();
+        });
+
+    });
+
+    describe('deleteKey', () => {
+
+        it('should remove keyinfo from activeKey array', () => {
+          // Given
+          let activeKey = [
+            {
+              code : 10,
+              key : "E"
+            },
+            {
+              code : 11,
+              key : "R"
+            }
+          ];
+
+          keyboard.activeKey = activeKey;
+
+          // When
+          keyboard.deleteKey({
+            code : 11,
+            key : "R"
+          });
+
+          // Then
+          expect(keyboard.activeKey).not.toEqual([
+            {
+              code : 10,
+              key : "E"
+            },
+            {
+              code : 11,
+              key : "R"
+            }
+          ]);
+        });
+
+    });
+
+    describe('addKey', () => {
+
+        it('should add keyinfo to activeKey array', () => {
+          // Given
+          let activeKey = [
+            {
+              code : 10,
+              key : "E"
+            }
+          ];
+
+          keyboard.activeKey = activeKey;
+
+          // When
+          keyboard.addKey({
+            code : 11,
+            key : "R"
+          });
+
+          // Then
+          expect(keyboard.activeKey[keyboard.activeKey.length - 1]).toEqual(
+            {
+              code : 11,
+              key : "R"
+            }
+          );
+        });
+
+    });
+
+    describe('blur', () => {
+
+        it('should onKeyup for all key allready onKeydown and call deleteAllKeys', () => {
+          // Given
+          let activeKey = [
+            {
+              code : 10,
+              key : "E"
+            },
+            {
+              code : 11,
+              key : "R"
+            }
+          ];
+          let lengthActiveKey = activeKey.length;
+
+          keyboard.activeKey = [
+            {
+              code : 10,
+              key : "E"
+            },
+            {
+              code : 11,
+              key : "R"
+            }
+          ];
+
+          // When
+          spyOn(keyboard, 'onKeyup');
+          spyOn(keyboard, 'deleteAllKeys');
+          keyboard.blur();
+
+          // Then
+          for(let x = 0; x < lengthActiveKey; x++) {
+            expect(keyboard.onKeyup).toHaveBeenCalledWith(activeKey[x]);
+          }
+          expect(keyboard.deleteAllKeys).toHaveBeenCalled();
         });
 
     });
