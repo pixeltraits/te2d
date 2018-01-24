@@ -1,9 +1,13 @@
 const morgan = require('morgan');
+const debug = require('debug')('te2d:server');
 
 /**
  * Class
  */
 class ServerUtils {
+  constructor(server) {
+    this.server = server;
+  }
   /**
    * Event listener for HTTP server "error" event.
    * @param {string} error The caught error
@@ -29,8 +33,10 @@ class ServerUtils {
    * @return {void}
    */
   onListening() {
-    const address = server.address();
+    const address = 'localhost:1332';
 
     debug(`Listening on ${address}`);
   }
 }
+
+module.exports = ServerUtils;

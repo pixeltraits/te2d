@@ -4,13 +4,14 @@ const http = require('http');
 
 const port = '1338';
 const server = http.createServer(app);
+const serverUtils = new ServerUtils(server);
 
 /**
  * Create HTTP server.
  */
 server.listen(port);
-server.on('error', ServerUtils.onError);
-server.on('listening', ServerUtils.onListening);
+server.on('error', serverUtils.onError);
+server.on('listening', serverUtils.onListening);
 
 /**
  * Get port from environment and store in Express.
