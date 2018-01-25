@@ -76,7 +76,7 @@ class Game {
         }, "default");
 
         self.jsonLoader.load({
-          url : self.configUrl+gameConfig.loaderConfig,
+          url : self.configUrl + gameConfig.loaderConfig,
           onLoad : function(bitmapConfig, reference) {
             self.bitmapLoader.load({
               url : self.configUrl+bitmapConfig.bitmapUrl,
@@ -110,7 +110,7 @@ class Game {
     this.loader.setOnCompleteMethod(onLoad);
 
     this.jsonLoader.load({
-      url : this.configUrl+"/levels/"+name+".json",
+      url : self.configUrl + "/levels/"+name+".json",
       onLoad : function(levelConfig, reference) {
         self.level = levelConfig.levelInfo;
         self.startProperties = {
@@ -120,7 +120,7 @@ class Game {
 
         //Load Texts
         self.loadContent(
-          "resources/texts/"+self.lang+"/",
+          self.configUrl + "resources/texts/"+self.lang+"/",
           levelConfig.texts,
           self.jsonLoader,
           function(texts){//When all contents are loaded
@@ -133,7 +133,7 @@ class Game {
         );
         //Load Collisions
         self.loadContent(
-          "resources/physicProfils/",
+          self.configUrl + "resources/physicProfils/",
           levelConfig.physicProfils,
           self.jsonLoader,
           function(physicProfils){//When all contents are loaded
@@ -146,7 +146,7 @@ class Game {
         );
         //Load textProfils
         self.loadContent(
-          "resources/textProfils/",
+          self.configUrl + "resources/textProfils/",
           levelConfig.textProfils,
           self.jsonLoader,
           function(textProfils){//When all contents are loaded
@@ -159,20 +159,20 @@ class Game {
         );
         //Load bitmaps and theirs configurations
         self.loadContent(
-          "resources/bitmaps/",
+          self.configUrl + "resources/bitmaps/",
           levelConfig.bitmaps,
           self.bitmapLoader,
           function(bitmaps){//When all contents are loaded
             self.bitmaps = bitmaps;
             //load Configurations
             self.loadContent(
-              "resources/animations/",
+              self.configUrl + "resources/animations/",
               levelConfig.animations,
               self.jsonLoader,
               function(animations){//When all contents are loaded
                 //Load animations group
                 self.loadContent(
-                  "resources/animations/",
+                  self.configUrl + "resources/animations/",
                   levelConfig.animationsGroups,
                   self.jsonLoader,
                   function(animationsGroups){//When all contents are loaded
@@ -206,14 +206,14 @@ class Game {
 
         //Load audio files and theirs configurations
         self.loadContent(
-          "resources/audios/",
+          self.configUrl + "resources/audios/",
           levelConfig.audios,
           self.audioLoader,
           function(audios) {//When all contents are loaded
             self.audios = audios;
             //load profils
             self.loadContent(
-              "resources/audioProfils/",
+              self.configUrl + "resources/audioProfils/",
               levelConfig.audioProfils,
               self.jsonLoader,
               function(audioProfils) {//When all contents are loaded
@@ -234,7 +234,7 @@ class Game {
 
         //Load objects of scene
         self.loadContent(
-            "resources/entityProfils/",
+            self.configUrl + "resources/entityProfils/",
             levelConfig.entityProfils,
             self.jsonLoader,
             function(entityProfils) {//When all contents are loaded
@@ -274,7 +274,7 @@ class Game {
           //Mouse -- 1.0
           //Keyboard
           self.loadContent(
-            "resources/controlerProfils/keyboards/",
+            self.configUrl + "resources/controlerProfils/keyboards/",
             levelConfig.keyboard,
             self.jsonLoader,
             function(players){//When all contents are loaded
@@ -411,14 +411,14 @@ class Game {
     for (var prop in myObject) {
 
     }
-    console.log("FORIN", new Date() - time);
+
     time = new Date();
     var length = myTab.length,
         x=0;
     for(; x<length;x++) {
 
     }
-    console.log("FOR", new Date() - time);
+
 
     this.entities[this.level.cameraId].setDisplayUpdateMethod(function(framerate) {
       var inView = self.scene['graphic'].getEntities({
@@ -474,7 +474,7 @@ class Game {
         self.entities[inPhysic[x]].updatePhysicPosition();
       }
 
-      self.physicInterface.updateEngine(framerate, 10, 10);
+      self.physicInterface.updateEngine(framerate, 6, 2);
     });
 
     //Camera configuration for the level

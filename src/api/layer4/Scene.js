@@ -80,10 +80,6 @@
         lastCaseY = Math.ceil((zone.y + zone.dy) / this.ratio),
         x = firstCaseX;
 
-    if(id == "50ib636f-8779-47d5-9fcb-ff98c8583dec"){
-      console.log(zone, id);
-    }
-
     for(; x < lastCaseX; x++) {
       for(var y = firstCaseY; y < lastCaseY; y++) {
         this.map[x][y][this.map[x][y].length] = id;

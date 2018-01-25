@@ -1,9 +1,8 @@
 const express = require('express');
 const path = require('path');
-const less = require('less-middleware');
 const bodyParser = require('body-parser');
 const expressLayouts = require('express-ejs-layouts');
-const game = require('./routes/game');
+const index = require('./routes/index');
 
 const app = express();
 
@@ -16,14 +15,10 @@ app.use(expressLayouts);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use('/public/javascripts/lib/es6-shim/', express.static(path.resolve(__dirname, '/node_modules/es6-shim/')));
-app.use('/public/javascripts/', express.static(path.resolve(__dirname, '/build/')));
-app.use('/public/javascripts/lib/socket.io/', express.static(path.resolve(__dirname, '/node_modules/socket.io-client')));
-app.use('/game/', express.static(path.resolve(__dirname, '/game/')));
-app.use('/public/stylesheets', less(path.resolve(__dirname, '/public/stylesheets')));
-app.use('/public', express.static(path.resolve(__dirname, '/public')));
+app.use('/public/javascripts/', express.static(path.join(__dirname, '/build/')));
+app.use('/public/game', express.static(path.join(__dirname, '/game')));
 
-app.use('/game', game);
+app.use('/', index);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

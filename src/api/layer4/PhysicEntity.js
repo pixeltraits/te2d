@@ -460,9 +460,6 @@ class PhysicEntity {
   addToScene(scene) {
     if(this.scene == null) {
       this.scene = scene;
-      if(this.name == "groundPhysic") {
-        console.log(this.size, this.hitboxes)
-      }
       this.scene.add(
         {
           x : this.physicPosition.x,
@@ -563,10 +560,6 @@ class PhysicEntity {
       this.physicPosition = this.physicInterface.getPosition(this.physicBody);
 
       var graphicPosition = this.physicToGraphicPosition(this.physicPosition);
-      if(this.name == "groundPhysic") {
-        console.log("physic", this.physicPosition)
-        console.log("graphic", this.graphicPosition)
-      }
 
       if(this.graphicEntity != null) {
         this.graphicEntity.setPosition({

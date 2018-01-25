@@ -163,7 +163,7 @@
       "argument": {
         "type": "simple",
         "argument" : {
-          "x" : 0,
+          "x" : 250,
           "y" : 300
         }
       }

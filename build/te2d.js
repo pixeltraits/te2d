@@ -3,17 +3,15 @@
  * @class Clone
  */
 class Clone {
-  constructor() {
-  }
   /**
    * Clone object with Img object
    * @method cloneComplexObject
-   * @param  {object} complexObject
+   * @param  {object} complexObject, an object like Image
    * @return {object} clone
    */
   cloneComplexObject(complexObject) {
-    var clone = {},
-        i = 0;
+    const clone = {};
+    let i = 0;
 
     for(i in complexObject) {
       if (complexObject.hasOwnProperty(i)) {
@@ -30,8 +28,8 @@ class Clone {
   /**
    * Clone simple object
    * @method cloneObject
-   * @param  {object} simpleObject
-   * @return {object}
+   * @param  {object} simpleObject, js basic object
+   * @return {object} clone of the simpleObject
    */
   cloneObject(simpleObject) {
     return JSON.parse(JSON.stringify(simpleObject));
@@ -543,7 +541,7 @@ class Bitmap {
     );
 
     var imageData = context.getImageData(0, 0, animation.dx, animation.dy),
-    i=0;
+        i = 0;
 
     /* Bitmap flipping */
     for (; i < imageData.height; i++) {
@@ -551,6 +549,7 @@ class Bitmap {
             var index = (i * 4) * imageData.width + (j * 4),
                 mirrorIndex = ((i + 1) * 4) * imageData.width - ((j + 1) * 4),
                 p = 0;
+
             for (; p < 4; p++) {
                 var temp = imageData.data[index + p];
                 imageData.data[index + p] = imageData.data[mirrorIndex + p];
@@ -954,7 +953,7 @@ class Keyboard {
   keydown(event) {
     var keyInfo = {
       code : event.code,
-      key : event.key,
+      key : event.key
     };
 
     if(!this.isActive(keyInfo)) {
@@ -971,7 +970,7 @@ class Keyboard {
   keyup(event) {
     var keyInfo = {
       code : event.code,
-      key : event.key,
+      key : event.key
     };
 
     this.deleteKey(keyInfo);
@@ -1110,7 +1109,7 @@ class PhysicBox2D {
     this.pixelMetterFactor = 0.2;
 
     this.physicContext = new this.b2World(
-       new this.b2Vec2(0, 100),
+       new this.b2Vec2(0, 10),
        true
     );
     this.physicContext.SetContactListener(listener);
@@ -2494,9 +2493,6 @@ class PhysicEntity {
   addToScene(scene) {
     if(this.scene == null) {
       this.scene = scene;
-      if(this.name == "groundPhysic") {
-        console.log(this.size, this.hitboxes)
-      }
       this.scene.add(
         {
           x : this.physicPosition.x,
@@ -2597,10 +2593,6 @@ class PhysicEntity {
       this.physicPosition = this.physicInterface.getPosition(this.physicBody);
 
       var graphicPosition = this.physicToGraphicPosition(this.physicPosition);
-      if(this.name == "groundPhysic") {
-        console.log("physic", this.physicPosition)
-        console.log("graphic", this.graphicPosition)
-      }
 
       if(this.graphicEntity != null) {
         this.graphicEntity.setPosition({
@@ -2699,16 +2691,12 @@ class PhysicEntity {
    * @param {zone} zone
    * @param {string} id
    */
-  add(zone, id, scene) {
+  add(zone, id) {
     var firstCaseX = Math.floor(zone.x / this.ratio),
         firstCaseY = Math.floor(zone.y / this.ratio),
         lastCaseX = Math.ceil((zone.x + zone.dx) / this.ratio),
         lastCaseY = Math.ceil((zone.y + zone.dy) / this.ratio),
         x = firstCaseX;
-
-    if(id == "50ib636f-8779-47d5-9fcb-ff98c8583dec"){
-      console.log(scene, zone, id)
-    }
 
     for(; x < lastCaseX; x++) {
       for(var y = firstCaseY; y < lastCaseY; y++) {
@@ -3453,7 +3441,7 @@ class Game {
         }, "default");
 
         self.jsonLoader.load({
-          url : self.configUrl+gameConfig.loaderConfig,
+          url : self.configUrl + gameConfig.loaderConfig,
           onLoad : function(bitmapConfig, reference) {
             self.bitmapLoader.load({
               url : self.configUrl+bitmapConfig.bitmapUrl,
@@ -3487,7 +3475,7 @@ class Game {
     this.loader.setOnCompleteMethod(onLoad);
 
     this.jsonLoader.load({
-      url : this.configUrl+"/levels/"+name+".json",
+      url : self.configUrl + "/levels/"+name+".json",
       onLoad : function(levelConfig, reference) {
         self.level = levelConfig.levelInfo;
         self.startProperties = {
@@ -3497,7 +3485,7 @@ class Game {
 
         //Load Texts
         self.loadContent(
-          "resources/texts/"+self.lang+"/",
+          self.configUrl + "resources/texts/"+self.lang+"/",
           levelConfig.texts,
           self.jsonLoader,
           function(texts){//When all contents are loaded
@@ -3510,7 +3498,7 @@ class Game {
         );
         //Load Collisions
         self.loadContent(
-          "resources/physicProfils/",
+          self.configUrl + "resources/physicProfils/",
           levelConfig.physicProfils,
           self.jsonLoader,
           function(physicProfils){//When all contents are loaded
@@ -3523,7 +3511,7 @@ class Game {
         );
         //Load textProfils
         self.loadContent(
-          "resources/textProfils/",
+          self.configUrl + "resources/textProfils/",
           levelConfig.textProfils,
           self.jsonLoader,
           function(textProfils){//When all contents are loaded
@@ -3536,20 +3524,20 @@ class Game {
         );
         //Load bitmaps and theirs configurations
         self.loadContent(
-          "resources/bitmaps/",
+          self.configUrl + "resources/bitmaps/",
           levelConfig.bitmaps,
           self.bitmapLoader,
           function(bitmaps){//When all contents are loaded
             self.bitmaps = bitmaps;
             //load Configurations
             self.loadContent(
-              "resources/animations/",
+              self.configUrl + "resources/animations/",
               levelConfig.animations,
               self.jsonLoader,
               function(animations){//When all contents are loaded
                 //Load animations group
                 self.loadContent(
-                  "resources/animations/",
+                  self.configUrl + "resources/animations/",
                   levelConfig.animationsGroups,
                   self.jsonLoader,
                   function(animationsGroups){//When all contents are loaded
@@ -3583,14 +3571,14 @@ class Game {
 
         //Load audio files and theirs configurations
         self.loadContent(
-          "resources/audios/",
+          self.configUrl + "resources/audios/",
           levelConfig.audios,
           self.audioLoader,
           function(audios) {//When all contents are loaded
             self.audios = audios;
             //load profils
             self.loadContent(
-              "resources/audioProfils/",
+              self.configUrl + "resources/audioProfils/",
               levelConfig.audioProfils,
               self.jsonLoader,
               function(audioProfils) {//When all contents are loaded
@@ -3611,7 +3599,7 @@ class Game {
 
         //Load objects of scene
         self.loadContent(
-            "resources/entityProfils/",
+            self.configUrl + "resources/entityProfils/",
             levelConfig.entityProfils,
             self.jsonLoader,
             function(entityProfils) {//When all contents are loaded
@@ -3651,7 +3639,7 @@ class Game {
           //Mouse -- 1.0
           //Keyboard
           self.loadContent(
-            "resources/controlerProfils/keyboards/",
+            self.configUrl + "resources/controlerProfils/keyboards/",
             levelConfig.keyboard,
             self.jsonLoader,
             function(players){//When all contents are loaded
@@ -3788,14 +3776,14 @@ class Game {
     for (var prop in myObject) {
 
     }
-    console.log("FORIN", new Date() - time);
+
     time = new Date();
     var length = myTab.length,
         x=0;
     for(; x<length;x++) {
 
     }
-    console.log("FOR", new Date() - time);
+
 
     this.entities[this.level.cameraId].setDisplayUpdateMethod(function(framerate) {
       var inView = self.scene['graphic'].getEntities({
@@ -3851,7 +3839,7 @@ class Game {
         self.entities[inPhysic[x]].updatePhysicPosition();
       }
 
-      self.physicInterface.updateEngine(framerate, 10, 10);
+      self.physicInterface.updateEngine(framerate, 6, 2);
     });
 
     //Camera configuration for the level
