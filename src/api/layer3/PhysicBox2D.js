@@ -28,7 +28,7 @@ class PhysicBox2D {
     this.pixelMetterFactor = 0.2;
 
     this.physicContext = new this.b2World(
-       new this.b2Vec2(0, 10),
+       new this.b2Vec2(0, 30),
        true
     );
     this.physicContext.SetContactListener(listener);
@@ -93,6 +93,7 @@ class PhysicBox2D {
     fixDef.shape = new this.b2PolygonShape;
     fixDef.shape.SetAsBox(this.pixelToMetter(dx+x), this.pixelToMetter(dy+y));
 
+    console.log(id, x, y, dx, dy, angle, sensor, restitution, friction, density, bodyRef)
     return bodyRef.CreateFixture(fixDef);
   }
   /**
@@ -159,6 +160,7 @@ class PhysicBox2D {
     fixDef.shape = new this.b2PolygonShape;
     fixDef.shape.Set(vertices, length);
 
+    console.log(id, x, y, vertices, angle, sensor, restitution, friction, density, bodyRef)
     return bodyRef.CreateFixture(fixDef);
   }
   /**

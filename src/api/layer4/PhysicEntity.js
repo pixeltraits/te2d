@@ -367,47 +367,47 @@ class PhysicEntity {
    * @param {collisionGeometry} collisionGeometry
    */
   addFixtureToBody(collisionGeometry) {
-    switch(collisionGeometry.shape) {
+    switch(collisionGeometry.fixture.shape) {
       case "circle" :
         return this.physicInterface.getCircle(
-          collisionGeometry.id,
-          collisionGeometry.x,
-          collisionGeometry.y,
-          collisionGeometry.radius,
-          collisionGeometry.angle,
-          collisionGeometry.sensor,
-          collisionGeometry.restitution,
-          collisionGeometry.friction,
-          collisionGeometry.density,
+          collisionGeometry.fixture.id,
+          collisionGeometry.fixture.x,
+          collisionGeometry.fixture.y,
+          collisionGeometry.fixture.radius,
+          collisionGeometry.fixture.angle,
+          collisionGeometry.fixture.sensor,
+          collisionGeometry.fixture.restitution,
+          collisionGeometry.fixture.friction,
+          collisionGeometry.fixture.density,
           this.physicBody
         );
         break;
       case "box" :
         return this.physicInterface.getBox(
-          collisionGeometry.id,
-          collisionGeometry.x,
-          collisionGeometry.y,
-          collisionGeometry.dx,
-          collisionGeometry.dy,
-          collisionGeometry.angle,
-          collisionGeometry.sensor,
-          collisionGeometry.restitution,
-          collisionGeometry.friction,
-          collisionGeometry.density,
+          collisionGeometry.fixture.id,
+          collisionGeometry.fixture.x,
+          collisionGeometry.fixture.y,
+          collisionGeometry.fixture.dx,
+          collisionGeometry.fixture.dy,
+          collisionGeometry.fixture.angle,
+          collisionGeometry.fixture.sensor,
+          collisionGeometry.fixture.restitution,
+          collisionGeometry.fixture.friction,
+          collisionGeometry.fixture.density,
           this.physicBody
         );
         break;
       case "polygon" :
         return this.physicInterface.getPolygon(
-          collisionGeometry.id,
-          collisionGeometry.x,
-          collisionGeometry.y,
-          collisionGeometry.vertices,
-          collisionGeometry.angle,
-          collisionGeometry.sensor,
-          collisionGeometry.restitution,
-          collisionGeometry.friction,
-          collisionGeometry.density,
+          collisionGeometry.fixture.id,
+          collisionGeometry.fixture.x,
+          collisionGeometry.fixture.y,
+          collisionGeometry.fixture.vertices,
+          collisionGeometry.fixture.angle,
+          collisionGeometry.fixture.sensor,
+          collisionGeometry.fixture.restitution,
+          collisionGeometry.fixture.friction,
+          collisionGeometry.fixture.density,
           this.physicBody
         );
         break;

@@ -1109,7 +1109,7 @@ class PhysicBox2D {
     this.pixelMetterFactor = 0.2;
 
     this.physicContext = new this.b2World(
-       new this.b2Vec2(0, 10),
+       new this.b2Vec2(0, 30),
        true
     );
     this.physicContext.SetContactListener(listener);
@@ -1174,6 +1174,7 @@ class PhysicBox2D {
     fixDef.shape = new this.b2PolygonShape;
     fixDef.shape.SetAsBox(this.pixelToMetter(dx+x), this.pixelToMetter(dy+y));
 
+    console.log(id, x, y, dx, dy, angle, sensor, restitution, friction, density, bodyRef)
     return bodyRef.CreateFixture(fixDef);
   }
   /**
@@ -1240,6 +1241,7 @@ class PhysicBox2D {
     fixDef.shape = new this.b2PolygonShape;
     fixDef.shape.Set(vertices, length);
 
+    console.log(id, x, y, vertices, angle, sensor, restitution, friction, density, bodyRef)
     return bodyRef.CreateFixture(fixDef);
   }
   /**
@@ -1514,7 +1516,7 @@ class PhysicInterface {
    * @return {fixture}
    */
   getPolygon(id, x, y, vertices, angle, sensor, restitution, friction, density, bodyRef) {
-    return this.physic.getCircle(
+    return this.physic.getPolygon(
       id,
       x,
       y,
@@ -2400,47 +2402,47 @@ class PhysicEntity {
    * @param {collisionGeometry} collisionGeometry
    */
   addFixtureToBody(collisionGeometry) {
-    switch(collisionGeometry.shape) {
+    switch(collisionGeometry.fixture.shape) {
       case "circle" :
         return this.physicInterface.getCircle(
-          collisionGeometry.id,
-          collisionGeometry.x,
-          collisionGeometry.y,
-          collisionGeometry.radius,
-          collisionGeometry.angle,
-          collisionGeometry.sensor,
-          collisionGeometry.restitution,
-          collisionGeometry.friction,
-          collisionGeometry.density,
+          collisionGeometry.fixture.id,
+          collisionGeometry.fixture.x,
+          collisionGeometry.fixture.y,
+          collisionGeometry.fixture.radius,
+          collisionGeometry.fixture.angle,
+          collisionGeometry.fixture.sensor,
+          collisionGeometry.fixture.restitution,
+          collisionGeometry.fixture.friction,
+          collisionGeometry.fixture.density,
           this.physicBody
         );
         break;
       case "box" :
         return this.physicInterface.getBox(
-          collisionGeometry.id,
-          collisionGeometry.x,
-          collisionGeometry.y,
-          collisionGeometry.dx,
-          collisionGeometry.dy,
-          collisionGeometry.angle,
-          collisionGeometry.sensor,
-          collisionGeometry.restitution,
-          collisionGeometry.friction,
-          collisionGeometry.density,
+          collisionGeometry.fixture.id,
+          collisionGeometry.fixture.x + this.physicPosition.x,
+          collisionGeometry.fixture.y + this.physicPosition.y,
+          collisionGeometry.fixture.dx,
+          collisionGeometry.fixture.dy,
+          collisionGeometry.fixture.angle,
+          collisionGeometry.fixture.sensor,
+          collisionGeometry.fixture.restitution,
+          collisionGeometry.fixture.friction,
+          collisionGeometry.fixture.density,
           this.physicBody
         );
         break;
       case "polygon" :
         return this.physicInterface.getPolygon(
-          collisionGeometry.id,
-          collisionGeometry.x,
-          collisionGeometry.y,
-          collisionGeometry.vertices,
-          collisionGeometry.angle,
-          collisionGeometry.sensor,
-          collisionGeometry.restitution,
-          collisionGeometry.friction,
-          collisionGeometry.density,
+          collisionGeometry.fixture.id,
+          collisionGeometry.fixture.x + this.physicPosition.x,
+          collisionGeometry.fixture.y + this.physicPosition.y,
+          collisionGeometry.fixture.vertices,
+          collisionGeometry.fixture.angle,
+          collisionGeometry.fixture.sensor,
+          collisionGeometry.fixture.restitution,
+          collisionGeometry.fixture.friction,
+          collisionGeometry.fixture.density,
           this.physicBody
         );
         break;

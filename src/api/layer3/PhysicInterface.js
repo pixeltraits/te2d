@@ -109,7 +109,7 @@ class PhysicInterface {
    * @return {fixture}
    */
   getPolygon(id, x, y, vertices, angle, sensor, restitution, friction, density, bodyRef) {
-    return this.physic.getCircle(
+    return this.physic.getPolygon(
       id,
       x,
       y,
