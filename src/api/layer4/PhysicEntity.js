@@ -383,12 +383,13 @@ class PhysicEntity {
         );
         break;
       case "box" :
+      console.log(this)
         return this.physicInterface.getBox(
           collisionGeometry.fixture.id,
           collisionGeometry.fixture.x,
           collisionGeometry.fixture.y,
-          collisionGeometry.fixture.dx,
-          collisionGeometry.fixture.dy,
+          collisionGeometry.fixture.dx / 2,
+          collisionGeometry.fixture.dy / 2,
           collisionGeometry.fixture.angle,
           collisionGeometry.fixture.sensor,
           collisionGeometry.fixture.restitution,

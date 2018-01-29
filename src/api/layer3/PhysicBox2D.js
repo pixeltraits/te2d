@@ -91,7 +91,7 @@ class PhysicBox2D {
     fixDef.userData = id;
 
     fixDef.shape = new this.b2PolygonShape;
-    fixDef.shape.SetAsBox(this.pixelToMetter(dx+x), this.pixelToMetter(dy+y));
+    fixDef.shape.SetAsBox(this.pixelToMetter(dx), this.pixelToMetter(dy));
 
     console.log(id, x, y, dx, dy, angle, sensor, restitution, friction, density, bodyRef)
     return bodyRef.CreateFixture(fixDef);

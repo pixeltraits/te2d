@@ -1172,7 +1172,7 @@ class PhysicBox2D {
     fixDef.userData = id;
 
     fixDef.shape = new this.b2PolygonShape;
-    fixDef.shape.SetAsBox(this.pixelToMetter(dx+x), this.pixelToMetter(dy+y));
+    fixDef.shape.SetAsBox(this.pixelToMetter(dx), this.pixelToMetter(dy));
 
     console.log(id, x, y, dx, dy, angle, sensor, restitution, friction, density, bodyRef)
     return bodyRef.CreateFixture(fixDef);
@@ -2418,12 +2418,13 @@ class PhysicEntity {
         );
         break;
       case "box" :
+      console.log(this)
         return this.physicInterface.getBox(
           collisionGeometry.fixture.id,
-          collisionGeometry.fixture.x + this.physicPosition.x,
-          collisionGeometry.fixture.y + this.physicPosition.y,
-          collisionGeometry.fixture.dx,
-          collisionGeometry.fixture.dy,
+          collisionGeometry.fixture.x,
+          collisionGeometry.fixture.y,
+          collisionGeometry.fixture.dx / 2,
+          collisionGeometry.fixture.dy / 2,
           collisionGeometry.fixture.angle,
           collisionGeometry.fixture.sensor,
           collisionGeometry.fixture.restitution,
@@ -2435,8 +2436,8 @@ class PhysicEntity {
       case "polygon" :
         return this.physicInterface.getPolygon(
           collisionGeometry.fixture.id,
-          collisionGeometry.fixture.x + this.physicPosition.x,
-          collisionGeometry.fixture.y + this.physicPosition.y,
+          collisionGeometry.fixture.x,
+          collisionGeometry.fixture.y,
           collisionGeometry.fixture.vertices,
           collisionGeometry.fixture.angle,
           collisionGeometry.fixture.sensor,
