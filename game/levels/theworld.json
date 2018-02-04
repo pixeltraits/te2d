@@ -114,6 +114,10 @@
       "objectConf" : "groundPhysic"
     },
     {
+      "id" : "leftWall",
+      "objectConf" : "groundPhysic"
+    },
+    {
       "id" : "50ib636f-8779-27d1-9fcb-ff98c8553dec",
       "objectConf" : "playerPhysic"
     }
@@ -134,13 +138,47 @@
     {
       "type" : "action",
       "context": "entities",
+      "id": "leftWall",
+      "method": "setGraphicPosition",
+      "argument": {
+        "type": "simple",
+        "argument" : {
+          "x" : 0,
+          "y" : 0
+        }
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "leftWall",
+      "method": "setAngle",
+      "argument": {
+        "type": "simple",
+        "argument" : 0
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "leftWall",
+      "method": "addToPhysicContext",
+      "argument": {
+        "type" : "resource",
+        "context": "scene",
+        "id": "physic"
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
       "id": "50ib636f-8779-27d1-9fcb-ff98c8553dec",
       "method": "setGraphicPosition",
       "argument": {
         "type": "simple",
         "argument" : {
-          "x" : 100,
-          "y" : 100
+          "x" : 300,
+          "y" : 50
         }
       }
     },
@@ -164,7 +202,7 @@
         "type": "simple",
         "argument" : {
           "x" : 0,
-          "y" : 300
+          "y" : 200
         }
       }
     },

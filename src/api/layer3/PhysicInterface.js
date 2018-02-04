@@ -50,25 +50,6 @@ class PhysicInterface {
    * @return {fixture}
    */
   getBox(id, x, y, dx, dy, angle, sensor, restitution, friction, density, bodyRef) {
-    //Polygon Only
-    let leftTopPoint = {
-      x : x,
-      y : y
-    };
-    let rightTopPoint = {
-      x : x + dx,
-      y : y
-    };
-    let leltBottomPoint = {
-      x : x,
-      y : y + dy
-    };
-    let rightBottomPoint = {
-      x : x + dx,
-      y : y + dy
-    };
-    let polygon = [leftTopPoint, rightTopPoint, leltBottomPoint, rightBottomPoint];
-
     return this.physic.getBox(
       id,
       x,

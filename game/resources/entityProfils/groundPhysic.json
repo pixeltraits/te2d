@@ -33,7 +33,7 @@
                 "sensor" : false,
                 "restitution" : 0,
                 "friction" : 0,
-                "density" : 1,
+                "density" : 2,
                 "angle": 0,
                 "shape" : "box",
                 "color" : "blue",
@@ -41,8 +41,8 @@
                 "borderSize" : 2,
                 "x" : 0,
                 "y" : 0,
-                "dx" : 200,
-                "dy" : 32
+                "dx" : 507,
+                "dy" : 27
               }
             }
           },

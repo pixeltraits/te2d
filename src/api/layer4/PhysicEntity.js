@@ -32,8 +32,8 @@ class PhysicEntity {
     };
     /* Calculated Size with angle */
     this.size = {
-      dx : 0,
-      dy : 0
+      dx : 1,
+      dy : 1
     };
 
     this.angle = 0;
@@ -383,13 +383,12 @@ class PhysicEntity {
         );
         break;
       case "box" :
-      console.log(this)
         return this.physicInterface.getBox(
           collisionGeometry.fixture.id,
           collisionGeometry.fixture.x,
           collisionGeometry.fixture.y,
-          collisionGeometry.fixture.dx / 2,
-          collisionGeometry.fixture.dy / 2,
+          collisionGeometry.fixture.dx,
+          collisionGeometry.fixture.dy,
           collisionGeometry.fixture.angle,
           collisionGeometry.fixture.sensor,
           collisionGeometry.fixture.restitution,
@@ -401,8 +400,6 @@ class PhysicEntity {
       case "polygon" :
         return this.physicInterface.getPolygon(
           collisionGeometry.fixture.id,
-          collisionGeometry.fixture.x,
-          collisionGeometry.fixture.y,
           collisionGeometry.fixture.vertices,
           collisionGeometry.fixture.angle,
           collisionGeometry.fixture.sensor,
@@ -567,6 +564,7 @@ class PhysicEntity {
           x : graphicPosition.x + this.graphicDelta.x,
           y : graphicPosition.y + this.graphicDelta.y
         });
+        this.graphicEntity.setAngle(this.angle);
       }
 
       var x = 0,
@@ -577,6 +575,7 @@ class PhysicEntity {
           x : this.hitboxes[x].fixture.x + this.graphicPosition.x,
           y : this.hitboxes[x].fixture.y + this.graphicPosition.y
         });
+        this.hitboxes[x].graphicEntity.setAngle(this.angle + this.hitboxes[x].fixture.angle);
       }
 
       this.graphicPosition = graphicPosition;

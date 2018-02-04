@@ -195,6 +195,22 @@ class GraphicEntity {
     };
   }
   /**
+   * Set angle
+   * @method setAngle
+   * @param {number} angle
+   */
+  setAngle(angle) {
+    this.angle = angle;
+  }
+  /**
+   * Set angle
+   * @method setAngle
+   * @param {number} angle
+   */
+  getAngle(angle) {
+    return this.angle;
+  }
+  /**
    * Set new animation bitmap
    * @method setBitmap
    * @param {animation} animation

@@ -25,10 +25,10 @@ class PhysicBox2D {
     //Physic context configuration
     var listener = new Box2D.Dynamics.b2ContactListener;
     listener.BeginContact = collisionStart;
-    this.pixelMetterFactor = 0.2;
+    this.pixelMetterFactor = 1;
 
     this.physicContext = new this.b2World(
-       new this.b2Vec2(0, 30),
+       new this.b2Vec2(0, 70),
        true
     );
     this.physicContext.SetContactListener(listener);
@@ -50,7 +50,7 @@ class PhysicBox2D {
     var bodyDef = new this.b2BodyDef;
 
     if(!dynamic) {
-      bodyDef.type = this.b2Body.b2_staticBod;
+      bodyDef.type = this.b2Body.b2_staticBody;
     } else {
       bodyDef.type = this.b2Body.b2_dynamicBody;
     }
@@ -82,19 +82,35 @@ class PhysicBox2D {
    * @return {fixture}
    */
   getBox(id, x, y, dx, dy, angle, sensor, restitution, friction, density, bodyRef) {
-    var fixDef = new this.b2FixtureDef;
+    //Create box with polygon methode
+    let leftTopPoint = {
+      x : x,
+      y : y
+    };
+    let rightTopPoint = {
+      x : x + dx,
+      y : y
+    };
+    let leftBottomPoint = {
+      x : x,
+      y : y + dy
+    };
+    let rightBottomPoint = {
+      x : x + dx,
+      y : y + dy
+    };
+    let vertices = [leftTopPoint, rightTopPoint, rightBottomPoint, leftBottomPoint];
 
-    fixDef.density = density;
-    fixDef.friction = friction;
-    fixDef.restitution = restitution;
-    fixDef.isSensor = sensor;
-    fixDef.userData = id;
-
-    fixDef.shape = new this.b2PolygonShape;
-    fixDef.shape.SetAsBox(this.pixelToMetter(dx), this.pixelToMetter(dy));
-
-    console.log(id, x, y, dx, dy, angle, sensor, restitution, friction, density, bodyRef)
-    return bodyRef.CreateFixture(fixDef);
+    return this.getPolygon(
+      id,
+      vertices,
+      angle,
+      sensor,
+      restitution,
+      friction,
+      density,
+      bodyRef
+    );
   }
   /**
    * Get a circle fixture
@@ -141,14 +157,14 @@ class PhysicBox2D {
    * @param {body} bodyRef
    * @return {fixture}
    */
-  getPolygon(id, x, y, vertices, angle, sensor, restitution, friction, density, bodyRef) {
-    var fixDef = new this.b2FixtureDef,
-        x = 0,
-        length = vertices.length;
+  getPolygon(id, vertices, angle, sensor, restitution, friction, density, bodyRef) {
+    let fixDef = new this.b2FixtureDef;
+    let polygonPoints = [];
+    const verticesLength = vertices.length;
 
-    for(; x < length; x++) {
-      vertices[x].x += x;
-      vertices[x].y += y;
+    for(let x = 0; x < verticesLength; x++) {
+      polygonPoints[x] = new this.b2Vec2;
+      polygonPoints[x].Set(vertices[x].x, vertices[x].y);
     }
 
     fixDef.density = density;
@@ -158,9 +174,8 @@ class PhysicBox2D {
     fixDef.userData = id;
 
     fixDef.shape = new this.b2PolygonShape;
-    fixDef.shape.Set(vertices, length);
+    fixDef.shape.SetAsArray(polygonPoints, verticesLength);
 
-    console.log(id, x, y, vertices, angle, sensor, restitution, friction, density, bodyRef)
     return bodyRef.CreateFixture(fixDef);
   }
   /**
@@ -296,7 +311,7 @@ class PhysicBox2D {
    * @param {vector} vector
    */
   setVelocity(bodyRef, vector) {
-    var velocity = physicObject.GetLinearVelocity(),
+    var velocity = bodyRef.GetLinearVelocity(),
         force = {
           x : vector.x,
           y : vector.y

@@ -31,8 +31,8 @@ class Player2D extends PhysicEntity {
         break;
     }
   }
-  update() {
-    super.update();
+  updatePhysicPosition() {
+    super.updatePhysicPosition();
 
     var velocity = this.getVelocity(),
         force = {

@@ -40,10 +40,10 @@
                 "color" : "blue",
                 "borderColor" : "red",
                 "borderSize" : 2,
-                "x" : 3,
-                "y" : 50,
-                "dx" : 10,
-                "dy" : 2
+                "x" : 0,
+                "y" : 0,
+                "dx" : 15,
+                "dy" : 50
               }
             }
           },
