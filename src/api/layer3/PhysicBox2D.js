@@ -172,6 +172,7 @@ class PhysicBox2D {
     fixDef.restitution = restitution;
     fixDef.isSensor = sensor;
     fixDef.userData = id;
+    fixDef.angle = angle;
 
     fixDef.shape = new this.b2PolygonShape;
     fixDef.shape.SetAsArray(polygonPoints, verticesLength);

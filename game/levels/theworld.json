@@ -144,7 +144,7 @@
         "type": "simple",
         "argument" : {
           "x" : 0,
-          "y" : 0
+          "y" : 200
         }
       }
     },
@@ -155,7 +155,7 @@
       "method": "setAngle",
       "argument": {
         "type": "simple",
-        "argument" : 0
+        "argument" : 1.57
       }
     },
     {
@@ -202,7 +202,7 @@
         "type": "simple",
         "argument" : {
           "x" : 0,
-          "y" : 200
+          "y" : 500
         }
       }
     },

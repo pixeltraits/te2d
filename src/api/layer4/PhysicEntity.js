@@ -44,7 +44,7 @@ class PhysicEntity {
       x : 0,
       y : 0
     };
-    this.angleConstraint = properties.angleConstraint != undefined ? properties.angleConstraint : true;
+    this.angleConstraint = properties.angleConstraint != undefined ? properties.angleConstraint : false;
     this.angularInertia = properties.rotateInertia != undefined ? properties.rotateInertia : 1;
     this.mass = properties.mass != undefined ? properties.mass : 1;
     this.dynamic = properties.dynamic != undefined ? properties.dynamic : false;
@@ -556,6 +556,7 @@ class PhysicEntity {
   updatePhysicPosition() {
     if(this.physicBody != null) {
       this.physicPosition = this.physicInterface.getPosition(this.physicBody);
+      this.angle = this.physicInterface.getAngle(this.physicBody);
 
       var graphicPosition = this.physicToGraphicPosition(this.physicPosition);
 
