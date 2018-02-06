@@ -4,37 +4,6 @@
  */
 class Bitmap {
   constructor() {
-    this.animation = 0;//Animation in progress
-    this.animations = [];//Animation group in progress
-    this.animationCallbacks = [];
-    this.timer = new Timer();
-    this.pause = false;
-    this.frame = 0;//Animation frame in progress
-  }
-  /**
-   * Get the size of bitmap with texture repetition
-   * @method getSize
-   * @return {size}
-   */
-  getSize() {
-    return {
-      dx : this.animations[this.animation].dx * this.animations[this.animation].repeatX,
-      dy : this.animations[this.animation].dy * this.animations[this.animation].repeatY
-    };
-  }
-  /**
-   * Set the animation
-   * @method setAnimation
-   * @param {animation[]} animations
-   * @param {animationCallback[]} animationCallbacks
-   */
-  setAnimation(animations, animationCallbacks) {
-    if(!this.pause) {
-      this.animationCallbacks = animationCallbacks;
-      this.animations = animations;
-      this.frame = 0;
-      this.animation = 0;
-    }
   }
   /**
    * Show bitmap on the canvas context
@@ -44,36 +13,34 @@ class Bitmap {
    * @param {size} canvasSize
    * @param {canvas2dContext} canvasCtx
    */
-  show(position, angle, canvasSize, canvasCtx) {
-    var repeat = {
-          x : 1,
-          y : 1
-        },
-        x = 0;
+  show(animation, position, angle, canvasSize, canvasCtx) {
+    let repeat = {
+      x : 1,
+      y : 1
+    };
+    let centerX = parseInt(position.x);
+    let centerY = parseInt(position.y);
 
-    this.updateAnimationFrame();
-
-    if(this.animations[this.animation].repeatX > 1 || this.animations[this.animation].repeatY > 1) {
-      repeat = this.getRepBitmap(position, canvasSize);
+    if(animation.repeatX > 1 || animation.repeatY > 1) {
+      repeat = this.getRepBitmap(animation, position, canvasSize);
     }
 
-    for(; x < repeat.x; x++) {
-      for(var y = 0; y < repeat.y; y++) {
-        var img = this.cutBitmap(
-              {
-                x : position.x + (this.animations[this.animation].dx * x),
-                y : position.y + (this.animations[this.animation].dy * y)
-              },
-              canvasSize
-            ),
-            centerX = img.x + (img.dx / 2),
-            centerY = img.y + (img.dy / 2);
+    canvasCtx.translate(centerX, centerY);
+    canvasCtx.rotate(angle);
 
-        canvasCtx.translate(centerX, centerY);
-        canvasCtx.rotate(angle);
+    for(let x = 0; x < repeat.x; x++) {
+      for(let y = 0; y < repeat.y; y++) {
+        let img = this.cutBitmap(
+          animation,
+          {
+            x : position.x + (animation.dx * x),
+            y : position.y + (animation.dy * y)
+          },
+          canvasSize
+        );
 
-        if(this.animations[this.animation].reverse) {
-          img.bitmap = this.animations[this.animation].bitmap;
+        if(animation.reverse) {
+          img.bitmap = animation.bitmap;
           canvasCtx.drawImage(
             this.flipBitmap(img),
             0,
@@ -87,22 +54,21 @@ class Bitmap {
           );
         } else {
           canvasCtx.drawImage(
-            this.animations[this.animation].bitmap,
+            animation.bitmap,
             img.ix,
             img.iy,
             img.dx,
             img.dy,
-            -img.dx / 2,
-            -img.dy / 2,
+            img.x,
+            img.y,
             img.dx,
             img.dy
           );
         }
-
-        canvasCtx.rotate(-angle);
-        canvasCtx.translate(-centerX, -centerY);
       }
     }
+    canvasCtx.rotate(-angle);
+    canvasCtx.translate(-centerX, -centerY);
   }
   /**
    * Cut the bitmap
@@ -112,17 +78,17 @@ class Bitmap {
    * @param {size} sizeView
    * @return {bitmap} cutedBitmap
    */
-  cutBitmap(positionBitmap, sizeView) {
-    var x2 = positionBitmap.x + this.animations[this.animation].dx,
-        y2 = positionBitmap.y + this.animations[this.animation].dy,
-        cutedBitmap = {
-          x : positionBitmap.x,
-          y : positionBitmap.y,
-          dx : this.animations[this.animation].dx,
-          dy : this.animations[this.animation].dy,
-          ix : this.animations[this.animation].x + (this.frame * this.animations[this.animation].dx),
-          iy : this.animations[this.animation].y
-        };
+  cutBitmap(animation, positionBitmap, sizeView) {
+    let x2 = positionBitmap.x + animation.dx;
+    let y2 = positionBitmap.y + animation.dy;
+    let cutedBitmap = {
+      x : positionBitmap.x,
+      y : positionBitmap.y,
+      dx : animation.dx,
+      dy : animation.dy,
+      ix : animation.x + (this.frame * animation.dx),
+      iy : animation.y
+    };
 
     if(positionBitmap.x < 0) {
       cutedBitmap.x = 0;
@@ -151,14 +117,17 @@ class Bitmap {
    * @param {size} sizeView
    * @return {repeatBitmap}
    */
-  getRepBitmap(positionBitmap, sizeView) {
-    var sizeBitmap = this.getSize(),
-        x2 = positionBitmap.x + sizeBitmap.dx,
-        y2 = positionBitmap.y + sizeBitmap.dy,
-        visibleSize = {
-          dx : 0,
-          dy : 0
-        };
+  getRepBitmap(animation, positionBitmap, sizeView) {
+    let sizeBitmap = {
+      dx : animation.dx * animation.repeatX,
+      dy : animation.dy * animation.repeatY
+    };
+    let x2 = positionBitmap.x + sizeBitmap.dx;
+    let y2 = positionBitmap.y + sizeBitmap.dy;
+    let visibleSize = {
+      dx : 0,
+      dy : 0
+    };
 
     if(positionBitmap.x > 0) {
       if(x2 < sizeView.dx) {
@@ -189,51 +158,9 @@ class Bitmap {
     }
 
     return {
-      x : Math.ceil(visibleSize.dx / this.animations[this.animation].dx),
-      y : Math.ceil(visibleSize.dy / this.animations[this.animation].dy)
+      x : Math.ceil(visibleSize.dx / animation.dx),
+      y : Math.ceil(visibleSize.dy / animation.dy)
     };
-  }
-  /**
-   * Update the frame of the animation
-   * @method updateAnimationFrame
-   */
-  updateAnimationFrame() {
-    if(this.animations[this.animation].frames > 0 || this.animations.length > 1 || this.animation < this.animations.length - 1) {
-      /* The animation is not fix or is an animation group where is not the last animation */
-      this.timer.setDelta(this.animations[this.animation].fps);
-
-      if(this.timer.whatTimeIsIt()) {
-        /* The time rate is past */
-
-        if(!this.pause) {
-          /* The pause is inactive */
-
-          if(this.frame >= this.animations[this.animation].frames) {
-            /* The animation is in the last frame */
-            this.animationCallbacks[this.animation]();
-            this.frame = 0;
-
-            if(this.animations.length > 1 && this.animation < this.animations.length - 1) {
-              /* The animation is not the last or unique */
-              this.animation++;
-            }
-          }
-
-          if(this.animations[this.animation].frames > 0) {
-            /* The animation have more one frame */
-            this.frame++;
-          }
-        }
-      }
-    }
-  }
-  /**
-   * Active/Desactive the pause
-   * @method setPause
-   * @param {boolean} pause
-   */
-  setPause(pause) {
-    this.pause = pause;
   }
   /**
    * Reverse pixel of bitmap(Horyzontal)
@@ -242,8 +169,8 @@ class Bitmap {
    * @return {canvas} canvas
    */
   flipBitmap(animation) {
-    var canvas = document.createElement('canvas'),
-        context = canvas.getContext('2d');
+    let canvas = document.createElement('canvas');
+    let context = canvas.getContext('2d');
 
     canvas.width = animation.dx;
     canvas.height = animation.dy;
@@ -260,18 +187,16 @@ class Bitmap {
       animation.dy
     );
 
-    var imageData = context.getImageData(0, 0, animation.dx, animation.dy),
-        i = 0;
+    let imageData = context.getImageData(0, 0, animation.dx, animation.dy);
 
     /* Bitmap flipping */
-    for (; i < imageData.height; i++) {
-        for (var j = 0; j < imageData.width / 2; j++) {
-            var index = (i * 4) * imageData.width + (j * 4),
-                mirrorIndex = ((i + 1) * 4) * imageData.width - ((j + 1) * 4),
-                p = 0;
+    for (let i = 0; i < imageData.height; i++) {
+        for (let j = 0; j < imageData.width / 2; j++) {
+            let index = (i * 4) * imageData.width + (j * 4);
+            let mirrorIndex = ((i + 1) * 4) * imageData.width - ((j + 1) * 4);
 
-            for (; p < 4; p++) {
-                var temp = imageData.data[index + p];
+            for (let p = 0; p < 4; p++) {
+                let temp = imageData.data[index + p];
                 imageData.data[index + p] = imageData.data[mirrorIndex + p];
                 imageData.data[mirrorIndex + p] = temp;
             }

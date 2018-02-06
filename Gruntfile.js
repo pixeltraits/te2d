@@ -9,6 +9,7 @@ module.exports = (grunt) => {
         src: [
           'src/api/layer1/*.js',
           'src/api/layer2/Audio.js',
+          'src/api/layer2/Animation.js',
           'src/api/layer2/Bitmap.js',
           'src/api/layer2/Text.js',
           'src/api/layer2/Geometry.js',

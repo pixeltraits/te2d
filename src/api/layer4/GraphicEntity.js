@@ -23,6 +23,7 @@ class GraphicEntity {
     this.parent = null;
     this.subGraphicEntities = [];
     this.graphicObject = null;
+    this.animation = null;
 
     /* Other */
     this.pause = false;
@@ -216,18 +217,12 @@ class GraphicEntity {
    * @param {animation} animation
    */
   setBitmap(animation) {
-    var bitmap = [],
-        length = animation.length,
-        x = 0;
-
-    for(; x < length; x++) {
-      bitmap[x] = animation[x];
-    }
-
     this.graphicObject = new Bitmap();
-    this.graphicObject.setAnimation(bitmap);
+    this.animation = new Animation();
 
-    this.setSize(this.graphicObject.getSize());
+    this.animation.setAnimation(animation);
+
+    this.setSize(this.animation.getSize());
   }
   /**
    * Set new text
@@ -278,13 +273,21 @@ class GraphicEntity {
    * @param {position} cameraPosition
    */
   updateGraphicObject(canvasCtx, canvasSize, cameraPosition) {
-    var mapPosition = this.getPosition(),
-        relativePosition = {
-          x : mapPosition.x - cameraPosition.x,
-          y : mapPosition.y - cameraPosition.y
-        };
+    let mapPosition = this.getPosition();
+    let relativePosition = {
+      x : mapPosition.x - cameraPosition.x,
+      y : mapPosition.y - cameraPosition.y
+    };
+    let animationInProcess;
 
-    this.graphicObject.show(relativePosition, this.angle, canvasSize, canvasCtx);
+    if(this.animation) {
+      this.animation.updateAnimationFrame();
+      animationInProcess = this.animation.getAnimationInProcess();
+      this.graphicObject.show(animationInProcess, relativePosition, this.angle, canvasSize, canvasCtx);
+    } else {
+      this.graphicObject.show(relativePosition, this.angle, canvasSize, canvasCtx);
+    }
+
   }
   /**
    * Set new audio file
