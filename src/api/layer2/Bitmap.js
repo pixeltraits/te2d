@@ -59,8 +59,8 @@ class Bitmap {
             img.iy,
             img.dx,
             img.dy,
-            img.x,
-            img.y,
+            animation.dx * x,
+            animation.dy * y,
             img.dx,
             img.dy
           );
@@ -86,7 +86,7 @@ class Bitmap {
       y : positionBitmap.y,
       dx : animation.dx,
       dy : animation.dy,
-      ix : animation.x + (this.frame * animation.dx),
+      ix : animation.x,
       iy : animation.y
     };
 
@@ -191,16 +191,16 @@ class Bitmap {
 
     /* Bitmap flipping */
     for (let i = 0; i < imageData.height; i++) {
-        for (let j = 0; j < imageData.width / 2; j++) {
-            let index = (i * 4) * imageData.width + (j * 4);
-            let mirrorIndex = ((i + 1) * 4) * imageData.width - ((j + 1) * 4);
+      for (let j = 0; j < imageData.width / 2; j++) {
+        let index = (i * 4) * imageData.width + (j * 4);
+        let mirrorIndex = ((i + 1) * 4) * imageData.width - ((j + 1) * 4);
 
-            for (let p = 0; p < 4; p++) {
-                let temp = imageData.data[index + p];
-                imageData.data[index + p] = imageData.data[mirrorIndex + p];
-                imageData.data[mirrorIndex + p] = temp;
-            }
+        for (let p = 0; p < 4; p++) {
+          let temp = imageData.data[index + p];
+          imageData.data[index + p] = imageData.data[mirrorIndex + p];
+          imageData.data[mirrorIndex + p] = temp;
         }
+      }
     }
     context.putImageData(imageData, 0, 0);
 

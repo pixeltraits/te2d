@@ -28,7 +28,7 @@ class PhysicBox2D {
     this.pixelMetterFactor = 1;
 
     this.physicContext = new this.b2World(
-       new this.b2Vec2(0, 70),
+       new this.b2Vec2(0, 100),
        true
     );
     this.physicContext.SetContactListener(listener);

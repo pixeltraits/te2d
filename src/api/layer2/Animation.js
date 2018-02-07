@@ -27,7 +27,18 @@ class Animation {
    * @return {animation}
    */
   getAnimationInProcess() {
-    return this.animations[this.animation];
+    let animationInProcess = {
+      bitmap : this.animations[this.animation].bitmap,
+      dx : this.animations[this.animation].dx,
+      dy : this.animations[this.animation].dy,
+      name : this.animations[this.animation].name,
+      repeatX : this.animations[this.animation].repeatX,
+      repeatY : this.animations[this.animation].repeatY,
+      reverse : this.animations[this.animation].reverse,
+      x : this.animations[this.animation].x + (this.frame * this.animations[this.animation].dx),
+      y : this.animations[this.animation].y
+    }
+    return animationInProcess;
   }
   /**
    * Get the size of bitmap with texture repetition

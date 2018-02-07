@@ -18,7 +18,7 @@
             "type": "simple",
             "argument": {
               "direction" : "right",
-              "acc" :  1500,
+              "acc" :  3000,
               "speed" : 500
             }
           }
@@ -52,8 +52,8 @@
             "type": "simple",
             "argument": {
               "direction" : "left",
-              "acc" : 1500,
-              "speed" : -500
+              "acc" : 3000,
+              "speed" : 500
             }
           }
         }
