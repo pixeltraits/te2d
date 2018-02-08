@@ -761,8 +761,8 @@ class Box extends Geometry {
     super.show(position, angle, canvasSize, canvasCtx);
 
     var center = {
-      x : position.x + (this.size.dx / 2),
-      y : position.y + (this.size.dy / 2)
+      x : position.x,
+      y : position.y
     };
 
     canvasCtx.translate(center.x, center.y);
@@ -770,15 +770,15 @@ class Box extends Geometry {
 
     canvasCtx.fillStyle = this.borderColor;
     canvasCtx.fillRect(
-      -this.size.dx / 2,
-      -this.size.dy / 2,
+      0,
+      0,
       this.size.dx + (this.borderSize * 2),
       this.size.dy + (this.borderSize * 2)
     );
     canvasCtx.fillStyle = this.color;
     canvasCtx.fillRect(
-      this.borderSize - (this.size.dx / 2),
-      this.borderSize - (this.size.dy / 2),
+      this.borderSize - (0),
+      this.borderSize - (0),
       this.size.dx,
       this.size.dy
     );
@@ -1128,7 +1128,7 @@ class PhysicBox2D {
     //Physic context configuration
     var listener = new Box2D.Dynamics.b2ContactListener;
     listener.BeginContact = collisionStart;
-    this.pixelMetterFactor = 1;
+    this.pixelMetterFactor = 0.05;
 
     this.physicContext = new this.b2World(
        new this.b2Vec2(0, 100),
@@ -1187,20 +1187,20 @@ class PhysicBox2D {
   getBox(id, x, y, dx, dy, angle, sensor, restitution, friction, density, bodyRef) {
     //Create box with polygon methode
     let leftTopPoint = {
-      x : x,
-      y : y
+      x : this.pixelToMetter(x),
+      y : this.pixelToMetter(y)
     };
     let rightTopPoint = {
-      x : x + dx,
-      y : y
+      x : this.pixelToMetter(x + dx),
+      y : this.pixelToMetter(y)
     };
     let leftBottomPoint = {
-      x : x,
-      y : y + dy
+      x : this.pixelToMetter(x),
+      y : this.pixelToMetter(y + dy)
     };
     let rightBottomPoint = {
-      x : x + dx,
-      y : y + dy
+      x : this.pixelToMetter(x + dx),
+      y : this.pixelToMetter(y + dy)
     };
     let vertices = [leftTopPoint, rightTopPoint, rightBottomPoint, leftBottomPoint];
 
@@ -1405,7 +1405,7 @@ class PhysicBox2D {
    */
   setImpulse(bodyRef, vector) {
     var velocity = bodyRef.GetLinearVelocity();
-    velocity.y = vector.y;
+    velocity.y = this.pixelToMetter(vector.y);
     bodyRef.SetLinearVelocity(velocity);
   }
   /**
@@ -1417,8 +1417,8 @@ class PhysicBox2D {
   setVelocity(bodyRef, vector) {
     var velocity = bodyRef.GetLinearVelocity(),
         force = {
-          x : vector.x,
-          y : vector.y
+          x : this.pixelToMetter(vector.x),
+          y : this.pixelToMetter(vector.y)
         };
 
     bodyRef.ApplyForce(new this.b2Vec2(force.x, force.y), bodyRef.GetWorldCenter());
@@ -2306,11 +2306,10 @@ class PhysicEntity {
    */
   addHitbox(hitbox) {
     if(!this.verifyHitbox(hitbox.hitbox.id)) {
-      var size = {
-            dx : 0,
-            dy : 0
-          },
-          length = this.hitboxes.length;
+      let size = {
+        dx : 0,
+        dy : 0
+      };
 
       hitbox.graphicEntity.setGeometry(hitbox.hitbox);
 
@@ -2327,15 +2326,15 @@ class PhysicEntity {
           break;
       }
 
-      this.hitboxes[length] = {
+      let hit = this.hitboxes.push({
         fixture : hitbox.hitbox,
         graphicEntity : hitbox.graphicEntity,
         originalSize : size,
         id : hitbox.hitbox.id
-      };
+      });
 
       if(this.physicBody != null) {
-        this.addFixtureToBody(this.hitboxes[length].fixture);
+        this.addFixtureToBody(hit.fixture);
       }
     }
   }
@@ -3061,7 +3060,7 @@ class Player2D extends PhysicEntity {
     if(this.accLeft == 0 && this.accRight == 0) {
       this.physicInterface.stopForces(this.physicBody);
     }
-    console.log(force)
+
     this.setVelocity(force);
   }
 }

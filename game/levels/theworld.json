@@ -1,8 +1,8 @@
 {
   "levelInfo": {
     "name": "theworld",
-    "widthCam": 800,
-    "heightCam": 600,
+    "widthCam": 1200,
+    "heightCam": 1200,
     "widthScene": 2000,
     "heightScene": 2000,
     "ratioScene": 300,
@@ -42,6 +42,10 @@
     {
       "name" : "ground",
       "content" : "ground.json"
+    },
+    {
+      "name" : "plateform",
+      "content" : "plateform.json"
     }
   ],
   "animationsGroups":[
@@ -88,8 +92,16 @@
       "content" : "ground.json"
     },
     {
+      "name" : "plateform",
+      "content" : "plateform.json"
+    },
+    {
       "name" : "groundPhysic",
       "content" : "groundPhysic.json"
+    },
+    {
+      "name" : "plateformPhysic",
+      "content" : "plateformPhysic.json"
     },
     {
       "name" : "playerPhysic",
@@ -114,7 +126,23 @@
       "objectConf" : "groundPhysic"
     },
     {
+      "id" : "plateformLeft",
+      "objectConf" : "plateformPhysic"
+    },
+    {
+      "id" : "plateformRight",
+      "objectConf" : "plateformPhysic"
+    },
+    {
       "id" : "leftWall",
+      "objectConf" : "groundPhysic"
+    },
+    {
+      "id" : "topWall",
+      "objectConf" : "groundPhysic"
+    },
+    {
+      "id" : "rightWall",
       "objectConf" : "groundPhysic"
     },
     {
@@ -135,6 +163,112 @@
     }
   ],
   "startActions":[
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "plateformRight",
+      "method": "setGraphicPosition",
+      "argument": {
+        "type": "simple",
+        "argument" : {
+          "x" : 370,
+          "y" : 400
+        }
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "plateformRight",
+      "method": "addToPhysicContext",
+      "argument": {
+        "type" : "resource",
+        "context": "scene",
+        "id": "physic"
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "plateformLeft",
+      "method": "setGraphicPosition",
+      "argument": {
+        "type": "simple",
+        "argument" : {
+          "x" : 120,
+          "y" : 400
+        }
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "plateformLeft",
+      "method": "addToPhysicContext",
+      "argument": {
+        "type" : "resource",
+        "context": "scene",
+        "id": "physic"
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "topWall",
+      "method": "setGraphicPosition",
+      "argument": {
+        "type": "simple",
+        "argument" : {
+          "x" : 50,
+          "y" : 70
+        }
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "topWall",
+      "method": "addToPhysicContext",
+      "argument": {
+        "type" : "resource",
+        "context": "scene",
+        "id": "physic"
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "rightWall",
+      "method": "setGraphicPosition",
+      "argument": {
+        "type": "simple",
+        "argument" : {
+          "x" : 592,
+          "y" : 70
+        }
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "rightWall",
+      "method": "setAngle",
+      "argument": {
+        "type": "simple",
+        "argument" : 1.57
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "rightWall",
+      "method": "addToPhysicContext",
+      "argument": {
+        "type" : "resource",
+        "context": "scene",
+        "id": "physic"
+      }
+    },
     {
       "type" : "action",
       "context": "entities",
@@ -178,7 +312,7 @@
         "type": "simple",
         "argument" : {
           "x" : 300,
-          "y" : 50
+          "y" : 120
         }
       }
     },

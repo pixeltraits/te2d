@@ -1,0 +1,20 @@
+{
+  "name": "plateform",
+  "type": "GraphicEntity",
+  "zAuto": false,
+  "dz": 0,
+  "z": 2,
+  "config": [
+    {
+      "type" : "action",
+      "context" : "entities",
+      "id" : "self",
+      "method" : "setBitmap",
+      "argument" : {
+        "type" : "resource",
+        "context" : "animations",
+        "id" : "plateform"
+      }
+    }
+  ]
+}

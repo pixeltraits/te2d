@@ -49,7 +49,7 @@ class Player2D extends PhysicEntity {
     if(this.accLeft == 0 && this.accRight == 0) {
       this.physicInterface.stopForces(this.physicBody);
     }
-    console.log(force)
+
     this.setVelocity(force);
   }
 }

@@ -214,11 +214,10 @@ class PhysicEntity {
    */
   addHitbox(hitbox) {
     if(!this.verifyHitbox(hitbox.hitbox.id)) {
-      var size = {
-            dx : 0,
-            dy : 0
-          },
-          length = this.hitboxes.length;
+      let size = {
+        dx : 0,
+        dy : 0
+      };
 
       hitbox.graphicEntity.setGeometry(hitbox.hitbox);
 
@@ -235,15 +234,15 @@ class PhysicEntity {
           break;
       }
 
-      this.hitboxes[length] = {
+      let hit = this.hitboxes.push({
         fixture : hitbox.hitbox,
         graphicEntity : hitbox.graphicEntity,
         originalSize : size,
         id : hitbox.hitbox.id
-      };
+      });
 
       if(this.physicBody != null) {
-        this.addFixtureToBody(this.hitboxes[length].fixture);
+        this.addFixtureToBody(hit.fixture);
       }
     }
   }

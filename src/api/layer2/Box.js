@@ -31,8 +31,8 @@ class Box extends Geometry {
     super.show(position, angle, canvasSize, canvasCtx);
 
     var center = {
-      x : position.x + (this.size.dx / 2),
-      y : position.y + (this.size.dy / 2)
+      x : position.x,
+      y : position.y
     };
 
     canvasCtx.translate(center.x, center.y);
@@ -40,15 +40,15 @@ class Box extends Geometry {
 
     canvasCtx.fillStyle = this.borderColor;
     canvasCtx.fillRect(
-      -this.size.dx / 2,
-      -this.size.dy / 2,
+      0,
+      0,
       this.size.dx + (this.borderSize * 2),
       this.size.dy + (this.borderSize * 2)
     );
     canvasCtx.fillStyle = this.color;
     canvasCtx.fillRect(
-      this.borderSize - (this.size.dx / 2),
-      this.borderSize - (this.size.dy / 2),
+      this.borderSize - (0),
+      this.borderSize - (0),
       this.size.dx,
       this.size.dy
     );

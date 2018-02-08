@@ -1,5 +1,5 @@
 {
-  "name": "groundPhysic",
+  "name": "plateformPhysic",
   "type": "PhysicEntity",
   "dynamic": false,
   "angle": 0,
@@ -41,7 +41,7 @@
                 "borderSize" : 2,
                 "x" : 0,
                 "y" : 0,
-                "dx" : 507,
+                "dx" : 125,
                 "dy" : 27
               }
             }
@@ -70,7 +70,7 @@
       "argument" : {
         "type" : "newObject",
         "context" : "entityProfils",
-        "id" : "ground",
+        "id" : "plateform",
         "config" : [
           {
             "type" : "action",

@@ -25,7 +25,7 @@ class PhysicBox2D {
     //Physic context configuration
     var listener = new Box2D.Dynamics.b2ContactListener;
     listener.BeginContact = collisionStart;
-    this.pixelMetterFactor = 1;
+    this.pixelMetterFactor = 0.05;
 
     this.physicContext = new this.b2World(
        new this.b2Vec2(0, 100),
@@ -84,20 +84,20 @@ class PhysicBox2D {
   getBox(id, x, y, dx, dy, angle, sensor, restitution, friction, density, bodyRef) {
     //Create box with polygon methode
     let leftTopPoint = {
-      x : x,
-      y : y
+      x : this.pixelToMetter(x),
+      y : this.pixelToMetter(y)
     };
     let rightTopPoint = {
-      x : x + dx,
-      y : y
+      x : this.pixelToMetter(x + dx),
+      y : this.pixelToMetter(y)
     };
     let leftBottomPoint = {
-      x : x,
-      y : y + dy
+      x : this.pixelToMetter(x),
+      y : this.pixelToMetter(y + dy)
     };
     let rightBottomPoint = {
-      x : x + dx,
-      y : y + dy
+      x : this.pixelToMetter(x + dx),
+      y : this.pixelToMetter(y + dy)
     };
     let vertices = [leftTopPoint, rightTopPoint, rightBottomPoint, leftBottomPoint];
 
@@ -302,7 +302,7 @@ class PhysicBox2D {
    */
   setImpulse(bodyRef, vector) {
     var velocity = bodyRef.GetLinearVelocity();
-    velocity.y = vector.y;
+    velocity.y = this.pixelToMetter(vector.y);
     bodyRef.SetLinearVelocity(velocity);
   }
   /**
@@ -314,8 +314,8 @@ class PhysicBox2D {
   setVelocity(bodyRef, vector) {
     var velocity = bodyRef.GetLinearVelocity(),
         force = {
-          x : vector.x,
-          y : vector.y
+          x : this.pixelToMetter(vector.x),
+          y : this.pixelToMetter(vector.y)
         };
 
     bodyRef.ApplyForce(new this.b2Vec2(force.x, force.y), bodyRef.GetWorldCenter());
