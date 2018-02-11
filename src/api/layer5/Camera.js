@@ -92,7 +92,6 @@ class Camera extends PhysicEntity {
     this.canvas.width = winDx;
     this.canvas.height = winDy;
     this.ctx.scale(scale, scale);
-    this.ctx.mozImageSmoothingEnabled = false;
     this.ctx.imageSmoothingEnabled = false;
   }
   /**
@@ -103,7 +102,6 @@ class Camera extends PhysicEntity {
     this.canvas.width = this.dx * this.scale;
     this.canvas.height = this.dy * this.scale;
     this.ctx.scale(this.scale, this.scale);
-    this.ctx.mozImageSmoothingEnabled = false;
     this.ctx.imageSmoothingEnabled = false;
   }
   /**

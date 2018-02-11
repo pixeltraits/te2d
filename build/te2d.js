@@ -50,12 +50,26 @@ class GeometricMath {
    * @return {size}
    */
   getPolygonSize(vertices) {
-    var x1 = vertices[0].x,
-        x2 = vertices[0].x,
-        y1 = vertices[0].y,
-        y2 = vertices[0].y,
-        i = 1,
-        length = vertices.length;
+    let polygonBox = getPolygonBox(vertices);
+
+    return {
+      dx : polygonBox.x2 - polygonBox.x1,
+      dy : polygonBox.y2 - polygonBox.y1
+    };
+  }
+  /**
+   * Get size of a polygon
+   * @method getPolygonSize
+   * @param {position[]} vertices
+   * @return {size}
+   */
+  getPolygonBox(vertices) {
+    let x1 = vertices[0].x;
+    let x2 = vertices[0].x;
+    let y1 = vertices[0].y;
+    let y2 = vertices[0].y;
+    let i = 1;
+    let length = vertices.length;
 
     for(; i < length; i++) {
       x1 = Math.min(vertices[i].x, x1);
@@ -65,8 +79,10 @@ class GeometricMath {
     }
 
     return {
-      dx : x2 - x1,
-      dy : y2 - y1
+      x1 : x1,
+      x2 : x2,
+      y1 : y1,
+      y2 : y2
     };
   }
   /**
@@ -103,6 +119,24 @@ class GeometricMath {
       x : (cos * distance.x) - (sin * distance.y) + center.x,
       y : (sin * distance.x) + (cos * distance.y) + center.y
     };
+  }
+  /**
+   * Get new position with angle
+   * @method getRotatedPolygon
+   * @param {position[]} vertices
+   * @param {number} angle
+   * @param {position} center
+   * @return {position}
+   */
+  getRotatedPolygon(vertices, angle, center) {
+    let verticesLength = vertices.length;
+    let rotatedVertices = [];
+
+    for(let x = 0; x < verticesLength; x++) {
+      rotatedVertices.push(this.getRotatedPoint(vertices[x], angle, center));
+    }
+
+    return rotatedVertices;
   }
 }
 
@@ -381,6 +415,7 @@ class Animation {
  */
 class Bitmap {
   constructor() {
+    this.geometricMath = new GeometricMath();
   }
   /**
    * Show bitmap on the canvas context
@@ -391,100 +426,47 @@ class Bitmap {
    * @param {canvas2dContext} canvasCtx
    */
   show(animation, position, angle, canvasSize, canvasCtx) {
-    let repeat = {
-      x : 1,
-      y : 1
+    let center = {
+      x : position.x,
+      y : position.y
     };
-    let centerX = parseInt(position.x);
-    let centerY = parseInt(position.y);
+    let repeat = this.getRepetitionBitmapToShow(animation, position, canvasSize, center, angle);
 
-    if(animation.repeatX > 1 || animation.repeatY > 1) {
-      repeat = this.getRepBitmap(animation, position, canvasSize);
-    }
-
-    canvasCtx.translate(centerX, centerY);
+    canvasCtx.translate(center.x, center.y);
     canvasCtx.rotate(angle);
 
     for(let x = 0; x < repeat.x; x++) {
       for(let y = 0; y < repeat.y; y++) {
-        let img = this.cutBitmap(
-          animation,
-          {
-            x : position.x + (animation.dx * x),
-            y : position.y + (animation.dy * y)
-          },
-          canvasSize
-        );
-
         if(animation.reverse) {
-          img.bitmap = animation.bitmap;
           canvasCtx.drawImage(
-            this.flipBitmap(img),
+            this.flipBitmap(animation.bitmap),
             0,
             0,
-            img.dx,
-            img.dy,
-            -img.dx / 2,
-            -img.dy / 2,
-            img.dx,
-            img.dy
+            animation.dx,
+            animation.dy,
+            -animation.dx / 2,
+            -animation.dy / 2,
+            animation.dx,
+            animation.dy
           );
         } else {
           canvasCtx.drawImage(
             animation.bitmap,
-            img.ix,
-            img.iy,
-            img.dx,
-            img.dy,
+            animation.x,
+            animation.y,
+            animation.dx,
+            animation.dy,
             animation.dx * x,
             animation.dy * y,
-            img.dx,
-            img.dy
+            animation.dx,
+            animation.dy
           );
         }
       }
     }
+
     canvasCtx.rotate(-angle);
-    canvasCtx.translate(-centerX, -centerY);
-  }
-  /**
-   * Cut the bitmap
-   * @method cutBitmap
-   * @private
-   * @param {position} positionBitmap
-   * @param {size} sizeView
-   * @return {bitmap} cutedBitmap
-   */
-  cutBitmap(animation, positionBitmap, sizeView) {
-    let x2 = positionBitmap.x + animation.dx;
-    let y2 = positionBitmap.y + animation.dy;
-    let cutedBitmap = {
-      x : positionBitmap.x,
-      y : positionBitmap.y,
-      dx : animation.dx,
-      dy : animation.dy,
-      ix : animation.x,
-      iy : animation.y
-    };
-
-    if(positionBitmap.x < 0) {
-      cutedBitmap.x = 0;
-      cutedBitmap.ix -= positionBitmap.x;
-      cutedBitmap.dx += positionBitmap.x;
-    }
-    if(x2 > sizeView.dx) {
-      cutedBitmap.dx += sizeView.dx - x2;
-    }
-    if(positionBitmap.y < 0) {
-      cutedBitmap.y = 0;
-      cutedBitmap.iy -= positionBitmap.y;
-      cutedBitmap.dy += positionBitmap.y;
-    }
-    if(y2 > sizeView.dy) {
-      cutedBitmap.dy += sizeView.dy - y2;
-    }
-
-    return cutedBitmap;
+    canvasCtx.translate(-center.x, -center.y);
   }
   /**
    * Determinate the number of repeat texture to show
@@ -494,50 +476,61 @@ class Bitmap {
    * @param {size} sizeView
    * @return {repeatBitmap}
    */
-  getRepBitmap(animation, positionBitmap, sizeView) {
-    let sizeBitmap = {
-      dx : animation.dx * animation.repeatX,
-      dy : animation.dy * animation.repeatY
-    };
-    let x2 = positionBitmap.x + sizeBitmap.dx;
-    let y2 = positionBitmap.y + sizeBitmap.dy;
+  getRepetitionBitmapToShow(animation, positionBitmap, sizeView, center, angle) {
+    let polygon = [
+      {
+        x : positionBitmap.x,
+        y : positionBitmap.y
+      },
+      {
+        x : positionBitmap.x + animation.dx * animation.repeatX,
+        y : positionBitmap.y
+      },
+      {
+        x : positionBitmap.x + animation.dx * animation.repeatX,
+        y : positionBitmap.y + animation.dy * animation.repeatY
+      },
+      {
+        x : positionBitmap.x,
+        y : positionBitmap.y + animation.dy * animation.repeatY
+      }
+    ];
+    let polygonBox = this.geometricMath.getPolygonBox(this.geometricMath.getRotatedPolygon(polygon, angle, center));
     let visibleSize = {
-      dx : 0,
-      dy : 0
+      dx : this.getVisibleLength(polygonBox.x1, polygonBox.x2, sizeView.dx),
+      dy : this.getVisibleLength(polygonBox.y1, polygonBox.y2, sizeView.dy)
     };
-
-    if(positionBitmap.x > 0) {
-      if(x2 < sizeView.dx) {
-        visibleSize.dx = sizeBitmap.dx;
-      } else {
-        visibleSize.dx = sizeView.dx - positionBitmap.x;
-      }
-    } else {
-      if(x2 < sizeView.dx) {
-        visibleSize.dx = x2;
-      } else {
-        visibleSize.dx = sizeView.dx;
-      }
-    }
-
-    if(positionBitmap.y > 0) {
-      if(y2 < sizeView.dy) {
-        visibleSize.dy = sizeBitmap.dy;
-      } else {
-        visibleSize.dy = sizeView.dy - positionBitmap.y;
-      }
-    } else {
-      if(y2 < sizeView.dy) {
-        visibleSize.dy = y2;
-      } else {
-        visibleSize.dy = sizeView.dy;
-      }
-    }
+    let maxVisibleSize = Math.max(visibleSize.dx, visibleSize.dy);
 
     return {
-      x : Math.ceil(visibleSize.dx / animation.dx),
-      y : Math.ceil(visibleSize.dy / animation.dy)
+      x : Math.min(animation.repeatX, Math.ceil(maxVisibleSize / animation.dx)),
+      y : Math.min(animation.repeatY, Math.ceil(maxVisibleSize / animation.dy))
     };
+  }
+  /**
+   * Reverse pixel of bitmap(Horyzontal)
+   * @method flipBitmap
+   * @param {animation} animation
+   * @return {canvas} canvas
+   */
+  getVisibleLength(x, x2, dxLimit) {
+    let dx = 0;
+
+    if(x > 0) {
+      if(x2 < dxLimit) {
+        dx = x2 - x;
+      } else {
+        dx = dxLimit - x;
+      }
+    } else {
+      if(x2 < dxLimit) {
+        dx = x2;
+      } else {
+        dx = dxLimit;
+      }
+    }
+
+    return dx;
   }
   /**
    * Reverse pixel of bitmap(Horyzontal)
@@ -554,8 +547,8 @@ class Bitmap {
 
     context.drawImage(
       animation.bitmap,
-      animation.ix,
-      animation.iy,
+      animation.x,
+      animation.y,
       animation.dx,
       animation.dy,
       0,
@@ -2885,7 +2878,6 @@ class Camera extends PhysicEntity {
     this.canvas.width = winDx;
     this.canvas.height = winDy;
     this.ctx.scale(scale, scale);
-    this.ctx.mozImageSmoothingEnabled = false;
     this.ctx.imageSmoothingEnabled = false;
   }
   /**
@@ -2896,7 +2888,6 @@ class Camera extends PhysicEntity {
     this.canvas.width = this.dx * this.scale;
     this.canvas.height = this.dy * this.scale;
     this.ctx.scale(this.scale, this.scale);
-    this.ctx.mozImageSmoothingEnabled = false;
     this.ctx.imageSmoothingEnabled = false;
   }
   /**

@@ -12,12 +12,26 @@ class GeometricMath {
    * @return {size}
    */
   getPolygonSize(vertices) {
-    var x1 = vertices[0].x,
-        x2 = vertices[0].x,
-        y1 = vertices[0].y,
-        y2 = vertices[0].y,
-        i = 1,
-        length = vertices.length;
+    let polygonBox = getPolygonBox(vertices);
+
+    return {
+      dx : polygonBox.x2 - polygonBox.x1,
+      dy : polygonBox.y2 - polygonBox.y1
+    };
+  }
+  /**
+   * Get size of a polygon
+   * @method getPolygonSize
+   * @param {position[]} vertices
+   * @return {size}
+   */
+  getPolygonBox(vertices) {
+    let x1 = vertices[0].x;
+    let x2 = vertices[0].x;
+    let y1 = vertices[0].y;
+    let y2 = vertices[0].y;
+    let i = 1;
+    let length = vertices.length;
 
     for(; i < length; i++) {
       x1 = Math.min(vertices[i].x, x1);
@@ -27,8 +41,10 @@ class GeometricMath {
     }
 
     return {
-      dx : x2 - x1,
-      dy : y2 - y1
+      x1 : x1,
+      x2 : x2,
+      y1 : y1,
+      y2 : y2
     };
   }
   /**
@@ -65,5 +81,23 @@ class GeometricMath {
       x : (cos * distance.x) - (sin * distance.y) + center.x,
       y : (sin * distance.x) + (cos * distance.y) + center.y
     };
+  }
+  /**
+   * Get new position with angle
+   * @method getRotatedPolygon
+   * @param {position[]} vertices
+   * @param {number} angle
+   * @param {position} center
+   * @return {position}
+   */
+  getRotatedPolygon(vertices, angle, center) {
+    let verticesLength = vertices.length;
+    let rotatedVertices = [];
+
+    for(let x = 0; x < verticesLength; x++) {
+      rotatedVertices.push(this.getRotatedPoint(vertices[x], angle, center));
+    }
+
+    return rotatedVertices;
   }
 }
