@@ -1,23 +1,36 @@
 /**
  * Graphic Entity
  * @class GraphicEntity
- * @param {graphicEntity} properties
- * @param {string} id
  */
 class GraphicEntity {
+  /**
+   * Graphic Entity
+   * @class GraphicEntity
+   * @param {graphicEntity} properties - object properties
+   * @param {string} id - Object Id
+   */
   constructor(properties, id) {
     /* Identity */
     this.id = id;
     this.name = properties.name;
 
     /* Position and size */
-    this.x = 0;
-    this.y = 0;
-    this.z = properties.z;
-    this.dx = 0;
-    this.dy = 0;
-    this.dz = properties.dz;
+    this.position = {
+      x: 0,
+      y: 0,
+      z: properties.z
+    };
+    this.size = {
+      dx: 0,
+      dy: 0,
+      dz: properties.dz
+    };
     this.angle = 0;
+    this.delta = {
+      x: 0,
+      y: 0,
+      angle: 0
+    };
 
     /* Sub Graphic entities properties */
     this.parent = null;
@@ -32,137 +45,143 @@ class GraphicEntity {
   /**
    * Set the graphic position of the entity and subGraphicEntities
    * @method setPosition
-   * @param {position} position
+   * @param {position} position - New position of the graphic entity
+   * @return {void}
    */
   setPosition(position) {
     /* Update position of subGraphicEntity */
-    if(typeof this.subGraphicEntities != "undefined"){
-      var x=0,
-          length = this.subGraphicEntities.length;
+    const subGraphicEntitiesLength = this.subGraphicEntities.length;
 
-      for(; x < length; x++) {
-        this.subGraphicEntities[x].addPosition({
-          x : position.x - this.x,
-          y : position.y - this.y
-        });
-        this.subGraphicEntities[x].addZ(position.y - this.y);
-      }
+    for (let x = 0; x < subGraphicEntitiesLength; x++) {
+      this.subGraphicEntities[x].addPosition({
+        x: position.x - this.position.x,
+        y: position.y - this.position.y
+      });
+      this.subGraphicEntities[x].addZPosition(position.y - this.position.y);
     }
 
     /* Map update */
-    if(this.scene != null) {
+    if (this.scene != null) {
       this.scene.update(
         {
-          x : this.x,
-          y : this.y,
-          dx : this.dx,
-          dy : this.dy
+          x: this.position.x,
+          y: this.position.y,
+          dx: this.size.dx,
+          dy: this.size.dy
         },
         {
-          x : position.x,
-          y : position.y,
-          dx : this.dx,
-          dy : this.dy
+          x: position.x,
+          y: position.y,
+          dx: this.size.dx,
+          dy: this.size.dy
         },
         this.id
       );
     }
 
-    this.x = position.x;
-    this.y = position.y;
+    this.position.x = position.x;
+    this.position.y = position.y;
     this.updateZ();
   }
   /**
    * Add position to the current position
    * @method addPosition
-   * @param {position} position
+   * @param {position} position - position to add
+   * @return {void}
    */
   addPosition(position) {
     this.setPosition({
-      x : this.x + position.x,
-      y : this.y + position.y
+      x: this.position.x + position.x,
+      y: this.position.y + position.y
     });
   }
   /**
    * Set position relative to parent
    * @method setRelativePosition
-   * @param {position} position
+   * @param {position} position - position relative to parent
+   * @return {void}
    */
   setRelativePosition(position) {
-    if(this.parent != null) {
-      var parentPosition = this.parent.getPosition();
+    if (this.parent != null) {
+      const parentPosition = this.parent.getPosition();
 
       this.setPosition({
-        x : parentPosition.x + position.x,
-        y : parentPosition.y + position.y
+        x: parentPosition.x + position.x,
+        y: parentPosition.y + position.y
       });
     }
   }
   /**
    * Add position on z
-   * @method addZ
+   * @method addZPosition
    * @param {number} z
+   * @return {void}
    */
-  addZ(z) {
-    this.z += z;
+  addZPosition(z) {
+    this.position.z += z;
   }
   /**
    * Set plan position relative to parent
    * @method setRelativeZ
    * @param {number} z
+   * @return {void}
    */
   setRelativeZ(z) {
-    if(this.parent != null) {
-      this.z = this.parent.z + z;
+    if (this.parent != null) {
+      this.position.z = this.parent.z + z;
     }
   }
   /**
    * Set plan position(Fixe 2D)
    * @method setZ
    * @param {number} z
+   * @return {void}
    */
   setZ(z) {
-    if(this.dz == 0) {
-      this.z = z;
+    if (this.size.dz === 0) {
+      this.position.z = z;
     }
   }
   /**
    * Update plan position(Automatique 2.5D)
    * @method updateZ
    * @private
+   * @return {void}
    */
   updateZ() {
-    if(this.dz != 0) {
-      this.z = this.y + this.dy - this.dz;
+    if (this.size.dz !== 0) {
+      this.position.z = this.position.y + this.size.dy - this.size.dz;
     }
   }
   /**
    * Set plan size(0 = Fix)
    * @method setDz
    * @param {number} dz
+   * @return {void}
    */
   setDz(dz) {
-    this.dz = dz;
+    this.size.dz = dz;
     this.updateZ();
   }
   /**
    * Set the graphic size of the entity
    * @method setSize
-   * @param {size} size
+   * @param {size} size - new graphic size of the entity
+   * @return {void}
    */
   setSize(size) {
     /* Map update */
-    if(this.scene != null) {
+    if (this.scene != null) {
       this.scene.update(
         {
-          x: this.x,
-          y: this.y,
-          dx: this.dx,
-          dy: this.dy
+          x: this.position.x,
+          y: this.position.y,
+          dx: this.size.dx,
+          dy: this.size.dy
         },
         {
-          x: this.x,
-          y: this.y,
+          x: this.position.x,
+          y: this.position.y,
           dx: size.dx,
           dy: size.dy
         },
@@ -170,51 +189,47 @@ class GraphicEntity {
       );
     }
 
-    this.dx = size.dx;
-    this.dy = size.dy;
+    this.size.dx = size.dx;
+    this.size.dy = size.dy;
   }
   /**
    * Get the graphic position of the entity.
    * @method getPosition
-   * @return {position}
+   * @return {position} - Last graphic entity position
    */
   getPosition() {
-    return {
-      x : this.x,
-      y : this.y
-    };
+    return this.position;
   }
   /**
    * Get the graphic size of the entity.
    * @method getSize
-   * @return {size}
+   * @return {size} - Last graphic entity size
    */
   getSize() {
-    return {
-      dx : this.dx,
-      dy : this.dy
-    };
+    return this.size;
   }
   /**
    * Set angle
    * @method setAngle
-   * @param {number} angle
+   * @param {number} angle - new angle(radian)
+   * @return {void}
    */
   setAngle(angle) {
     this.angle = angle;
   }
   /**
-   * Set angle
-   * @method setAngle
-   * @param {number} angle
+   * Get angle
+   * @method getAngle
+   * @return {number} - Last graphic entity angle
    */
-  getAngle(angle) {
+  getAngle() {
     return this.angle;
   }
   /**
    * Set new animation bitmap
    * @method setBitmap
-   * @param {animation} animation
+   * @param {animation} animation - New animation properties
+   * @return {void}
    */
   setBitmap(animation) {
     this.graphicObject = new Bitmap();
@@ -227,7 +242,8 @@ class GraphicEntity {
   /**
    * Set new text
    * @method setText
-   * @param {text} text
+   * @param {text} text - New text properties
+   * @return {void}
    */
   setText(text) {
     this.graphicObject = new Text();
@@ -238,31 +254,27 @@ class GraphicEntity {
   /**
    * Set new geometry
    * @method setGeometry
+   * @param {geometry} geometry - New geometry properties
+   * @return {void}
    */
   setGeometry(geometry) {
-    switch(geometry.shape) {
-      case "box" :
+    switch (geometry.shape) {
+      default:
+        console.log('This geometry does not exist.');
+        break;
+      case 'box':
         this.graphicObject = new Box(geometry);
         this.graphicObject.setGeometry(geometry);
         break;
-      case "circle" :
+      case 'circle':
         this.graphicObject = new Circle(geometry);
         this.graphicObject.setGeometry(geometry);
         break;
-      case "polygon" :
+      case 'polygon':
         this.graphicObject = new Polygon(geometry);
         this.graphicObject.setGeometry(geometry);
         break;
     }
-    this.setSize(this.graphicObject.getSize());
-  }
-  /**
-   * Set new graphic object
-   * @method setGraphicObject
-   */
-  setGraphicObject(graphicObject) {
-    this.graphicObject = graphicObject;
-
     this.setSize(this.graphicObject.getSize());
   }
   /**
@@ -271,31 +283,32 @@ class GraphicEntity {
    * @param {canvasCtx} canvasCtx
    * @param {size} canvasSize
    * @param {position} cameraPosition
+   * @return {void}
    */
   updateGraphicObject(canvasCtx, canvasSize, cameraPosition) {
-    let mapPosition = this.getPosition();
-    let relativePosition = {
-      x : mapPosition.x - cameraPosition.x,
-      y : mapPosition.y - cameraPosition.y
+    const mapPosition = this.getPosition();
+    const relativePosition = {
+      x: mapPosition.x - cameraPosition.x,
+      y: mapPosition.y - cameraPosition.y
     };
     let animationInProcess;
 
-    if(this.animation) {
+    if (this.animation) {
       this.animation.updateAnimationFrame();
       animationInProcess = this.animation.getAnimationInProcess();
       this.graphicObject.show(animationInProcess, relativePosition, this.angle, canvasSize, canvasCtx);
     } else {
       this.graphicObject.show(relativePosition, this.angle, canvasSize, canvasCtx);
     }
-
   }
   /**
    * Set new audio file
    * @method setAudio
-   * @param {audio} audio
+   * @param {audio} audio - New audio properties
+   * @return {void}
    */
   setAudio(audio) {
-    if(typeof this.audio == "undefined") {
+    if (typeof this.audio === 'undefined') {
       this.audio = new Audio();
     }
     this.audio.setAudio(audio.audioConf, audio.audioContext);
@@ -303,59 +316,60 @@ class GraphicEntity {
   /**
    * Stop the audio file
    * @method unsetAudio
+   * @return {void}
    */
   unsetAudio() {
     this.audio.unsetAudio();
   }
   /**
-   * Add the entity from the Scene
+   * Add the entity to the Scene
    * @method addToScene
-   * @param {scene} scene
+   * @param {scene} scene - The scene where add object entity
+   * @return {void}
    */
   addToScene(scene) {
-    if(this.scene == null) {
+    if (this.scene == null) {
       this.scene = scene;
       this.scene.add(
         {
-          x : this.x,
-          y : this.y,
-          dx : this.dx,
-          dy : this.dy
+          x: this.position.x,
+          y: this.position.y,
+          dx: this.size.dx,
+          dy: this.size.dy
         },
         this.id
       );
 
       /* Update subObject */
-      var length = this.subGraphicEntities.length,
-          x=0;
+      const subGraphicEntitiesLength = this.subGraphicEntities.length;
 
-      for(; x < length; x++) {
+      for (let x = 0; x < subGraphicEntitiesLength; x++) {
         this.subGraphicEntities[x].addToScene(this.scene);
       }
     }
   }
   /**
-   * Delete the entity from the Scene
+   * Delete the entity to the Scene
    * @method deleteToScene
+   * @return {void}
    */
   deleteToScene() {
-    if(this.scene != null) {
+    if (this.scene != null) {
       this.scene.delete(
         {
-          x : this.x,
-          y : this.y,
-          dx : this.dx,
-          dy : this.dy
+          x: this.position.x,
+          y: this.position.y,
+          dx: this.size.dx,
+          dy: this.size.dy
         },
         this.id
       );
       this.scene = null;
 
       /* Update subObject */
-      var length = this.subGraphicEntities.length,
-          x = 0;
+      const subGraphicEntitiesLength = this.subGraphicEntities.length;
 
-      for(; x < length; x++) {
+      for (let x = 0; x < subGraphicEntitiesLength; x++) {
         this.subGraphicEntities[x].deleteToScene();
       }
     }
@@ -363,46 +377,48 @@ class GraphicEntity {
   /**
    * Set Pause
    * @method setPause
-   * @param {boolean} pause
+   * @param {boolean} pause - State of the pause
+   * @return {void}
    */
   setPause(pause) {
-    if(typeof this.skinMachine != "undefined") {
-      this.skinMachine.setPause(pause);
+    if (typeof this.graphicObject !== 'undefined') {
+      this.graphicObject.setPause(pause);
     }
-    if(typeof this.audio == "undefined") {
+    if (typeof this.audio === 'undefined') {
       this.audio.setPause(pause);
     }
-    this.pause = true;
+    this.pause = pause;
   }
   /**
    * Add sub graphic entity
    * @method addSubEntity
-   * @param {graphicEntity} subGraphicEntity
+   * @param {graphicEntity} subGraphicEntity - Sub Graphic Entity to add
+   * @return {void}
    */
   addSubEntity(subGraphicEntity) {
-    if(subGraphicEntity.parent == null) {
+    if (subGraphicEntity.parent == null) {
       subGraphicEntity.setPosition({
-        x: this.x + subGraphicEntity.x,
-        y: this.y + subGraphicEntity.y
+        x: this.position.x + subGraphicEntity.x,
+        y: this.position.y + subGraphicEntity.y
       });
 
       subGraphicEntity.parent = this;
       subGraphicEntity.dz = 0;
 
-      this.subGraphicEntities[this.subGraphicEntities.length] = subGraphicEntity;
+      this.subGraphicEntities.push(subGraphicEntity);
     }
   }
   /**
    * Delete sub grphic entity
    * @method deleteSubObject
-   * @param {graphicEntity} subGraphicEntity
+   * @param {graphicEntity} subGraphicEntity - Sub Graphic Entity to delete
+   * @return {void}
    */
   deleteSubEntity(subGraphicEntity) {
-    var length = this.subGraphicEntities.length,
-        x = 0;
+    const subGraphicEntitiesLength = this.subGraphicEntities.length;
 
-    for(; x < length; x++) {
-      if(this.subGraphicEntities[x].id == subGraphicEntity.id) {
+    for (let x = 0; x < subGraphicEntitiesLength; x++) {
+      if (this.subGraphicEntities[x].id === subGraphicEntity.id) {
         subGraphicEntity.parent = null;
         this.subGraphicEntities.splice(x, 1);
         return;

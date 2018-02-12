@@ -1717,7 +1717,7 @@ class GraphicEntity {
           x : position.x - this.x,
           y : position.y - this.y
         });
-        this.subGraphicEntities[x].addZ(position.y - this.y);
+        this.subGraphicEntities[x].addZPosition(position.y - this.y);
       }
     }
 
@@ -1772,10 +1772,10 @@ class GraphicEntity {
   }
   /**
    * Add position on z
-   * @method addZ
+   * @method addZPosition
    * @param {number} z
    */
-  addZ(z) {
+  addZPosition(z) {
     this.z += z;
   }
   /**
