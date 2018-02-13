@@ -1,0 +1,5 @@
+"*":
+  core:
+    disabledPackages: ["atom-beautify"]
+  editor:
+    tabType: "soft"

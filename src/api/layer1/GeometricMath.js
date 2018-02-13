@@ -12,11 +12,11 @@ class GeometricMath {
    * @return {size}
    */
   getPolygonSize(vertices) {
-    let polygonBox = getPolygonBox(vertices);
+    const polygonBox = this.getPolygonBox(vertices);
 
     return {
-      dx : polygonBox.x2 - polygonBox.x1,
-      dy : polygonBox.y2 - polygonBox.y1
+      dx: polygonBox.x2 - polygonBox.x1,
+      dy: polygonBox.y2 - polygonBox.y1
     };
   }
   /**
@@ -25,15 +25,15 @@ class GeometricMath {
    * @param {position[]} vertices
    * @return {size}
    */
-  getPolygonBox(vertices) {
+  static getPolygonBox(vertices) {
     let x1 = vertices[0].x;
     let x2 = vertices[0].x;
     let y1 = vertices[0].y;
     let y2 = vertices[0].y;
-    let i = 1;
-    let length = vertices.length;
 
-    for(; i < length; i++) {
+    const length = vertices.length;
+
+    for (let i = 1; i < length; i++) {
       x1 = Math.min(vertices[i].x, x1);
       x2 = Math.max(vertices[i].x, x2);
       y1 = Math.min(vertices[i].y, y1);
@@ -41,10 +41,10 @@ class GeometricMath {
     }
 
     return {
-      x1 : x1,
-      x2 : x2,
-      y1 : y1,
-      y2 : y2
+      x1: x1,
+      x2: x2,
+      y1: y1,
+      y2: y2
     };
   }
   /**
