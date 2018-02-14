@@ -26,11 +26,6 @@ class GraphicEntity {
       dz: properties.dz
     };
     this.angle = 0;
-    this.delta = {
-      x: 0,
-      y: 0,
-      angle: 0
-    };
 
     /* Sub Graphic entities properties */
     this.parent = null;

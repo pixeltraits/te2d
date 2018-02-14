@@ -1,10 +1,14 @@
 /**
  * Physic Entity
  * @class PhysicEntity
- * @param {physicEntity} properties
- * @param {string} id
  */
 class PhysicEntity {
+  /**
+   * Physic Entity
+   * @method constructor
+   * @param {physicEntity} properties - Object properties
+   * @param {string} id - Object id
+   */
   constructor(properties, id) {
     /* Identity */
     this.id = id;
@@ -12,28 +16,32 @@ class PhysicEntity {
 
     /* Gravity point */
     this.physicPosition = {
-      x : 0,
-      y : 0
+      x: 0,
+      y: 0
     };
-    /* Graphic position(top, left) */
     this.graphicPosition = {
-      x : 0,
-      y : 0
+      x: 0,
+      y: 0
     };
     this.graphicDelta = {
-      x : 0,
-      y : 0
+      x: 0,
+      y: 0
     };
 
     /* Calculated Size */
     this.originalSize = {
-      dx : 0,
-      dy : 0
+      dx: 0,
+      dy: 0
     };
     /* Calculated Size with angle */
     this.size = {
-      dx : 1,
-      dy : 1
+      dx: 1,
+      dy: 1
+    };
+    this.delta = {
+      x: 0,
+      y: 0,
+      angle: 0
     };
 
     this.angle = 0;
@@ -41,8 +49,8 @@ class PhysicEntity {
 
     /* Mouvement properties */
     this.velocity = {
-      x : 0,
-      y : 0
+      x: 0,
+      y: 0
     };
     this.angleConstraint = properties.angleConstraint != undefined ? properties.angleConstraint : false;
     this.angularInertia = properties.rotateInertia != undefined ? properties.rotateInertia : 1;
@@ -70,7 +78,7 @@ class PhysicEntity {
   }
   /**
    * Set scene entity reference
-   * @method setGraphicEntity
+   * @method setGraphicDelta
    * @param {position} position
    */
   setGraphicDelta(position) {
@@ -187,10 +195,9 @@ class PhysicEntity {
    * @return {position}
    */
   graphicToPhysicPosition(graphicPosition) {
-    //console.log()
     return {
-      x : graphicPosition.x + (this.size.dx / 2),
-      y : graphicPosition.y + (this.size.dy / 2)
+      x: graphicPosition.x + (this.size.dx / 2),
+      y: graphicPosition.y + (this.size.dy / 2)
     };
   }
   /**
