@@ -81,12 +81,13 @@ class Game {
             self.bitmapLoader.load({
               url : self.configUrl+bitmapConfig.bitmapUrl,
               onLoad : function(bitmap, reference) {
+                const cameraSize = self.camera.getSize();
                 self.loader = new Loader(
                   bitmap,
                   bitmapConfig,
                   {
-                    dx : self.camera.dx,
-                    dy : self.camera.dy,
+                    dx : cameraSize.dx,
+                    dy : cameraSize.dy,
                     context : self.camera.ctx
                   },
                   function(){}
@@ -421,24 +422,26 @@ class Game {
 
 
     this.entities[this.level.cameraId].setDisplayUpdateMethod(function(framerate) {
+      const cameraSize = self.entities[self.level.cameraId].getSize();
       var inView = self.scene['graphic'].getEntities({
             x : self.entities[self.level.cameraId].graphicPosition.x,
             y : self.entities[self.level.cameraId].graphicPosition.y,
-            dx : self.entities[self.level.cameraId].dx,
-            dy : self.entities[self.level.cameraId].dy
+            dx : cameraSize.dx,
+            dy : cameraSize.dy
           }),
           inPhysic = self.scene['physic'].getEntities({
             x : self.entities[self.level.cameraId].graphicPosition.x,
             y : self.entities[self.level.cameraId].graphicPosition.y,
-            dx : self.entities[self.level.cameraId].dx,
-            dy : self.entities[self.level.cameraId].dy
+            dx : cameraSize.dx,
+            dy : cameraSize.dy
           }),
           x=0,
           length = inView.length;
         //console.log(self.scene['physic'])
       //Increase sort of the objects by z propertie
       inView.sort(function(a, b) {
-        return (self.entities[a].z > self.entities[b].z) ? 1 : -1;
+        const entityPosition = self.entities[a].getPosition();
+        return (entityPosition.z > entityPosition.z) ? 1 : -1;
       });
 
         //console.log(self.entities['50ib636f-8779-47d5-9fcb-ff98c8583dec'])
@@ -448,8 +451,8 @@ class Game {
       self.entities[self.level.cameraId].ctx.clearRect(
         0,
         0,
-        self.entities[self.level.cameraId].dx + self.entities[self.level.cameraId].dx,
-        self.entities[self.level.cameraId].dy + self.entities[self.level.cameraId].dy
+        cameraSize.dx + cameraSize.dx,
+        cameraSize.dy + cameraSize.dy
       );
 
       //Call of entities graphic system
@@ -457,8 +460,8 @@ class Game {
         self.entities[inView[x]].updateGraphicObject(
           self.entities[self.level.cameraId].ctx,
           {
-            dx : self.entities[self.level.cameraId].dx,
-            dy : self.entities[self.level.cameraId].dy
+            dx : cameraSize.dx,
+            dy : cameraSize.dy
           },
           {
             x : self.entities[self.level.cameraId].graphicPosition.x,
@@ -634,7 +637,7 @@ class Game {
      * @return objectId
      */
   createSceneObject(configuration, id) {
-    var objectId = id != "auto" ? id : this.idGenerator.generate(),
+    var objectId = id != "auto" ? id : IdGenerator.generate(),
         objectConf = this.clone(configuration);
 
     this.entities[objectId] = this.entitiesFactory.getInstance(

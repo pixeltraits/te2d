@@ -3,8 +3,6 @@
  * @class IdGenerator
  */
 class IdGenerator {
-  constructor() {
-  }
   /**
    * JsFiddle source code
    * http://jsfiddle.net/briguy37/2mvfd/

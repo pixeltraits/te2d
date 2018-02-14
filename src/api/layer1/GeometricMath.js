@@ -3,16 +3,14 @@
  * @class GeometricMath
  */
 class GeometricMath {
-  constructor() {
-  }
   /**
    * Get size of a polygon
    * @method getPolygonSize
-   * @param {position[]} vertices
-   * @return {size}
+   * @param {position[]} vertices - Vertices of the polygon
+   * @return {size} - Size of the polygon
    */
-  getPolygonSize(vertices) {
-    const polygonBox = this.getPolygonBox(vertices);
+  static getPolygonSize(vertices) {
+    const polygonBox = GeometricMath.getPolygonBox(vertices);
 
     return {
       dx: polygonBox.x2 - polygonBox.x1,
@@ -22,79 +20,75 @@ class GeometricMath {
   /**
    * Get size of a polygon
    * @method getPolygonSize
-   * @param {position[]} vertices
-   * @return {size}
+   * @param {position[]} vertices - Vertices of the polygon
+   * @return {box} - Box polygon
    */
   static getPolygonBox(vertices) {
-    let x1 = vertices[0].x;
-    let x2 = vertices[0].x;
-    let y1 = vertices[0].y;
-    let y2 = vertices[0].y;
+    const polygonBox = {
+      x1: vertices[0].x,
+      x2: vertices[0].x,
+      y1: vertices[0].y,
+      y2: vertices[0].y
+    };
+    const verticesLength = vertices.length;
 
-    const length = vertices.length;
-
-    for (let i = 1; i < length; i++) {
-      x1 = Math.min(vertices[i].x, x1);
-      x2 = Math.max(vertices[i].x, x2);
-      y1 = Math.min(vertices[i].y, y1);
-      y2 = Math.max(vertices[i].y, y2);
+    for (let i = 1; i < verticesLength; i++) {
+      polygonBox.x1 = Math.min(vertices[i].x, polygonBox.x1);
+      polygonBox.x2 = Math.max(vertices[i].x, polygonBox.x2);
+      polygonBox.y1 = Math.min(vertices[i].y, polygonBox.y1);
+      polygonBox.y2 = Math.max(vertices[i].y, polygonBox.y2);
     }
 
-    return {
-      x1: x1,
-      x2: x2,
-      y1: y1,
-      y2: y2
-    };
+    return polygonBox;
   }
   /**
    * Get size of a circle
    * @method getCircleSize
-   * @param {number} radius
-   * @return {size}
+   * @param {number} radius - Radius of the circle
+   * @return {size} - Size of the circle
    */
-  getCircleSize(radius) {
-    var diameter = radius * 2;
+  static getCircleSize(radius) {
+    const diameter = radius * 2;
 
     return {
-      dx : diameter,
-      dy : diameter
+      dx: diameter,
+      dy: diameter
     };
   }
   /**
    * Get new position with angle
    * @method getRotatedPoint
-   * @param {position} position
-   * @param {number} angle
-   * @param {position} center
-   * @return {position}
+   * @param {position} position - Position of the point
+   * @param {number} angle - Angle
+   * @param {position} center - Position of the center of rotation
+   * @return {position} - Position of the rotated point
    */
-  getRotatedPoint(position, angle, center) {
-    var distance = {
-          x : position.x - center.x,
-          y : position.y - center.y
-        },
-        cos = Math.cos(angle),
-        sin = Math.sin(angle);
+  static getRotatedPoint(position, angle, center) {
+    const distance = {
+      x: position.x - center.x,
+      y: position.y - center.y
+    };
+    const cos = Math.cos(angle);
+    const sin = Math.sin(angle);
 
     return {
-      x : (cos * distance.x) - (sin * distance.y) + center.x,
-      y : (sin * distance.x) + (cos * distance.y) + center.y
+      x: (cos * distance.x) - (sin * distance.y) + center.x,
+      y: (sin * distance.x) + (cos * distance.y) + center.y
     };
   }
   /**
    * Get new position with angle
    * @method getRotatedPolygon
-   * @param {position[]} vertices
-   * @param {number} angle
-   * @param {position} center
-   * @return {position}
+   * @param {position[]} vertices - Vertices of the polygon
+   * @param {number} angle - Angle of rotation
+   * @param {position} center - Position of the center of rotation
+   * @return {position[]} - Vertices Position of the rotated polygon
    */
-  getRotatedPolygon(vertices, angle, center) {
-    let verticesLength = vertices.length;
-    let rotatedVertices = [];
+  static getRotatedPolygon(vertices, angle, center) {
+    const verticesLength = vertices.length;
+    const rotatedVertices = [];
 
-    for(let x = 0; x < verticesLength; x++) {
+    for (let x = 0; x < verticesLength; x++) {
       rotatedVertices.push(this.getRotatedPoint(vertices[x], angle, center));
     }
 

@@ -7,7 +7,6 @@ class Polygon extends Geometry {
     super();
 
     this.type = "Polygon";
-    this.geometricMath = new GeometricMath();
     this.vertices = [];
   }
   /**
@@ -15,7 +14,7 @@ class Polygon extends Geometry {
    * @method updateSize
    */
   updateSize() {
-    this.size = this.geometricMath.getPolygonSize(this.vertices);
+    this.size = GeometricMath.getPolygonSize(this.vertices);
   }
   /**
    * Set geometry

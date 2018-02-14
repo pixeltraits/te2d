@@ -8,14 +8,13 @@ class Circle extends Geometry {
 
     this.type = "circle";
     this.radius = 0;
-    this.geometricMath = new GeometricMath();
   }
   /**
    * Update the size of geometry
    * @method updateSize
    */
   updateSize() {
-    this.size = this.geometricMath.getCircleSize(this.radius);
+    this.size = GeometricMath.getCircleSize(this.radius);
   }
   /**
    * Set geometry

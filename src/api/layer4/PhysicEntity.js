@@ -52,7 +52,6 @@ class PhysicEntity {
     /* Physic ressource */
     this.physicBody = null;
     this.physicInterface;
-    this.geometricMath = new GeometricMath();
 
     /* Physic fixture */
     this.hitboxes = [];
@@ -223,14 +222,14 @@ class PhysicEntity {
 
       switch(hitbox.hitbox.type) {
         case "circle" :
-          size = this.geometricMath.getCircleSize(hitbox.hitbox.radius);
+          size = GeometricMath.getCircleSize(hitbox.hitbox.radius);
           break;
         case "box" :
           size.dx = hitbox.hitbox.dx;
           size.dy = hitbox.hitbox.dx;
           break;
         case "polygon" :
-          size = this.geometricMath.getPolygonSize(hitbox.hitbox.vertices);
+          size = GeometricMath.getPolygonSize(hitbox.hitbox.vertices);
           break;
       }
 
@@ -289,7 +288,7 @@ class PhysicEntity {
         polygon = [];
 
     for(; x < length; x++) {
-      polygon[x] = this.geometricMath.getRotatedPoint(
+      polygon[x] = GeometricMath.getRotatedPoint(
         this.perimeter[x],
         this.angle,
         {
@@ -299,7 +298,7 @@ class PhysicEntity {
       );
     }
 
-    this.setSize(this.geometricMath.getPolygonSize(polygon));
+    this.setSize(GeometricMath.getPolygonSize(polygon));
   }
   /**
    * Update original size

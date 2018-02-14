@@ -11,11 +11,10 @@ class Clone {
    */
   cloneComplexObject(complexObject) {
     const clone = {};
-    let i = 0;
 
-    for(i in complexObject) {
+    for (let i in complexObject) {
       if (complexObject.hasOwnProperty(i)) {
-        if(typeof complexObject[i] != 'object' || complexObject[i] instanceof HTMLImageElement) {
+        if (typeof complexObject[i] != 'object' || complexObject[i] instanceof HTMLImageElement) {
           clone[i] = complexObject[i];
         } else {
           clone[i] = this.cloneObject(complexObject[i]);
@@ -31,7 +30,7 @@ class Clone {
    * @param  {object} simpleObject, js basic object
    * @return {object} clone of the simpleObject
    */
-  cloneObject(simpleObject) {
+  static cloneObject(simpleObject) {
     return JSON.parse(JSON.stringify(simpleObject));
   }
 }
@@ -41,98 +40,92 @@ class Clone {
  * @class GeometricMath
  */
 class GeometricMath {
-  constructor() {
-  }
   /**
    * Get size of a polygon
    * @method getPolygonSize
-   * @param {position[]} vertices
-   * @return {size}
+   * @param {position[]} vertices - Vertices of the polygon
+   * @return {size} - Size of the polygon
    */
-  getPolygonSize(vertices) {
-    let polygonBox = getPolygonBox(vertices);
+  static getPolygonSize(vertices) {
+    const polygonBox = GeometricMath.getPolygonBox(vertices);
 
     return {
-      dx : polygonBox.x2 - polygonBox.x1,
-      dy : polygonBox.y2 - polygonBox.y1
+      dx: polygonBox.x2 - polygonBox.x1,
+      dy: polygonBox.y2 - polygonBox.y1
     };
   }
   /**
    * Get size of a polygon
    * @method getPolygonSize
-   * @param {position[]} vertices
-   * @return {size}
+   * @param {position[]} vertices - Vertices of the polygon
+   * @return {box} - Box polygon
    */
-  getPolygonBox(vertices) {
-    let x1 = vertices[0].x;
-    let x2 = vertices[0].x;
-    let y1 = vertices[0].y;
-    let y2 = vertices[0].y;
-    let i = 1;
-    let length = vertices.length;
+  static getPolygonBox(vertices) {
+    const polygonBox = {
+      x1: vertices[0].x,
+      x2: vertices[0].x,
+      y1: vertices[0].y,
+      y2: vertices[0].y
+    };
+    const verticesLength = vertices.length;
 
-    for(; i < length; i++) {
-      x1 = Math.min(vertices[i].x, x1);
-      x2 = Math.max(vertices[i].x, x2);
-      y1 = Math.min(vertices[i].y, y1);
-      y2 = Math.max(vertices[i].y, y2);
+    for (let i = 1; i < verticesLength; i++) {
+      polygonBox.x1 = Math.min(vertices[i].x, polygonBox.x1);
+      polygonBox.x2 = Math.max(vertices[i].x, polygonBox.x2);
+      polygonBox.y1 = Math.min(vertices[i].y, polygonBox.y1);
+      polygonBox.y2 = Math.max(vertices[i].y, polygonBox.y2);
     }
 
-    return {
-      x1 : x1,
-      x2 : x2,
-      y1 : y1,
-      y2 : y2
-    };
+    return polygonBox;
   }
   /**
    * Get size of a circle
    * @method getCircleSize
-   * @param {number} radius
-   * @return {size}
+   * @param {number} radius - Radius of the circle
+   * @return {size} - Size of the circle
    */
-  getCircleSize(radius) {
-    var diameter = radius * 2;
+  static getCircleSize(radius) {
+    const diameter = radius * 2;
 
     return {
-      dx : diameter,
-      dy : diameter
+      dx: diameter,
+      dy: diameter
     };
   }
   /**
    * Get new position with angle
    * @method getRotatedPoint
-   * @param {position} position
-   * @param {number} angle
-   * @param {position} center
-   * @return {position}
+   * @param {position} position - Position of the point
+   * @param {number} angle - Angle
+   * @param {position} center - Position of the center of rotation
+   * @return {position} - Position of the rotated point
    */
-  getRotatedPoint(position, angle, center) {
-    var distance = {
-          x : position.x - center.x,
-          y : position.y - center.y
-        },
-        cos = Math.cos(angle),
-        sin = Math.sin(angle);
+  static getRotatedPoint(position, angle, center) {
+    const distance = {
+      x: position.x - center.x,
+      y: position.y - center.y
+    };
+    const cos = Math.cos(angle);
+    const sin = Math.sin(angle);
 
     return {
-      x : (cos * distance.x) - (sin * distance.y) + center.x,
-      y : (sin * distance.x) + (cos * distance.y) + center.y
+      x: (cos * distance.x) - (sin * distance.y) + center.x,
+      y: (sin * distance.x) + (cos * distance.y) + center.y
     };
   }
   /**
    * Get new position with angle
    * @method getRotatedPolygon
-   * @param {position[]} vertices
-   * @param {number} angle
-   * @param {position} center
-   * @return {position}
+   * @param {position[]} vertices - Vertices of the polygon
+   * @param {number} angle - Angle of rotation
+   * @param {position} center - Position of the center of rotation
+   * @return {position[]} - Vertices Position of the rotated polygon
    */
-  getRotatedPolygon(vertices, angle, center) {
-    let verticesLength = vertices.length;
-    let rotatedVertices = [];
+  static getRotatedPolygon(vertices, angle, center) {
+    const verticesLength = vertices.length;
+    const rotatedVertices = [];
 
-    for(let x = 0; x < verticesLength; x++) {
+    for (let x = 0; x < verticesLength; x++) {
       rotatedVertices.push(this.getRotatedPoint(vertices[x], angle, center));
     }
 
@@ -141,27 +134,25 @@ class GeometricMath {
 }
 
 /**
-   * Generate unique ID
-   * @class IdGenerator
-   */
+ * Generate unique ID
+ * @class IdGenerator
+ */
 class IdGenerator {
-  constructor() {
-  }
   /**
-     * JsFiddle source code
-     * http://jsfiddle.net/briguy37/2mvfd/
-     * Created and maintained by Piotr and Oskar.
-     * This method generate a unique Id
-     * @method generate
-     * @return {string} uuid, Unique Id
-    */
-  generate() {
-    var d = new Date().getTime(),
-        uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-            var r = (d + Math.random()*16)%16 | 0;
-            d = Math.floor(d/16);
-            return (c=='x' ? r : (r&0x3|0x8)).toString(16);
-        });
+   * JsFiddle source code
+   * http://jsfiddle.net/briguy37/2mvfd/
+   * Created and maintained by Piotr and Oskar.
+   * This method generate a unique Id
+   * @method generate
+   * @return {string} uuid, Unique Id
+   */
+  static generate() {
+    let d = new Date().getTime();
+    const uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+      const r = (d + Math.random() * 16) % 16 | 0;
+      d = Math.floor(d / 16);
+      return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+    });
 
     return uuid;
   }
@@ -170,18 +161,24 @@ class IdGenerator {
 /**
  * Timer system
  * @class Timer
- * @param {number} delta
  */
 class Timer {
+  /**
+   * Timer system
+   * @method constructor
+   * @param {number} delta - Delta time to detect
+   * @return {void}
+   */
   constructor(delta) {
-    this.t1 = 0;//Date of last execution
-    this.t2 = 0;//Time waste for one iteration
-    this.delta = delta;//Time before new execution
+    this.t1 = 0; // Date of last execution
+    this.t2 = 0; // Time waste for one iteration
+    this.delta = delta; // Time before new execution
   }
   /**
    * Set timer delta
    * @method setDelta
-   * @param {number} delta
+   * @param {number} delta - Delta time to detect
+   * @return {void}
    */
   setDelta(delta) {
     this.delta = delta;
@@ -189,52 +186,36 @@ class Timer {
   /**
    * If delta time is past, true
    * @method whatTimeIsIt
-   * @param {boolean}
+   * @return {boolean} - True if my delta is past
    */
   whatTimeIsIt() {
-    var timePast;
-
-    if(this.t1 == 0) {
+    if (this.t1 === 0) {
       this.t1 = Date.now();
-
       return true;
-    } else {
-      timePast = Date.now() - this.t1;
-
-      if(timePast >= this.delta) {
-        this.t1 = Date.now();
-
-        return true;
-      } else {
-        return false;
-      }
+    } else if (Date.now() - this.t1 >= this.delta) {
+      this.t1 = Date.now();
+      return true;
     }
+    return false;
   }
   /**
    * If delta time is past, true
    * With late !!! @refactor !!!
    * @method whatTimeIsItWithLate
-   * @param {boolean}
+   * @return {boolean} -
    */
   whatTimeIsItWithLate() {
-    var timePast;
+    const timePast = Date.now() - this.t1;
 
-    if(this.t1 == 0) {
+    if (this.t1 === 0) {
       this.t1 = Date.now();
-
       return true;
-    } else {
-      timePast = Date.now() - this.t1;
-
-      if(timePast + this.t2 >= this.delta) {
-        this.t1 += this.delta;
-        this.t2 = timePast - this.delta;
-
-        return true;
-      } else {
-        return false;
-      }
+    } else if (timePast + this.t2 >= this.delta) {
+      this.t1 += this.delta;
+      this.t2 = timePast - this.delta;
+      return true;
     }
+    return false;
   }
 }
 
@@ -414,9 +395,6 @@ class Animation {
  * @class Bitmap
  */
 class Bitmap {
-  constructor() {
-    this.geometricMath = new GeometricMath();
-  }
   /**
    * Show bitmap on the canvas context
    * @method show
@@ -495,7 +473,7 @@ class Bitmap {
         y : positionBitmap.y + animation.dy * animation.repeatY
       }
     ];
-    let polygonBox = this.geometricMath.getPolygonBox(this.geometricMath.getRotatedPolygon(polygon, angle, center));
+    let polygonBox = GeometricMath.getPolygonBox(GeometricMath.getRotatedPolygon(polygon, angle, center));
     let visibleSize = {
       dx : this.getVisibleLength(polygonBox.x1, polygonBox.x2, sizeView.dx),
       dy : this.getVisibleLength(polygonBox.y1, polygonBox.y2, sizeView.dy)
@@ -791,14 +769,13 @@ class Circle extends Geometry {
 
     this.type = "circle";
     this.radius = 0;
-    this.geometricMath = new GeometricMath();
   }
   /**
    * Update the size of geometry
    * @method updateSize
    */
   updateSize() {
-    this.size = this.geometricMath.getCircleSize(this.radius);
+    this.size = GeometricMath.getCircleSize(this.radius);
   }
   /**
    * Set geometry
@@ -857,7 +834,6 @@ class Polygon extends Geometry {
     super();
 
     this.type = "Polygon";
-    this.geometricMath = new GeometricMath();
     this.vertices = [];
   }
   /**
@@ -865,7 +841,7 @@ class Polygon extends Geometry {
    * @method updateSize
    */
   updateSize() {
-    this.size = this.geometricMath.getPolygonSize(this.vertices);
+    this.size = GeometricMath.getPolygonSize(this.vertices);
   }
   /**
    * Set geometry
@@ -1673,23 +1649,36 @@ class PhysicInterface {
 /**
  * Graphic Entity
  * @class GraphicEntity
- * @param {graphicEntity} properties
- * @param {string} id
  */
 class GraphicEntity {
+  /**
+   * Graphic Entity
+   * @class GraphicEntity
+   * @param {graphicEntity} properties - object properties
+   * @param {string} id - Object Id
+   */
   constructor(properties, id) {
     /* Identity */
     this.id = id;
     this.name = properties.name;
 
     /* Position and size */
-    this.x = 0;
-    this.y = 0;
-    this.z = properties.z;
-    this.dx = 0;
-    this.dy = 0;
-    this.dz = properties.dz;
+    this.position = {
+      x: 0,
+      y: 0,
+      z: properties.z
+    };
+    this.size = {
+      dx: 0,
+      dy: 0,
+      dz: properties.dz
+    };
     this.angle = 0;
+    this.delta = {
+      x: 0,
+      y: 0,
+      angle: 0
+    };
 
     /* Sub Graphic entities properties */
     this.parent = null;
@@ -1704,69 +1693,69 @@ class GraphicEntity {
   /**
    * Set the graphic position of the entity and subGraphicEntities
    * @method setPosition
-   * @param {position} position
+   * @param {position} position - New position of the graphic entity
+   * @return {void}
    */
   setPosition(position) {
     /* Update position of subGraphicEntity */
-    if(typeof this.subGraphicEntities != "undefined"){
-      var x=0,
-          length = this.subGraphicEntities.length;
+    const subGraphicEntitiesLength = this.subGraphicEntities.length;
 
-      for(; x < length; x++) {
-        this.subGraphicEntities[x].addPosition({
-          x : position.x - this.x,
-          y : position.y - this.y
-        });
-        this.subGraphicEntities[x].addZPosition(position.y - this.y);
-      }
+    for (let x = 0; x < subGraphicEntitiesLength; x++) {
+      this.subGraphicEntities[x].addPosition({
+        x: position.x - this.position.x,
+        y: position.y - this.position.y
+      });
+      this.subGraphicEntities[x].addZPosition(position.y - this.position.y);
     }
 
     /* Map update */
-    if(this.scene != null) {
+    if (this.scene != null) {
       this.scene.update(
         {
-          x : this.x,
-          y : this.y,
-          dx : this.dx,
-          dy : this.dy
+          x: this.position.x,
+          y: this.position.y,
+          dx: this.size.dx,
+          dy: this.size.dy
         },
         {
-          x : position.x,
-          y : position.y,
-          dx : this.dx,
-          dy : this.dy
+          x: position.x,
+          y: position.y,
+          dx: this.size.dx,
+          dy: this.size.dy
         },
         this.id
       );
     }
 
-    this.x = position.x;
-    this.y = position.y;
+    this.position.x = position.x;
+    this.position.y = position.y;
     this.updateZ();
   }
   /**
    * Add position to the current position
    * @method addPosition
-   * @param {position} position
+   * @param {position} position - position to add
+   * @return {void}
    */
   addPosition(position) {
     this.setPosition({
-      x : this.x + position.x,
-      y : this.y + position.y
+      x: this.position.x + position.x,
+      y: this.position.y + position.y
     });
   }
   /**
    * Set position relative to parent
    * @method setRelativePosition
-   * @param {position} position
+   * @param {position} position - position relative to parent
+   * @return {void}
    */
   setRelativePosition(position) {
-    if(this.parent != null) {
-      var parentPosition = this.parent.getPosition();
+    if (this.parent != null) {
+      const parentPosition = this.parent.getPosition();
 
       this.setPosition({
-        x : parentPosition.x + position.x,
-        y : parentPosition.y + position.y
+        x: parentPosition.x + position.x,
+        y: parentPosition.y + position.y
       });
     }
   }
@@ -1774,67 +1763,73 @@ class GraphicEntity {
    * Add position on z
    * @method addZPosition
    * @param {number} z
+   * @return {void}
    */
   addZPosition(z) {
-    this.z += z;
+    this.position.z += z;
   }
   /**
    * Set plan position relative to parent
    * @method setRelativeZ
    * @param {number} z
+   * @return {void}
    */
   setRelativeZ(z) {
-    if(this.parent != null) {
-      this.z = this.parent.z + z;
+    if (this.parent != null) {
+      this.position.z = this.parent.z + z;
     }
   }
   /**
    * Set plan position(Fixe 2D)
    * @method setZ
    * @param {number} z
+   * @return {void}
    */
   setZ(z) {
-    if(this.dz == 0) {
-      this.z = z;
+    if (this.size.dz === 0) {
+      this.position.z = z;
     }
   }
   /**
    * Update plan position(Automatique 2.5D)
    * @method updateZ
    * @private
+   * @return {void}
    */
   updateZ() {
-    if(this.dz != 0) {
-      this.z = this.y + this.dy - this.dz;
+    if (this.size.dz !== 0) {
+      this.position.z = this.position.y + this.size.dy - this.size.dz;
     }
   }
   /**
    * Set plan size(0 = Fix)
    * @method setDz
    * @param {number} dz
+   * @return {void}
    */
   setDz(dz) {
-    this.dz = dz;
+    this.size.dz = dz;
     this.updateZ();
   }
   /**
    * Set the graphic size of the entity
    * @method setSize
-   * @param {size} size
+   * @param {size} size - new graphic size of the entity
+   * @return {void}
    */
   setSize(size) {
     /* Map update */
-    if(this.scene != null) {
+    if (this.scene != null) {
       this.scene.update(
         {
-          x: this.x,
-          y: this.y,
-          dx: this.dx,
-          dy: this.dy
+          x: this.position.x,
+          y: this.position.y,
+          dx: this.size.dx,
+          dy: this.size.dy
         },
         {
-          x: this.x,
-          y: this.y,
+          x: this.position.x,
+          y: this.position.y,
           dx: size.dx,
           dy: size.dy
         },
@@ -1842,51 +1837,47 @@ class GraphicEntity {
       );
     }
 
-    this.dx = size.dx;
-    this.dy = size.dy;
+    this.size.dx = size.dx;
+    this.size.dy = size.dy;
   }
   /**
    * Get the graphic position of the entity.
    * @method getPosition
-   * @return {position}
+   * @return {position} - Last graphic entity position
    */
   getPosition() {
-    return {
-      x : this.x,
-      y : this.y
-    };
+    return this.position;
   }
   /**
    * Get the graphic size of the entity.
    * @method getSize
-   * @return {size}
+   * @return {size} - Last graphic entity size
    */
   getSize() {
-    return {
-      dx : this.dx,
-      dy : this.dy
-    };
+    return this.size;
   }
   /**
    * Set angle
    * @method setAngle
-   * @param {number} angle
+   * @param {number} angle - new angle(radian)
+   * @return {void}
    */
   setAngle(angle) {
     this.angle = angle;
   }
   /**
-   * Set angle
-   * @method setAngle
-   * @param {number} angle
+   * Get angle
+   * @method getAngle
+   * @return {number} - Last graphic entity angle
    */
-  getAngle(angle) {
+  getAngle() {
     return this.angle;
   }
   /**
    * Set new animation bitmap
    * @method setBitmap
-   * @param {animation} animation
+   * @param {animation} animation - New animation properties
+   * @return {void}
    */
   setBitmap(animation) {
     this.graphicObject = new Bitmap();
@@ -1899,7 +1890,8 @@ class GraphicEntity {
   /**
    * Set new text
    * @method setText
-   * @param {text} text
+   * @param {text} text - New text properties
+   * @return {void}
    */
   setText(text) {
     this.graphicObject = new Text();
@@ -1910,31 +1902,27 @@ class GraphicEntity {
   /**
    * Set new geometry
    * @method setGeometry
+   * @param {geometry} geometry - New geometry properties
+   * @return {void}
    */
   setGeometry(geometry) {
-    switch(geometry.shape) {
-      case "box" :
+    switch (geometry.shape) {
+      default:
+        console.log('This geometry does not exist.');
+        break;
+      case 'box':
         this.graphicObject = new Box(geometry);
         this.graphicObject.setGeometry(geometry);
         break;
-      case "circle" :
+      case 'circle':
         this.graphicObject = new Circle(geometry);
         this.graphicObject.setGeometry(geometry);
         break;
-      case "polygon" :
+      case 'polygon':
         this.graphicObject = new Polygon(geometry);
         this.graphicObject.setGeometry(geometry);
         break;
     }
-    this.setSize(this.graphicObject.getSize());
-  }
-  /**
-   * Set new graphic object
-   * @method setGraphicObject
-   */
-  setGraphicObject(graphicObject) {
-    this.graphicObject = graphicObject;
-
     this.setSize(this.graphicObject.getSize());
   }
   /**
@@ -1943,31 +1931,32 @@ class GraphicEntity {
    * @param {canvasCtx} canvasCtx
    * @param {size} canvasSize
    * @param {position} cameraPosition
+   * @return {void}
    */
   updateGraphicObject(canvasCtx, canvasSize, cameraPosition) {
-    let mapPosition = this.getPosition();
-    let relativePosition = {
-      x : mapPosition.x - cameraPosition.x,
-      y : mapPosition.y - cameraPosition.y
+    const mapPosition = this.getPosition();
+    const relativePosition = {
+      x: mapPosition.x - cameraPosition.x,
+      y: mapPosition.y - cameraPosition.y
     };
     let animationInProcess;
 
-    if(this.animation) {
+    if (this.animation) {
       this.animation.updateAnimationFrame();
       animationInProcess = this.animation.getAnimationInProcess();
       this.graphicObject.show(animationInProcess, relativePosition, this.angle, canvasSize, canvasCtx);
     } else {
       this.graphicObject.show(relativePosition, this.angle, canvasSize, canvasCtx);
     }
-
   }
   /**
    * Set new audio file
    * @method setAudio
-   * @param {audio} audio
+   * @param {audio} audio - New audio properties
+   * @return {void}
    */
   setAudio(audio) {
-    if(typeof this.audio == "undefined") {
+    if (typeof this.audio === 'undefined') {
       this.audio = new Audio();
     }
     this.audio.setAudio(audio.audioConf, audio.audioContext);
@@ -1975,59 +1964,60 @@ class GraphicEntity {
   /**
    * Stop the audio file
    * @method unsetAudio
+   * @return {void}
    */
   unsetAudio() {
     this.audio.unsetAudio();
   }
   /**
-   * Add the entity from the Scene
+   * Add the entity to the Scene
    * @method addToScene
-   * @param {scene} scene
+   * @param {scene} scene - The scene where add object entity
+   * @return {void}
    */
   addToScene(scene) {
-    if(this.scene == null) {
+    if (this.scene == null) {
       this.scene = scene;
       this.scene.add(
         {
-          x : this.x,
-          y : this.y,
-          dx : this.dx,
-          dy : this.dy
+          x: this.position.x,
+          y: this.position.y,
+          dx: this.size.dx,
+          dy: this.size.dy
         },
         this.id
       );
 
       /* Update subObject */
-      var length = this.subGraphicEntities.length,
-          x=0;
+      const subGraphicEntitiesLength = this.subGraphicEntities.length;
 
-      for(; x < length; x++) {
+      for (let x = 0; x < subGraphicEntitiesLength; x++) {
         this.subGraphicEntities[x].addToScene(this.scene);
       }
     }
   }
   /**
-   * Delete the entity from the Scene
+   * Delete the entity to the Scene
    * @method deleteToScene
+   * @return {void}
    */
   deleteToScene() {
-    if(this.scene != null) {
+    if (this.scene != null) {
       this.scene.delete(
         {
-          x : this.x,
-          y : this.y,
-          dx : this.dx,
-          dy : this.dy
+          x: this.position.x,
+          y: this.position.y,
+          dx: this.size.dx,
+          dy: this.size.dy
         },
         this.id
       );
       this.scene = null;
 
       /* Update subObject */
-      var length = this.subGraphicEntities.length,
-          x = 0;
+      const subGraphicEntitiesLength = this.subGraphicEntities.length;
 
-      for(; x < length; x++) {
+      for (let x = 0; x < subGraphicEntitiesLength; x++) {
         this.subGraphicEntities[x].deleteToScene();
       }
     }
@@ -2035,46 +2025,48 @@ class GraphicEntity {
   /**
    * Set Pause
    * @method setPause
-   * @param {boolean} pause
+   * @param {boolean} pause - State of the pause
+   * @return {void}
    */
   setPause(pause) {
-    if(typeof this.skinMachine != "undefined") {
-      this.skinMachine.setPause(pause);
+    if (typeof this.graphicObject !== 'undefined') {
+      this.graphicObject.setPause(pause);
     }
-    if(typeof this.audio == "undefined") {
+    if (typeof this.audio === 'undefined') {
       this.audio.setPause(pause);
     }
-    this.pause = true;
+    this.pause = pause;
   }
   /**
    * Add sub graphic entity
    * @method addSubEntity
-   * @param {graphicEntity} subGraphicEntity
+   * @param {graphicEntity} subGraphicEntity - Sub Graphic Entity to add
+   * @return {void}
    */
   addSubEntity(subGraphicEntity) {
-    if(subGraphicEntity.parent == null) {
+    if (subGraphicEntity.parent == null) {
       subGraphicEntity.setPosition({
-        x: this.x + subGraphicEntity.x,
-        y: this.y + subGraphicEntity.y
+        x: this.position.x + subGraphicEntity.x,
+        y: this.position.y + subGraphicEntity.y
       });
 
       subGraphicEntity.parent = this;
       subGraphicEntity.dz = 0;
 
-      this.subGraphicEntities[this.subGraphicEntities.length] = subGraphicEntity;
+      this.subGraphicEntities.push(subGraphicEntity);
     }
   }
   /**
    * Delete sub grphic entity
    * @method deleteSubObject
-   * @param {graphicEntity} subGraphicEntity
+   * @param {graphicEntity} subGraphicEntity - Sub Graphic Entity to delete
+   * @return {void}
    */
   deleteSubEntity(subGraphicEntity) {
-    var length = this.subGraphicEntities.length,
-        x = 0;
+    const subGraphicEntitiesLength = this.subGraphicEntities.length;
 
-    for(; x < length; x++) {
-      if(this.subGraphicEntities[x].id == subGraphicEntity.id) {
+    for (let x = 0; x < subGraphicEntitiesLength; x++) {
+      if (this.subGraphicEntities[x].id === subGraphicEntity.id) {
         subGraphicEntity.parent = null;
         this.subGraphicEntities.splice(x, 1);
         return;
@@ -2137,7 +2129,6 @@ class PhysicEntity {
     /* Physic ressource */
     this.physicBody = null;
     this.physicInterface;
-    this.geometricMath = new GeometricMath();
 
     /* Physic fixture */
     this.hitboxes = [];
@@ -2308,14 +2299,14 @@ class PhysicEntity {
 
       switch(hitbox.hitbox.type) {
         case "circle" :
-          size = this.geometricMath.getCircleSize(hitbox.hitbox.radius);
+          size = GeometricMath.getCircleSize(hitbox.hitbox.radius);
           break;
         case "box" :
           size.dx = hitbox.hitbox.dx;
           size.dy = hitbox.hitbox.dx;
           break;
         case "polygon" :
-          size = this.geometricMath.getPolygonSize(hitbox.hitbox.vertices);
+          size = GeometricMath.getPolygonSize(hitbox.hitbox.vertices);
           break;
       }
 
@@ -2374,7 +2365,7 @@ class PhysicEntity {
         polygon = [];
 
     for(; x < length; x++) {
-      polygon[x] = this.geometricMath.getRotatedPoint(
+      polygon[x] = GeometricMath.getRotatedPoint(
         this.perimeter[x],
         this.angle,
         {
@@ -2384,7 +2375,7 @@ class PhysicEntity {
       );
     }
 
-    this.setSize(this.geometricMath.getPolygonSize(polygon));
+    this.setSize(GeometricMath.getPolygonSize(polygon));
   }
   /**
    * Update original size
@@ -2787,44 +2778,48 @@ class PhysicEntity {
 /**
  * Display manager
  * @class Camera
- * @param {camera} properties
- * @param {string} id
  */
 class Camera extends PhysicEntity {
+  /**
+   * Display manager
+   * @method constructor
+   * @param {camera} properties - Object Properties
+   * @param {string} id - Object ID
+   */
   constructor(properties, id) {
     super(properties, id);
 
     /* Camera Properties */
     this.canvas = document.getElementById(properties.canvasId);
-    this.ctx = this.canvas.getContext("2d", {
-      antialias : true
+    this.ctx = this.canvas.getContext('2d', {
+      antialias: true
     });
-    this.dx = properties.dx != undefined ? properties.dx : 0;
-    this.dy = properties.dy != undefined ? properties.dy : 0;
-    this.scale = properties.scale != undefined ? properties.scale : 1;
-    this.displayMode = properties.displayMode != undefined ? properties.displayMode : "default";
+    this.size.dx = properties.dx !== undefined ? properties.dx : 0;
+    this.size.dy = properties.dy !== undefined ? properties.dy : 0;
+    this.scale = properties.scale !== undefined ? properties.scale : 1;
+    this.displayMode = properties.displayMode !== undefined ? properties.displayMode : 'default';
     this.stopDisplayLoop = false;
-    this.onDisplayUpdate = function(){};
+    this.onDisplayUpdate = () => {};
 
     /* Fps system */
     this.fpsDisplay = false;
     this.lastFrameDate = Date.now();
     this.fps = 0;
     this.fpsFont = {
-        size : 25,
-        font : "Courier New",
-        style : "white bold"
+      size: 25,
+      font: 'Courier New',
+      style: 'white bold'
     };
     this.fpsPosition = {
-        x : 20,
-        y : 20
+      x: 20,
+      y: 20
     };
 
     /* Event called when display is updated */
-    this.displayUpdated = new CustomEvent("displayUpdated", {
-      bubbles : false,
-      cancelable : true,
-      detail : {}
+    this.displayUpdated = new CustomEvent('displayUpdated', {
+      bubbles: false,
+      cancelable: true,
+      detail: {}
     });
 
     this.updateDisplaySize();
@@ -2833,25 +2828,27 @@ class Camera extends PhysicEntity {
    * Update the calculated size
    * @method updateDisplaySize
    * @param {size} size - new size of the display
+   * @return {void}
    */
   setDisplaySize(size) {
-    this.dx = size.dx;
-    this.dy = size.dy;
+    this.size.dx = size.dx;
+    this.size.dy = size.dy;
     this.updateDisplaySize();
   }
   /**
    * Update the calculated size
    * @method updateDisplaySize
+   * @return {void}
    */
   updateDisplaySize() {
-    switch(this.displayMode) {
-      case "default":
+    switch (this.displayMode) {
+      case 'default':
         this.activeDefaultDisplay();
         break;
-      case "fullwindow":
+      case 'fullwindow':
         this.activeFullwindow();
         break;
-      case "fullscreen":
+      case 'fullscreen':
         this.activeFullscreen();
         break;
       default:
@@ -2861,6 +2858,7 @@ class Camera extends PhysicEntity {
   /**
    * The camera take the full display of the screen
    * @method activeFullscreen
+   * @return {void}
    */
   activeFullscreen() {
     /* For 1.0, by default fullwindow mode is actived */
@@ -2869,11 +2867,12 @@ class Camera extends PhysicEntity {
   /**
    * The camera take the full display of the window browser
    * @method activeFullwindow
+   * @return {void}
    */
   activeFullwindow() {
-    var winDx = window.innerWidth,
-        winDy = window.innerHeight,
-        scale = this.displayScale(this.dx, this.dy, winDx, winDy);
+    const winDx = window.innerWidth;
+    const winDy = window.innerHeight;
+    const scale = Camera.displayScale(this.size.dx, this.size.dy, winDx, winDy);
 
     this.canvas.width = winDx;
     this.canvas.height = winDy;
@@ -2883,17 +2882,20 @@ class Camera extends PhysicEntity {
   /**
    * The camera display without adaptative parameters
    * @method activeDefaultDisplay
+   * @return {void}
    */
   activeDefaultDisplay() {
-    this.canvas.width = this.dx * this.scale;
-    this.canvas.height = this.dy * this.scale;
+    this.canvas.width = this.size.dx * this.scale;
+    this.canvas.height = this.size.dy * this.scale;
     this.ctx.scale(this.scale, this.scale);
     this.ctx.imageSmoothingEnabled = false;
   }
   /**
-     * The camera display without adaptative parameters
-     * @method activeDefaultDisplay
-     */
+   * The camera display without adaptative parameters
+   * @method scale
+   * @param {number} x - width of original resolution
+   * @return {void}
+   */
   scale(x) {
     this.ctx.scale(x, x);
   }
@@ -2907,19 +2909,20 @@ class Camera extends PhysicEntity {
    * @param {number} dy2 - height of new resolution
    * @return {number} scale - the higher scale between width and height of canvas
    */
-  displayScale(dx1, dy1, dx2, dy2) {
-    var scaleX = dx2 / dx1,
-        scaleY = dy2 / dy1;
+  static displayScale(dx1, dy1, dx2, dy2) {
+    const scaleX = dx2 / dx1;
+    const scaleY = dy2 / dy1;
 
-    if(Math.abs(scaleX) < Math.abs(scaleY)) {
+    if (Math.abs(scaleX) < Math.abs(scaleY)) {
       return scaleY;
-    } else {
-      return scaleX;
     }
+
+    return scaleX;
   }
   /**
    * Start the display loop
    * @method start
+   * @return {void}
    */
   start() {
     this.displayUpdate(0);
@@ -2927,6 +2930,7 @@ class Camera extends PhysicEntity {
   /**
    * Stop the display loop
    * @method stop
+   * @return {void}
    */
   stop() {
     this.stopDisplayLoop = true;
@@ -2934,44 +2938,49 @@ class Camera extends PhysicEntity {
   /**
    * Update fps and his display
    * @method fpsUpdate
+   * @return {void}
    */
   fpsUpdate() {
     /* Fps calcul */
-    var frameDate = Date.now(),
-    delta = frameDate - self.lastFrameDate;
+    const frameDate = Date.now();
+    const delta = frameDate - this.lastFrameDate;
 
     /* Fps update */
     this.fps = 1000 / delta;
     this.lastFrameDate = frameDate;
 
     /* Fps Display update */
-    this.ctx.font = this.fpsFont.size+'px '+this.fpsFont.font;
+    this.ctx.font = `${this.fpsFont.size}px ${this.fpsFont.font}`;
     this.ctx.fillStyle = this.fpsFont.style;
     this.ctx.fillText(this.fps, this.fpsPosition.x, this.fpsPosition.y);
   }
   /**
    * Show the framerate performance on display
    * @method showFps
+   * @return {void}
    */
   showFps() {
-    if(!this.fpsDisplay) {
+    if (!this.fpsDisplay) {
       this.fpsDisplay = true;
-      this.canvas.addEventListener("displayUpdated", this.fpsUpdate, false);
+      this.canvas.addEventListener('displayUpdated', this.fpsUpdate, false);
     }
   }
   /**
    * Hide the framerate performance on display
    * @method hideFps
+   * @return {void}
    */
   hideFps() {
-    if(this.fpsDisplay) {
+    if (this.fpsDisplay) {
       this.fpsDisplay = false;
-      this.canvas.removeEventListener("displayUpdated", this.fpsUpdate, false);
+      this.canvas.removeEventListener('displayUpdated', this.fpsUpdate, false);
     }
   }
   /**
    * Set method called in displayUpdate
    * @method setDisplayUpdateMethod
+   * @param {function} onDisplayUpdate - function
+   * @return {void}
    */
   setDisplayUpdateMethod(onDisplayUpdate) {
     this.onDisplayUpdate = onDisplayUpdate;
@@ -2979,22 +2988,24 @@ class Camera extends PhysicEntity {
   /**
    * Update the display on browser framerate(~60fps)
    * @method displayUpdate
+   * @param {number} timePast - time past
+   * @return {void}
    */
   displayUpdate(timePast) {
-    var startDate = Date.now(),
-        self = this;
+    const startDate = Date.now();
+    const self = this;
 
     this.onDisplayUpdate(timePast);
     this.canvas.dispatchEvent(this.displayUpdated);
 
     /* Stop command */
-    if(this.stopDisplayLoop) {
+    if (this.stopDisplayLoop) {
       this.stopDisplayLoop = false;
       return;
     }
 
     /* Framerate Loop */
-    window.requestAnimationFrame(function() {
+    window.requestAnimationFrame(() => {
       self.displayUpdate((Date.now() - startDate) / 1000);
     });
   }
@@ -3496,12 +3507,13 @@ class Game {
             self.bitmapLoader.load({
               url : self.configUrl+bitmapConfig.bitmapUrl,
               onLoad : function(bitmap, reference) {
+                const cameraSize = self.camera.getSize();
                 self.loader = new Loader(
                   bitmap,
                   bitmapConfig,
                   {
-                    dx : self.camera.dx,
-                    dy : self.camera.dy,
+                    dx : cameraSize.dx,
+                    dy : cameraSize.dy,
                     context : self.camera.ctx
                   },
                   function(){}
@@ -3836,24 +3848,26 @@ class Game {
 
 
     this.entities[this.level.cameraId].setDisplayUpdateMethod(function(framerate) {
+      const cameraSize = self.entities[self.level.cameraId].getSize();
       var inView = self.scene['graphic'].getEntities({
             x : self.entities[self.level.cameraId].graphicPosition.x,
             y : self.entities[self.level.cameraId].graphicPosition.y,
-            dx : self.entities[self.level.cameraId].dx,
-            dy : self.entities[self.level.cameraId].dy
+            dx : cameraSize.dx,
+            dy : cameraSize.dy
           }),
           inPhysic = self.scene['physic'].getEntities({
             x : self.entities[self.level.cameraId].graphicPosition.x,
             y : self.entities[self.level.cameraId].graphicPosition.y,
-            dx : self.entities[self.level.cameraId].dx,
-            dy : self.entities[self.level.cameraId].dy
+            dx : cameraSize.dx,
+            dy : cameraSize.dy
           }),
           x=0,
           length = inView.length;
         //console.log(self.scene['physic'])
       //Increase sort of the objects by z propertie
       inView.sort(function(a, b) {
-        return (self.entities[a].z > self.entities[b].z) ? 1 : -1;
+        const entityPosition = self.entities[a].getPosition();
+        return (entityPosition.z > entityPosition.z) ? 1 : -1;
       });
 
         //console.log(self.entities['50ib636f-8779-47d5-9fcb-ff98c8583dec'])
@@ -3863,8 +3877,8 @@ class Game {
       self.entities[self.level.cameraId].ctx.clearRect(
         0,
         0,
-        self.entities[self.level.cameraId].dx + self.entities[self.level.cameraId].dx,
-        self.entities[self.level.cameraId].dy + self.entities[self.level.cameraId].dy
+        cameraSize.dx + cameraSize.dx,
+        cameraSize.dy + cameraSize.dy
       );
 
       //Call of entities graphic system
@@ -3872,8 +3886,8 @@ class Game {
         self.entities[inView[x]].updateGraphicObject(
           self.entities[self.level.cameraId].ctx,
           {
-            dx : self.entities[self.level.cameraId].dx,
-            dy : self.entities[self.level.cameraId].dy
+            dx : cameraSize.dx,
+            dy : cameraSize.dy
           },
           {
             x : self.entities[self.level.cameraId].graphicPosition.x,
@@ -4049,7 +4063,7 @@ class Game {
      * @return objectId
      */
   createSceneObject(configuration, id) {
-    var objectId = id != "auto" ? id : this.idGenerator.generate(),
+    var objectId = id != "auto" ? id : IdGenerator.generate(),
         objectConf = this.clone(configuration);
 
     this.entities[objectId] = this.entitiesFactory.getInstance(

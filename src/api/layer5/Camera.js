@@ -17,8 +17,8 @@ class Camera extends PhysicEntity {
     this.ctx = this.canvas.getContext('2d', {
       antialias: true
     });
-    this.dx = properties.dx !== undefined ? properties.dx : 0;
-    this.dy = properties.dy !== undefined ? properties.dy : 0;
+    this.size.dx = properties.dx !== undefined ? properties.dx : 0;
+    this.size.dy = properties.dy !== undefined ? properties.dy : 0;
     this.scale = properties.scale !== undefined ? properties.scale : 1;
     this.displayMode = properties.displayMode !== undefined ? properties.displayMode : 'default';
     this.stopDisplayLoop = false;
@@ -54,8 +54,8 @@ class Camera extends PhysicEntity {
    * @return {void}
    */
   setDisplaySize(size) {
-    this.dx = size.dx;
-    this.dy = size.dy;
+    this.size.dx = size.dx;
+    this.size.dy = size.dy;
     this.updateDisplaySize();
   }
   /**
@@ -95,7 +95,7 @@ class Camera extends PhysicEntity {
   activeFullwindow() {
     const winDx = window.innerWidth;
     const winDy = window.innerHeight;
-    const scale = this.displayScale(this.dx, this.dy, winDx, winDy);
+    const scale = Camera.displayScale(this.size.dx, this.size.dy, winDx, winDy);
 
     this.canvas.width = winDx;
     this.canvas.height = winDy;
@@ -108,8 +108,8 @@ class Camera extends PhysicEntity {
    * @return {void}
    */
   activeDefaultDisplay() {
-    this.canvas.width = this.dx * this.scale;
-    this.canvas.height = this.dy * this.scale;
+    this.canvas.width = this.size.dx * this.scale;
+    this.canvas.height = this.size.dy * this.scale;
     this.ctx.scale(this.scale, this.scale);
     this.ctx.imageSmoothingEnabled = false;
   }

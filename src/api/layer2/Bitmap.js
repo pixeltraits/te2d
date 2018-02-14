@@ -3,9 +3,6 @@
  * @class Bitmap
  */
 class Bitmap {
-  constructor() {
-    this.geometricMath = new GeometricMath();
-  }
   /**
    * Show bitmap on the canvas context
    * @method show
@@ -84,7 +81,7 @@ class Bitmap {
         y : positionBitmap.y + animation.dy * animation.repeatY
       }
     ];
-    let polygonBox = this.geometricMath.getPolygonBox(this.geometricMath.getRotatedPolygon(polygon, angle, center));
+    let polygonBox = GeometricMath.getPolygonBox(GeometricMath.getRotatedPolygon(polygon, angle, center));
     let visibleSize = {
       dx : this.getVisibleLength(polygonBox.x1, polygonBox.x2, sizeView.dx),
       dy : this.getVisibleLength(polygonBox.y1, polygonBox.y2, sizeView.dy)

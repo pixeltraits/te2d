@@ -11,9 +11,8 @@ class Clone {
    */
   cloneComplexObject(complexObject) {
     const clone = {};
-    let i = 0;
 
-    for(i in complexObject) {
+    for (let i in complexObject) {
       if (complexObject.hasOwnProperty(i)) {
         if (typeof complexObject[i] != 'object' || complexObject[i] instanceof HTMLImageElement) {
           clone[i] = complexObject[i];
