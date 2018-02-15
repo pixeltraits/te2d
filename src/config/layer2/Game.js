@@ -424,14 +424,14 @@ class Game {
     this.entities[this.level.cameraId].setDisplayUpdateMethod(function(framerate) {
       const cameraSize = self.entities[self.level.cameraId].getSize();
       var inView = self.scene['graphic'].getEntities({
-            x : self.entities[self.level.cameraId].graphicPosition.x,
-            y : self.entities[self.level.cameraId].graphicPosition.y,
+            x : self.entities[self.level.cameraId].position.x,
+            y : self.entities[self.level.cameraId].position.y,
             dx : cameraSize.dx,
             dy : cameraSize.dy
           }),
           inPhysic = self.scene['physic'].getEntities({
-            x : self.entities[self.level.cameraId].graphicPosition.x,
-            y : self.entities[self.level.cameraId].graphicPosition.y,
+            x : self.entities[self.level.cameraId].position.x,
+            y : self.entities[self.level.cameraId].position.y,
             dx : cameraSize.dx,
             dy : cameraSize.dy
           }),
@@ -464,8 +464,8 @@ class Game {
             dy : cameraSize.dy
           },
           {
-            x : self.entities[self.level.cameraId].graphicPosition.x,
-            y : self.entities[self.level.cameraId].graphicPosition.y
+            x : self.entities[self.level.cameraId].position.x,
+            y : self.entities[self.level.cameraId].position.y
           }
         );
       }
@@ -481,7 +481,7 @@ class Game {
     });
 
     //Camera configuration for the level
-    this.entities[this.level.cameraId].setGraphicPosition({
+    this.entities[this.level.cameraId].setPosition({
       x: this.level.xCam,
       y: this.level.yCam
     });

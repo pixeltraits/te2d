@@ -15,15 +15,7 @@ class PhysicEntity {
     this.name = properties.name;
 
     /* Gravity point */
-    this.physicPosition = {
-      x: 0,
-      y: 0
-    };
-    this.graphicPosition = {
-      x: 0,
-      y: 0
-    };
-    this.graphicDelta = {
+    this.position = {
       x: 0,
       y: 0
     };
@@ -52,14 +44,14 @@ class PhysicEntity {
       x: 0,
       y: 0
     };
-    this.angleConstraint = properties.angleConstraint != undefined ? properties.angleConstraint : false;
-    this.angularInertia = properties.rotateInertia != undefined ? properties.rotateInertia : 1;
-    this.mass = properties.mass != undefined ? properties.mass : 1;
-    this.dynamic = properties.dynamic != undefined ? properties.dynamic : false;
+    this.angleConstraint = properties.angleConstraint !== undefined ? properties.angleConstraint : false;
+    this.angularInertia = properties.rotateInertia !== undefined ? properties.rotateInertia : 1;
+    this.mass = properties.mass !== undefined ? properties.mass : 1;
+    this.dynamic = properties.dynamic !== undefined ? properties.dynamic : false;
 
     /* Physic ressource */
     this.physicBody = null;
-    this.physicInterface;
+    this.physicInterface = null;
 
     /* Physic fixture */
     this.hitboxes = [];
@@ -69,25 +61,19 @@ class PhysicEntity {
     this.scene = null;
   }
   /**
-   * Set scene entity reference
+   * Set graphic entity reference
    * @method setGraphicEntity
-   * @param {graphicEntity} graphicEntity
+   * @param {graphicEntity} graphicEntity - Graphic entity to reference
+   * @return {void}
    */
   setGraphicEntity(graphicEntity) {
     this.graphicEntity = graphicEntity;
   }
   /**
-   * Set scene entity reference
-   * @method setGraphicDelta
-   * @param {position} position
-   */
-  setGraphicDelta(position) {
-    this.graphicDelta = position;
-  }
-  /**
-   * Set physic ressource and context
+   * Set physic interface reference @Refactor
    * @method setPhysicInterface
-   * @param {physicInterface} physicInterface
+   * @param {physicInterface} physicInterface - Reference of the physic interface
+   * @return {void}
    */
   setPhysicInterface(physicInterface) {
     this.physicInterface = physicInterface;
@@ -111,22 +97,23 @@ class PhysicEntity {
     this.originalSize;
   }
   /**
-   * Set size with angle
+   * Set size
    * @method setSize
    * @private
-   * @param {size} size
+   * @param {size} size - The new size
+   * @return {void}
    */
   setSize(size) {
     /* Map update */
-    if(this.scene != null) {
+    if (this.scene != null) {
       this.scene.update(
         {
-          position : this.physicPosition,
-          size : this.size
+          position: this.physicPosition,
+          size: this.size
         },
         {
-          position : this.physicPosition,
-          size : size
+          position: this.physicPosition,
+          size: size
         },
         this.id
       );
@@ -137,81 +124,99 @@ class PhysicEntity {
   /**
    * Get size with angle
    * @method getSize
-   * @return {size}
+   * @return {size} - the last size of physic entity
    */
   getSize() {
     return this.size;
   }
   /**
-   * Set the graphic position of the physic entity.
-   * @method setGraphicPosition
-   * @param {position} graphicPosition
+   * Set the position of the physic entity
+   * @method setPosition
+   * @param {position} position - New absolute position
+   * @return {void}
    */
-  setGraphicPosition(graphicPosition) {
-    var physicPosition = this.graphicToPhysicPosition(graphicPosition);
+  setPosition(position) {
+    this.position = position;
+    this.updateGraphicEntityPosition();
 
-    this.physicPosition.x = physicPosition.x;
-    this.physicPosition.y = physicPosition.y;
+    this.updateHitboxesPosition();
+  }
+  /**
+   * Update graphic entity position of the hitboxes with last physic entity position
+   * @method updateHitboxesPosition
+   * @return {void}
+   */
+  updateHitboxesPosition() {
+    const hitboxesLength = this.hitboxes.length;
 
-    if(this.physicBody != null) {
-
-    }
-    if(this.graphicEntity != null) {
-      this.graphicPosition = graphicPosition;
-
-      this.graphicEntity.setPosition({
-        x : this.physicPosition.x + this.graphicDelta.x,
-        y : this.physicPosition.y + this.graphicDelta.y
+    for (let x = 0; x < hitboxesLength; x++) {
+      this.hitboxes[x].graphicEntity.setPosition({
+        x: this.position.x + this.hitboxes[x].fixture.x,
+        y: this.position.y + this.hitboxes[x].fixture.y
       });
     }
   }
   /**
-   * Get the graphic position of the Entity.
-   * @method getGraphicPosition
-   * @return {position} position
+   * Update graphic entity position of the hitboxes with last physic entity position
+   * @method updateHitboxesAngle
+   * @return {void}
    */
-  getGraphicPosition() {
-    return this.graphicPosition;
-  }
-  /**
-   * Get position between Scene and Physic ????
-   * @method getPositionDelta
-   * @private
-   * @return {physicPosition} position
-   */
-  getPositionDelta() {
-    var graphicPosition = this.graphicEntity.getPosition();
+  updateHitboxesAngle() {
+    const hitboxesLength = this.hitboxes.length;
 
-    return {
-      x : Math.abs(this.graphicPosition.x - graphicPosition.x),
-      y : Math.abs(this.graphicPosition.y - graphicPosition.y)
-    };
+    for (let x = 0; x < hitboxesLength; x++) {
+      this.hitboxes[x].graphicEntity.setAngle(this.angle + this.hitboxes[x].fixture.angle);
+    }
   }
   /**
-   * Translate graphic position to physic position.
-   * @method graphicToPhysicPosition
-   * @private
-   * @param {position} graphicPosition
-   * @return {position}
+   * Get the position of the physic entity
+   * @method getPosition
+   * @return {position} - Last position of the physic entity
    */
-  graphicToPhysicPosition(graphicPosition) {
-    return {
-      x: graphicPosition.x + (this.size.dx / 2),
-      y: graphicPosition.y + (this.size.dy / 2)
-    };
+  getPosition() {
+    return this.position;
   }
   /**
-   * Translate physic position to graphic position.
-   * @method physicToGraphicPosition
-   * @private
-   * @param {position} physicPosition
-   * @return {position}
+   * Set the delta position and Angle between physic entity and graphic Entity
+   * @method setDelta
+   * @param {delta} delta - Delta position and Angle between physic entity and graphic Entity
+   * @return {void}
    */
-  physicToGraphicPosition(physicPosition) {
-    return {
-      x : physicPosition.x - (this.size.dx / 2),
-      y : physicPosition.y - (this.size.dy / 2)
-    };
+  setDelta(delta) {
+    this.delta = delta;
+    this.updateGraphicEntityPosition();
+    this.updateGraphicEntityAngle();
+  }
+  /**
+   * Update graphic position with last physic entity position and delta
+   * @method updateGraphicEntityPosition
+   * @return {void}
+   */
+  updateGraphicEntityPosition() {
+    if (this.graphicEntity != null) {
+      this.graphicEntity.setPosition({
+        x: this.position.x + this.delta.x,
+        y: this.position.y + this.delta.y
+      });
+    }
+  }
+  /**
+   * Update graphic angle with last physic entity angle and delta
+   * @method updateGraphicEntityAngle
+   * @return {void}
+   */
+  updateGraphicEntityAngle() {
+    if (this.graphicEntity != null) {
+      this.graphicEntity.setAngle(this.angle + this.delta.angle);
+    }
+  }
+  /**
+   * Get delta position and angle between physic entity and graphic Entity
+   * @method getDelta
+   * @return {delta} delta
+   */
+  getDelta() {
+    return this.delta;
   }
   /**
    * Add hitbox to the gravity point
@@ -221,8 +226,8 @@ class PhysicEntity {
   addHitbox(hitbox) {
     if(!this.verifyHitbox(hitbox.hitbox.id)) {
       let size = {
-        dx : 0,
-        dy : 0
+        dx: 0,
+        dy: 0
       };
 
       hitbox.graphicEntity.setGeometry(hitbox.hitbox);
@@ -299,8 +304,8 @@ class PhysicEntity {
         this.perimeter[x],
         this.angle,
         {
-          x : 0,
-          y : 0
+          x: 0,
+          y: 0
         }
       );
     }
@@ -310,26 +315,26 @@ class PhysicEntity {
   /**
    * Update original size
    * @method updateOriginalSize
+   * @return {void}
    */
   updateOriginalSize() {
-    var length = this.hitboxes.length,
-        x = 0;
+    const length = this.hitboxes.length;
 
-    if(length > 0) {
-      switch(this.hitboxes[0].fixture.shape) {
-        case "circle" :
+    if (length > 0) {
+      switch (this.hitboxes[0].fixture.shape) {
+        case 'circle':
           var minX = this.hitboxes[0].fixture.x,
               maxX = this.hitboxes[0].fixture.x - this.hitboxes[0].fixture.radius,
               minY = this.hitboxes[0].fixture.y,
               maxY = this.hitboxes[0].fixture.y - this.hitboxes[0].fixture.radius;
           break;
-        case "box" :
+        case 'box':
           var minX = this.hitboxes[0].fixture.x,
               maxX = this.hitboxes[0].fixture.x + this.hitboxes[0].fixture.dx,
               minY = this.hitboxes[0].fixture.y,
               maxY = this.hitboxes[0].fixture.y + this.hitboxes[0].fixture.dy;
           break;
-        case "polygon" :
+        case 'polygon':
           var minX = this.hitboxes[0].fixture.x,
               maxX = this.hitboxes[0].fixture.x + this.hitboxes[0].fixture.dx,
               minY = this.hitboxes[0].fixture.y,
@@ -338,7 +343,7 @@ class PhysicEntity {
       }
     }
 
-    for(; x < length; x++) {
+    for(let x = 0; x < length; x++) {
       switch(this.hitboxes[x].fixture.shape) {
         case "circle" :
           minX = Math.min(minX, this.hitboxes[x].fixture.x - this.hitboxes[x].fixture.radius);
@@ -362,19 +367,23 @@ class PhysicEntity {
     }
 
     this.setSize({
-      dx : maxX - minX,
-      dy : maxY - minY
+      dx: maxX - minX,
+      dy: maxY - minY
     });
   }
   /**
    * Add collision geometry to the gravity point
    * @method addFixtureToBody
-   * @param {collisionGeometry} collisionGeometry
+   * @param {collisionGeometry} collisionGeometry - Active the hitbox in the physic engine
+   * @return {void}
    */
   addFixtureToBody(collisionGeometry) {
-    switch(collisionGeometry.fixture.shape) {
-      case "circle" :
-        return this.physicInterface.getCircle(
+    switch (collisionGeometry.fixture.shape) {
+      default:
+        console.log('Ce type de geometry est inconnu');
+        break;
+      case 'circle':
+        this.physicInterface.getCircle(
           collisionGeometry.fixture.id,
           collisionGeometry.fixture.x,
           collisionGeometry.fixture.y,
@@ -387,8 +396,8 @@ class PhysicEntity {
           this.physicBody
         );
         break;
-      case "box" :
-        return this.physicInterface.getBox(
+      case 'box':
+        this.physicInterface.getBox(
           collisionGeometry.fixture.id,
           collisionGeometry.fixture.x,
           collisionGeometry.fixture.y,
@@ -402,8 +411,8 @@ class PhysicEntity {
           this.physicBody
         );
         break;
-      case "polygon" :
-        return this.physicInterface.getPolygon(
+      case 'polygon':
+        this.physicInterface.getPolygon(
           collisionGeometry.fixture.id,
           collisionGeometry.fixture.vertices,
           collisionGeometry.fixture.angle,
@@ -420,14 +429,15 @@ class PhysicEntity {
   /**
    * Add the physic object to the physic context
    * @method addToPhysicContext
-   * @param {scene} scene
+   * @param {scene} scene - The scene where is add Physic Entity
+   * @return {void}
    */
   addToPhysicContext(scene) {
-    if(this.physicBody == null) {
+    if (this.physicBody == null) {
       this.physicBody = this.physicInterface.getBody(
         this.id,
-        this.physicPosition.x,
-        this.physicPosition.y,
+        this.position.x,
+        this.position.y,
         this.angle,
         this.mass,
         this.angularConstraint,
@@ -435,10 +445,9 @@ class PhysicEntity {
         this.dynamic
       );
 
-      var length = this.hitboxes.length,
-          x = 0;
+      const hitboxesLength = this.hitboxes.length;
 
-      for(; x < length; x++) {
+      for (let x = 0; x < hitboxesLength; x++) {
         this.addFixtureToBody(this.hitboxes[x]);
       }
 
@@ -450,44 +459,46 @@ class PhysicEntity {
    * @method deleteToPhysicContext
    */
   deleteToPhysicContext(scene) {
-    if(this.physicBody != null) {
+    if (this.physicBody != null) {
       this.deleteToScene(scene);
     }
   }
   /**
-   * Add the object to the Scene
+   * Add the physic entity to the Scene
    * @method addToScene
    * @private
-   * @param {scene} scene
+   * @param {scene} scene - Scene where is add the physic entity
+   * @return {void}
    */
   addToScene(scene) {
-    if(this.scene == null) {
+    if (this.scene == null) {
       this.scene = scene;
       this.scene.add(
         {
-          x : this.physicPosition.x,
-          y : this.physicPosition.y,
-          dx : this.size.dx,
-          dy : this.size.dy
+          x: this.position.x,
+          y: this.position.y,
+          dx: this.size.dx,
+          dy: this.size.dy
         },
         this.id,
-        "physic"
+        'physic'
       );
     }
   }
   /**
-   * Delete the object to the Scene
+   * Delete the physic entity to the Scene
    * @method deleteToScene
    * @private
+   * @return {void}
    */
   deleteToScene() {
-    if(this.scene != null) {
+    if (this.scene != null) {
       this.scene.delete(
         {
-          x : this.physicPosition.x,
-          y : this.physicPosition.y,
-          dx : this.size.dx,
-          dy : this.size.dy
+          x: this.position.x,
+          y: this.position.y,
+          dx: this.size.dx,
+          dy: this.size.dy
         },
         this.id
       );
@@ -495,12 +506,15 @@ class PhysicEntity {
     }
   }
   /**
-   * Set angle
+   * Set angle of the physic position
    * @method setAngle
-   * @param {number} angle
+   * @param {number} angle - The new angle of physic position
+   * @return {void}
    */
   setAngle(angle) {
     this.angle = angle;
+    this.updateGraphicEntityAngle();
+    this.updateHitboxesAngle();
   }
   /**
    * Get angle
@@ -513,12 +527,13 @@ class PhysicEntity {
   /**
    * Set velocity
    * @method setVelocity
-   * @param {vector} vector
+   * @param {vector} vector - Force on x and y
+   * @return {void}
    */
   setVelocity(vector) {
     this.physicInterface.setVelocity(this.physicBody, {
-      x : vector.x,
-      y : vector.y
+      x: vector.x,
+      y: vector.y
     });
   }
   /**
@@ -532,59 +547,37 @@ class PhysicEntity {
   /**
    * Show collision geometries
    * @method show
-   * @param {scene} scene
+   * @param {scene} scene - Scene where to show the hitboxes
+   * @return {void}
    */
   show(scene) {
-    var length = this.hitboxes.length,
-        x = 0;
+    const hitboxesLength = this.hitboxes.length;
 
-    for(; x < length; x++) {
+    for (let x = 0; x < hitboxesLength; x++) {
       this.hitboxes[x].graphicEntity.addToScene(scene);
     }
   }
   /**
    * Hide collision geometries
    * @method hide
+   * @return {void}
    */
   hide() {
-    var length = this.hitboxes.length,
-        x = 0;
+    const hitboxesLength = this.hitboxes.length;
 
-    for(; x < length; x++) {
+    for (let x = 0; x < hitboxesLength; x++) {
       this.hitboxes[x].graphicEntity.deleteToScene();
     }
   }
   /**
    * Update the physic position
    * @method updatePhysicPosition
+   * @return {void}
    */
   updatePhysicPosition() {
-    if(this.physicBody != null) {
-      this.physicPosition = this.physicInterface.getPosition(this.physicBody);
-      this.angle = this.physicInterface.getAngle(this.physicBody);
-
-      var graphicPosition = this.physicToGraphicPosition(this.physicPosition);
-
-      if(this.graphicEntity != null) {
-        this.graphicEntity.setPosition({
-          x : graphicPosition.x + this.graphicDelta.x,
-          y : graphicPosition.y + this.graphicDelta.y
-        });
-        this.graphicEntity.setAngle(this.angle);
-      }
-
-      var x = 0,
-          length = this.hitboxes.length;
-
-      for(; x < length; x++) {
-        this.hitboxes[x].graphicEntity.setPosition({
-          x : this.hitboxes[x].fixture.x + this.graphicPosition.x,
-          y : this.hitboxes[x].fixture.y + this.graphicPosition.y
-        });
-        this.hitboxes[x].graphicEntity.setAngle(this.angle + this.hitboxes[x].fixture.angle);
-      }
-
-      this.graphicPosition = graphicPosition;
+    if (this.physicBody != null) {
+      this.setPosition(this.physicInterface.getPosition(this.physicBody));
+      this.setAngle(this.physicInterface.getAngle(this.physicBody));
     }
   }
 }

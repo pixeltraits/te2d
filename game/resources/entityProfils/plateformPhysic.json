@@ -90,7 +90,7 @@
       "type": "action",
       "context": "entities",
       "id": "self",
-      "method": "setGraphicDelta",
+      "method": "setDelta",
       "argument": {
         "type": "simple",
         "argument" : {

@@ -167,7 +167,7 @@
       "type" : "action",
       "context": "entities",
       "id": "plateformRight",
-      "method": "setGraphicPosition",
+      "method": "setPosition",
       "argument": {
         "type": "simple",
         "argument" : {
@@ -191,7 +191,7 @@
       "type" : "action",
       "context": "entities",
       "id": "plateformLeft",
-      "method": "setGraphicPosition",
+      "method": "setPosition",
       "argument": {
         "type": "simple",
         "argument" : {
@@ -215,7 +215,7 @@
       "type" : "action",
       "context": "entities",
       "id": "topWall",
-      "method": "setGraphicPosition",
+      "method": "setPosition",
       "argument": {
         "type": "simple",
         "argument" : {
@@ -239,7 +239,7 @@
       "type" : "action",
       "context": "entities",
       "id": "rightWall",
-      "method": "setGraphicPosition",
+      "method": "setPosition",
       "argument": {
         "type": "simple",
         "argument" : {
@@ -273,7 +273,7 @@
       "type" : "action",
       "context": "entities",
       "id": "leftWall",
-      "method": "setGraphicPosition",
+      "method": "setPosition",
       "argument": {
         "type": "simple",
         "argument" : {
@@ -307,7 +307,7 @@
       "type" : "action",
       "context": "entities",
       "id": "50ib636f-8779-27d1-9fcb-ff98c8553dec",
-      "method": "setGraphicPosition",
+      "method": "setPosition",
       "argument": {
         "type": "simple",
         "argument" : {
@@ -331,7 +331,7 @@
       "type" : "action",
       "context": "entities",
       "id": "50ib636f-8779-47d5-9fcb-ff98c8583dec",
-      "method": "setGraphicPosition",
+      "method": "setPosition",
       "argument": {
         "type": "simple",
         "argument" : {
