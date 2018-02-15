@@ -2220,12 +2220,22 @@ class PhysicEntity {
    */
   updateHitboxesPosition() {
     const hitboxesLength = this.hitboxes.length;
+    let graphicEntityPosition = {
+      x: 0,
+      y: 0,
+      z: 9999999
+    };
+
+    if (this.graphicEntity != null) {
+      //graphicEntityPosition = this.graphicEntity.getPosition();
+    }
 
     for (let x = 0; x < hitboxesLength; x++) {
       this.hitboxes[x].graphicEntity.setPosition({
         x: this.position.x + this.hitboxes[x].fixture.x,
         y: this.position.y + this.hitboxes[x].fixture.y
       });
+      this.hitboxes[x].graphicEntity.setZ(graphicEntityPosition.z + 1);
     }
   }
   /**
@@ -3858,14 +3868,14 @@ class Game {
           }),
           x=0,
           length = inView.length;
-        //console.log(self.scene['physic'])
+
       //Increase sort of the objects by z propertie
       inView.sort(function(a, b) {
-        const entityPosition = self.entities[a].getPosition();
-        return (entityPosition.z > entityPosition.z) ? 1 : -1;
+        const entityPositionA = self.entities[a].getPosition();
+        const entityPositionB = self.entities[b].getPosition();
+        return (entityPositionA.z > entityPositionB.z) ? 1 : -1;
       });
 
-        //console.log(self.entities['50ib636f-8779-47d5-9fcb-ff98c8583dec'])
 
       //Update of display------------------------------------
       //Clear display

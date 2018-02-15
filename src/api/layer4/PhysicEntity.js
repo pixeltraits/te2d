@@ -148,12 +148,22 @@ class PhysicEntity {
    */
   updateHitboxesPosition() {
     const hitboxesLength = this.hitboxes.length;
+    let graphicEntityPosition = {
+      x: 0,
+      y: 0,
+      z: 9999999
+    };
+
+    if (this.graphicEntity != null) {
+      //graphicEntityPosition = this.graphicEntity.getPosition();
+    }
 
     for (let x = 0; x < hitboxesLength; x++) {
       this.hitboxes[x].graphicEntity.setPosition({
         x: this.position.x + this.hitboxes[x].fixture.x,
         y: this.position.y + this.hitboxes[x].fixture.y
       });
+      this.hitboxes[x].graphicEntity.setZ(graphicEntityPosition.z + 1);
     }
   }
   /**

@@ -91,7 +91,7 @@
       "type" : "action",
       "context" : "entities",
       "id" : "self",
-      "method" : "hide",
+      "method" : "show",
       "argument" : {
         "type" : "resource",
         "context": "scene",

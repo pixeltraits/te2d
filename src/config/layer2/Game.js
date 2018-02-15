@@ -437,14 +437,14 @@ class Game {
           }),
           x=0,
           length = inView.length;
-        //console.log(self.scene['physic'])
+
       //Increase sort of the objects by z propertie
       inView.sort(function(a, b) {
-        const entityPosition = self.entities[a].getPosition();
-        return (entityPosition.z > entityPosition.z) ? 1 : -1;
+        const entityPositionA = self.entities[a].getPosition();
+        const entityPositionB = self.entities[b].getPosition();
+        return (entityPositionA.z > entityPositionB.z) ? 1 : -1;
       });
 
-        //console.log(self.entities['50ib636f-8779-47d5-9fcb-ff98c8583dec'])
 
       //Update of display------------------------------------
       //Clear display

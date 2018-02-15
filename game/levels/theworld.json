@@ -6,7 +6,7 @@
     "widthScene": 2000,
     "heightScene": 2000,
     "ratioScene": 300,
-    "xCam": 50,
+    "xCam": 0,
     "yCam": 0,
     "cameraId": "6de04c99-d92b-419f-ac4d-5552581554ab"
   },
