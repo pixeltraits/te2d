@@ -1,10 +1,10 @@
 /**
-   * Load contents configuration
-   * @class Game
-   * @param {string} configUrl
-   * @param {string} gameConfigUrl
-   * @param {function} onLoad
-   */
+ * Load contents configuration
+ * @class Game
+ * @param {string} configUrl
+ * @param {string} gameConfigUrl
+ * @param {function} onLoad
+ */
 class Game {
   constructor(configUrl, gameConfigUrl, onLoad) {
     var self = this;
