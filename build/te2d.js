@@ -79,6 +79,31 @@ class GeometricMath {
     return polygonBox;
   }
   /**
+   * Get length visible in dxLimit between x and x2
+   * @method getVisibleLength
+   * @param {number} x - Position x
+   * @param {number} x2 - Position x3
+   * @param {number} dxLimit - Max length
+   * @return {number} dx - Visible length
+   */
+  static getVisibleLength(x, x2, dxLimit) {
+    let dx = 0;
+
+    if (x > 0) {
+      if (x2 < dxLimit) {
+        dx = x2 - x;
+      } else {
+        dx = dxLimit - x;
+      }
+    } else if (x2 < dxLimit) {
+      dx = x2;
+    } else {
+      dx = dxLimit;
+    }
+
+    return dx;
+  }
+  /**
    * Get size of a circle
    * @method getCircleSize
    * @param {number} radius - Radius of the circle
@@ -109,8 +134,8 @@ class GeometricMath {
     const sin = Math.sin(angle);
 
     return {
-      x: (cos * distance.x) - (sin * distance.y) + center.x,
-      y: (sin * distance.x) + (cos * distance.y) + center.y
+      x: ((cos * distance.x) - (sin * distance.y)) + center.x,
+      y: ((sin * distance.x) + (cos * distance.y)) + center.y
     };
   }
   /**
@@ -130,6 +155,48 @@ class GeometricMath {
     }
 
     return rotatedVertices;
+  }
+  /**
+   * Get zone with angle
+   * @method getZoneWithAngle
+   * @param {zone} zone - Zone to rotate
+   * @param {number} angle - Angle of the zone
+   * @return {void}
+   */
+  static getZoneWithAngle(zone, angle) {
+    const polygon = GeometricMath.getRotatedPolygon(
+      [
+        {
+          x: zone.x,
+          y: zone.y
+        },
+        {
+          x: zone.x + zone.dx,
+          y: zone.y
+        },
+        {
+          x: zone.x + zone.dx,
+          y: zone.y + zone.dy
+        },
+        {
+          x: zone.x,
+          y: zone.y + zone.dy
+        }
+      ],
+      angle,
+      {
+        x: zone.x,
+        y: zone.y
+      }
+    );
+    const polygonBox = GeometricMath.getPolygonBox(polygon);
+
+    return {
+      x: polygonBox.x1,
+      y: polygonBox.y1,
+      dx: polygonBox.x2 - polygonBox.x1,
+      dy: polygonBox.y2 - polygonBox.y1
+    };
   }
 }
 
@@ -398,26 +465,28 @@ class Bitmap {
   /**
    * Show bitmap on the canvas context
    * @method show
-   * @param {position} position
-   * @param {number} angle
-   * @param {size} canvasSize
-   * @param {canvas2dContext} canvasCtx
+   * @param {animation} animation - Animation to show
+   * @param {position} position - Position of bitmap
+   * @param {number} angle - Angle of bitmap
+   * @param {size} canvasSize - Size of bitmap
+   * @param {canvas2dContext} canvasCtx - Canvas context
+   * @return {void}
    */
-  show(animation, position, angle, canvasSize, canvasCtx) {
-    let center = {
-      x : position.x,
-      y : position.y
+  static show(animation, position, angle, canvasSize, canvasCtx) {
+    const center = {
+      x: position.x,
+      y: position.y
     };
-    let repeat = this.getRepetitionBitmapToShow(animation, position, canvasSize, center, angle);
+    const repeat = Bitmap.getRepetitionBitmapToShow(animation, position, canvasSize, center, angle);
 
     canvasCtx.translate(center.x, center.y);
     canvasCtx.rotate(angle);
 
-    for(let x = 0; x < repeat.x; x++) {
-      for(let y = 0; y < repeat.y; y++) {
-        if(animation.reverse) {
+    for (let x = 0; x < repeat.x; x++) {
+      for (let y = 0; y < repeat.y; y++) {
+        if (animation.reverse) {
           canvasCtx.drawImage(
-            this.flipBitmap(animation.bitmap),
+            Bitmap.flipBitmap(animation.bitmap),
             0,
             0,
             animation.dx,
@@ -450,75 +519,54 @@ class Bitmap {
    * Determinate the number of repeat texture to show
    * @method getRepBitmap
    * @private
-   * @param {position} positionBitmap
-   * @param {size} sizeView
-   * @return {repeatBitmap}
+   * @param {animation} animation - Animation properties
+   * @param {position} positionBitmap - Bitmap position
+   * @param {size} sizeView - Size of the view
+   * @param {position} center - Center of rotation
+   * @param {number} angle - Angle of bitmap
+   * @return {repeatBitmap} - Number of repeat in the view in X and Y
    */
-  getRepetitionBitmapToShow(animation, positionBitmap, sizeView, center, angle) {
-    let polygon = [
+  static getRepetitionBitmapToShow(animation, positionBitmap, sizeView, center, angle) {
+    const polygon = [
       {
-        x : positionBitmap.x,
-        y : positionBitmap.y
+        x: positionBitmap.x,
+        y: positionBitmap.y
       },
       {
-        x : positionBitmap.x + animation.dx * animation.repeatX,
-        y : positionBitmap.y
+        x: positionBitmap.x + (animation.dx * animation.repeatX),
+        y: positionBitmap.y
       },
       {
-        x : positionBitmap.x + animation.dx * animation.repeatX,
-        y : positionBitmap.y + animation.dy * animation.repeatY
+        x: positionBitmap.x + (animation.dx * animation.repeatX),
+        y: positionBitmap.y + (animation.dy * animation.repeatY)
       },
       {
-        x : positionBitmap.x,
-        y : positionBitmap.y + animation.dy * animation.repeatY
+        x: positionBitmap.x,
+        y: positionBitmap.y + (animation.dy * animation.repeatY)
       }
     ];
-    let polygonBox = GeometricMath.getPolygonBox(GeometricMath.getRotatedPolygon(polygon, angle, center));
-    let visibleSize = {
-      dx : this.getVisibleLength(polygonBox.x1, polygonBox.x2, sizeView.dx),
-      dy : this.getVisibleLength(polygonBox.y1, polygonBox.y2, sizeView.dy)
+    const polygonBox = GeometricMath.getPolygonBox(GeometricMath.getRotatedPolygon(polygon, angle, center));
+    const visibleSize = {
+      dx: GeometricMath.getVisibleLength(polygonBox.x1, polygonBox.x2, sizeView.dx),
+      dy: GeometricMath.getVisibleLength(polygonBox.y1, polygonBox.y2, sizeView.dy)
     };
-    let maxVisibleSize = Math.max(visibleSize.dx, visibleSize.dy);
+    const maxVisibleSize = Math.max(visibleSize.dx, visibleSize.dy);
 
     return {
-      x : Math.min(animation.repeatX, Math.ceil(maxVisibleSize / animation.dx)),
-      y : Math.min(animation.repeatY, Math.ceil(maxVisibleSize / animation.dy))
+      x: Math.min(animation.repeatX, Math.ceil(maxVisibleSize / animation.dx)),
+      y: Math.min(animation.repeatY, Math.ceil(maxVisibleSize / animation.dy))
     };
   }
+
   /**
    * Reverse pixel of bitmap(Horyzontal)
    * @method flipBitmap
-   * @param {animation} animation
-   * @return {canvas} canvas
+   * @param {animation} animation - Animation properties
+   * @return {canvas} canvas - Canvas with the revert image
    */
-  getVisibleLength(x, x2, dxLimit) {
-    let dx = 0;
-
-    if(x > 0) {
-      if(x2 < dxLimit) {
-        dx = x2 - x;
-      } else {
-        dx = dxLimit - x;
-      }
-    } else {
-      if(x2 < dxLimit) {
-        dx = x2;
-      } else {
-        dx = dxLimit;
-      }
-    }
-
-    return dx;
-  }
-  /**
-   * Reverse pixel of bitmap(Horyzontal)
-   * @method flipBitmap
-   * @param {animation} animation
-   * @return {canvas} canvas
-   */
-  flipBitmap(animation) {
-    let canvas = document.createElement('canvas');
-    let context = canvas.getContext('2d');
+  static flipBitmap(animation) {
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
 
     canvas.width = animation.dx;
     canvas.height = animation.dy;
@@ -535,16 +583,16 @@ class Bitmap {
       animation.dy
     );
 
-    let imageData = context.getImageData(0, 0, animation.dx, animation.dy);
+    const imageData = context.getImageData(0, 0, animation.dx, animation.dy);
 
     /* Bitmap flipping */
     for (let i = 0; i < imageData.height; i++) {
       for (let j = 0; j < imageData.width / 2; j++) {
-        let index = (i * 4) * imageData.width + (j * 4);
-        let mirrorIndex = ((i + 1) * 4) * imageData.width - ((j + 1) * 4);
+        const index = ((i * 4) * imageData.width) + (j * 4);
+        const mirrorIndex = (((i + 1) * 4) * imageData.width) - ((j + 1) * 4);
 
         for (let p = 0; p < 4; p++) {
-          let temp = imageData.data[index + p];
+          const temp = imageData.data[index + p];
           imageData.data[index + p] = imageData.data[mirrorIndex + p];
           imageData.data[mirrorIndex + p] = temp;
         }
@@ -1679,7 +1727,7 @@ class GraphicEntity {
     this.parent = null;
     this.subGraphicEntities = [];
     this.graphicObject = null;
-    this.animation = null;
+    this.animation = false;
 
     /* Other */
     this.pause = false;
@@ -1875,12 +1923,12 @@ class GraphicEntity {
    * @return {void}
    */
   setBitmap(animation) {
-    this.graphicObject = new Bitmap();
-    this.animation = new Animation();
+    this.graphicObject = new Animation();
+    this.animation = true;
 
-    this.animation.setAnimation(animation);
+    this.graphicObject.setAnimation(animation);
 
-    this.setSize(this.animation.getSize());
+    this.setSize(this.graphicObject.getSize());
   }
   /**
    * Set new text
@@ -1890,6 +1938,7 @@ class GraphicEntity {
    */
   setText(text) {
     this.graphicObject = new Text();
+    this.animation = false;
     this.graphicObject.setText(text.words, text.style);
 
     this.setSize(this.graphicObject.getSize());
@@ -1918,6 +1967,7 @@ class GraphicEntity {
         this.graphicObject.setGeometry(geometry);
         break;
     }
+    this.animation = false;
     this.setSize(this.graphicObject.getSize());
   }
   /**
@@ -1935,11 +1985,11 @@ class GraphicEntity {
       y: mapPosition.y - cameraPosition.y
     };
     let animationInProcess;
-
+    
     if (this.animation) {
-      this.animation.updateAnimationFrame();
-      animationInProcess = this.animation.getAnimationInProcess();
-      this.graphicObject.show(animationInProcess, relativePosition, this.angle, canvasSize, canvasCtx);
+      this.graphicObject.updateAnimationFrame();
+      animationInProcess = this.graphicObject.getAnimationInProcess();
+      Bitmap.show(animationInProcess, relativePosition, this.angle, canvasSize, canvasCtx);
     } else {
       this.graphicObject.show(relativePosition, this.angle, canvasSize, canvasCtx);
     }
@@ -1972,16 +2022,18 @@ class GraphicEntity {
    */
   addToScene(scene) {
     if (this.scene == null) {
-      this.scene = scene;
-      this.scene.add(
+      const zoneWithAngle = GeometricMath.getZoneWithAngle(
         {
           x: this.position.x,
           y: this.position.y,
           dx: this.size.dx,
           dy: this.size.dy
         },
-        this.id
+        this.angle
       );
+
+      this.scene = scene;
+      this.scene.add(zoneWithAngle, this.id);
 
       /* Update subObject */
       const subGraphicEntitiesLength = this.subGraphicEntities.length;
@@ -1998,13 +2050,18 @@ class GraphicEntity {
    */
   deleteToScene() {
     if (this.scene != null) {
-      this.scene.delete(
+      const zoneWithAngle = GeometricMath.getZoneWithAngle(
         {
           x: this.position.x,
           y: this.position.y,
           dx: this.size.dx,
           dy: this.size.dy
         },
+        this.angle
+      );
+
+      this.scene.delete(
+        zoneWithAngle,
         this.id
       );
       this.scene = null;
@@ -2667,22 +2724,26 @@ class PhysicEntity {
 /**
  * Scene Manager
  * @class Scene
- * @param {size} size
- * @param {number} ratio
  */
 ﻿class Scene {
+  /**
+   * Scene Manager
+   * @method constructor
+   * @param {size} size - Size of the map
+   * @param {number} ratio - Ratio of the map
+   */
   constructor(size, ratio) {
     this.map = [];
     this.ratio = ratio;
 
     this.cases = {
-      x : Math.ceil(size.dx / this.ratio),
-      y : Math.ceil(size.dy / this.ratio)
+      x: Math.ceil(size.dx / this.ratio),
+      y: Math.ceil(size.dy / this.ratio)
     };
 
-    for(var x = 0; x < this.cases.x; x++) {
+    for (let x = 0; x < this.cases.x; x++) {
       this.map[x] = [];
-      for(var y = 0; y < this.cases.y; y++) {
+      for (let y = 0; y < this.cases.y; y++) {
         this.map[x][y] = [];
       }
     }
@@ -2690,28 +2751,26 @@ class PhysicEntity {
   /**
    * Get entities in the zone defined
    * @method getEntities
-   * @param {zone} zone
+   * @param {zone} zone - Zone
    * @return {entity[]} entities
    */
   getEntities(zone) {
-    var firstCaseX = Math.floor(zone.x / this.ratio),
-        firstCaseY = Math.floor(zone.y / this.ratio),
-        lastCaseX = Math.ceil((zone.x + zone.dx) / this.ratio),
-        lastCaseY = Math.ceil((zone.y + zone.dy) / this.ratio),
-        entities = [],
-        list = [],
-        x = firstCaseX;
+    const firstCaseX = Math.floor(zone.x / this.ratio);
+    const firstCaseY = Math.floor(zone.y / this.ratio);
+    const lastCaseX = Math.ceil((zone.x + zone.dx) / this.ratio);
+    const lastCaseY = Math.ceil((zone.y + zone.dy) / this.ratio);
+    const entities = [];
+    const list = [];
 
-    for(; x < lastCaseX; x++) {
+    for (let x = firstCaseX; x < lastCaseX; x++) {
       /* Read every cases in x between zone.x and zone.dx */
-      for(var y = firstCaseY; y < lastCaseY; y++) {
+      for (let y = firstCaseY; y < lastCaseY; y++) {
         /* Read every cases in y between zone.y and zone.dy */
-        var length = this.map[x][y].length,
-            z=0;
+        const length = this.map[x][y].length;
 
-        for(; z < length; z++) {
+        for (let z = 0; z < length; z++) {
           /* Read every entity in this case */
-          if(typeof list[this.map[x][y][z]] == "undefined") {
+          if (typeof list[this.map[x][y][z]] === 'undefined') {
             /* The entity is not set yet */
             entities[entities.length] = this.map[x][y][z];
             list[this.map[x][y][z]] = true;
@@ -2725,9 +2784,10 @@ class PhysicEntity {
   /**
    * Update entity position
    * @method update
-   * @param {zone} oldZone
-   * @param {zone} newZone
-   * @param {string} id
+   * @param {zone} oldZone - Previous localization zone
+   * @param {zone} newZone - Next localization zone
+   * @param {string} id - Id entity to search
+   * @return {void}
    */
   update(oldZone, newZone, id) {
     this.delete(oldZone, id);
@@ -2736,42 +2796,41 @@ class PhysicEntity {
   /**
    * Add entity in map
    * @method add
-   * @param {zone} zone
-   * @param {string} id
+   * @param {zone} zone - Search zone
+   * @param {string} id - Id entity to search
+   * @return {void}
    */
   add(zone, id) {
-    var firstCaseX = Math.floor(zone.x / this.ratio),
-        firstCaseY = Math.floor(zone.y / this.ratio),
-        lastCaseX = Math.ceil((zone.x + zone.dx) / this.ratio),
-        lastCaseY = Math.ceil((zone.y + zone.dy) / this.ratio),
-        x = firstCaseX;
+    const firstCaseX = Math.floor(zone.x / this.ratio);
+    const firstCaseY = Math.floor(zone.y / this.ratio);
+    const lastCaseX = Math.ceil((zone.x + zone.dx) / this.ratio);
+    const lastCaseY = Math.ceil((zone.y + zone.dy) / this.ratio);
 
-    for(; x < lastCaseX; x++) {
-      for(var y = firstCaseY; y < lastCaseY; y++) {
-        this.map[x][y][this.map[x][y].length] = id;
+    for (let x = firstCaseX; x < lastCaseX; x++) {
+      for (let y = firstCaseY; y < lastCaseY; y++) {
+        this.map[x][y].push(id);
       }
     }
   }
   /**
    * Delete entity in map
    * @method delete
-   * @param {zone} zone
-   * @param {string} id
+   * @param {zone} zone - Search zone
+   * @param {string} id - Id entity to search
+   * @return {void}
    */
   delete(zone, id) {
-    var firstCaseX = Math.floor(zone.x / this.ratio),
-      firstCaseY = Math.floor(zone.y / this.ratio),
-      lastCaseX = Math.ceil((zone.x + zone.dx) / this.ratio),
-      lastCaseY = Math.ceil((zone.y + zone.dy) / this.ratio),
-      x = firstCaseX;
+    const firstCaseX = Math.floor(zone.x / this.ratio);
+    const firstCaseY = Math.floor(zone.y / this.ratio);
+    const lastCaseX = Math.ceil((zone.x + zone.dx) / this.ratio);
+    const lastCaseY = Math.ceil((zone.y + zone.dy) / this.ratio);
 
-    for(;x < lastCaseX;x++){
-      for(var y = firstCaseY; y < lastCaseY; y++) {
-        var length = this.map[x][y].length,
-            z = 0;
+    for (let x = firstCaseX; x < lastCaseX; x++) {
+      for (let y = firstCaseY; y < lastCaseY; y++) {
+        const length = this.map[x][y].length;
 
-        for(; z < length; z++) {
-          if(this.map[x][y][z] == id) {
+        for (let z = 0; z < length; z++) {
+          if (this.map[x][y][z] === id) {
             this.map[x][y].splice(z, 1);
           }
         }
@@ -3430,12 +3489,12 @@ class Loader {
 }
 
 /**
-   * Load contents configuration
-   * @class Game
-   * @param {string} configUrl
-   * @param {string} gameConfigUrl
-   * @param {function} onLoad
-   */
+ * Load contents configuration
+ * @class Game
+ * @param {string} configUrl
+ * @param {string} gameConfigUrl
+ * @param {function} onLoad
+ */
 class Game {
   constructor(configUrl, gameConfigUrl, onLoad) {
     var self = this;

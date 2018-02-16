@@ -6,26 +6,28 @@ class Bitmap {
   /**
    * Show bitmap on the canvas context
    * @method show
-   * @param {position} position
-   * @param {number} angle
-   * @param {size} canvasSize
-   * @param {canvas2dContext} canvasCtx
+   * @param {animation} animation - Animation to show
+   * @param {position} position - Position of bitmap
+   * @param {number} angle - Angle of bitmap
+   * @param {size} canvasSize - Size of bitmap
+   * @param {canvas2dContext} canvasCtx - Canvas context
+   * @return {void}
    */
-  show(animation, position, angle, canvasSize, canvasCtx) {
-    let center = {
-      x : position.x,
-      y : position.y
+  static show(animation, position, angle, canvasSize, canvasCtx) {
+    const center = {
+      x: position.x,
+      y: position.y
     };
-    let repeat = this.getRepetitionBitmapToShow(animation, position, canvasSize, center, angle);
+    const repeat = Bitmap.getRepetitionBitmapToShow(animation, position, canvasSize, center, angle);
 
     canvasCtx.translate(center.x, center.y);
     canvasCtx.rotate(angle);
 
-    for(let x = 0; x < repeat.x; x++) {
-      for(let y = 0; y < repeat.y; y++) {
-        if(animation.reverse) {
+    for (let x = 0; x < repeat.x; x++) {
+      for (let y = 0; y < repeat.y; y++) {
+        if (animation.reverse) {
           canvasCtx.drawImage(
-            this.flipBitmap(animation.bitmap),
+            Bitmap.flipBitmap(animation.bitmap),
             0,
             0,
             animation.dx,
@@ -58,75 +60,54 @@ class Bitmap {
    * Determinate the number of repeat texture to show
    * @method getRepBitmap
    * @private
-   * @param {position} positionBitmap
-   * @param {size} sizeView
-   * @return {repeatBitmap}
+   * @param {animation} animation - Animation properties
+   * @param {position} positionBitmap - Bitmap position
+   * @param {size} sizeView - Size of the view
+   * @param {position} center - Center of rotation
+   * @param {number} angle - Angle of bitmap
+   * @return {repeatBitmap} - Number of repeat in the view in X and Y
    */
-  getRepetitionBitmapToShow(animation, positionBitmap, sizeView, center, angle) {
-    let polygon = [
+  static getRepetitionBitmapToShow(animation, positionBitmap, sizeView, center, angle) {
+    const polygon = [
       {
-        x : positionBitmap.x,
-        y : positionBitmap.y
+        x: positionBitmap.x,
+        y: positionBitmap.y
       },
       {
-        x : positionBitmap.x + animation.dx * animation.repeatX,
-        y : positionBitmap.y
+        x: positionBitmap.x + (animation.dx * animation.repeatX),
+        y: positionBitmap.y
       },
       {
-        x : positionBitmap.x + animation.dx * animation.repeatX,
-        y : positionBitmap.y + animation.dy * animation.repeatY
+        x: positionBitmap.x + (animation.dx * animation.repeatX),
+        y: positionBitmap.y + (animation.dy * animation.repeatY)
       },
       {
-        x : positionBitmap.x,
-        y : positionBitmap.y + animation.dy * animation.repeatY
+        x: positionBitmap.x,
+        y: positionBitmap.y + (animation.dy * animation.repeatY)
       }
     ];
-    let polygonBox = GeometricMath.getPolygonBox(GeometricMath.getRotatedPolygon(polygon, angle, center));
-    let visibleSize = {
-      dx : this.getVisibleLength(polygonBox.x1, polygonBox.x2, sizeView.dx),
-      dy : this.getVisibleLength(polygonBox.y1, polygonBox.y2, sizeView.dy)
+    const polygonBox = GeometricMath.getPolygonBox(GeometricMath.getRotatedPolygon(polygon, angle, center));
+    const visibleSize = {
+      dx: GeometricMath.getVisibleLength(polygonBox.x1, polygonBox.x2, sizeView.dx),
+      dy: GeometricMath.getVisibleLength(polygonBox.y1, polygonBox.y2, sizeView.dy)
     };
-    let maxVisibleSize = Math.max(visibleSize.dx, visibleSize.dy);
+    const maxVisibleSize = Math.max(visibleSize.dx, visibleSize.dy);
 
     return {
-      x : Math.min(animation.repeatX, Math.ceil(maxVisibleSize / animation.dx)),
-      y : Math.min(animation.repeatY, Math.ceil(maxVisibleSize / animation.dy))
+      x: Math.min(animation.repeatX, Math.ceil(maxVisibleSize / animation.dx)),
+      y: Math.min(animation.repeatY, Math.ceil(maxVisibleSize / animation.dy))
     };
   }
+
   /**
    * Reverse pixel of bitmap(Horyzontal)
    * @method flipBitmap
-   * @param {animation} animation
-   * @return {canvas} canvas
+   * @param {animation} animation - Animation properties
+   * @return {canvas} canvas - Canvas with the revert image
    */
-  getVisibleLength(x, x2, dxLimit) {
-    let dx = 0;
-
-    if(x > 0) {
-      if(x2 < dxLimit) {
-        dx = x2 - x;
-      } else {
-        dx = dxLimit - x;
-      }
-    } else {
-      if(x2 < dxLimit) {
-        dx = x2;
-      } else {
-        dx = dxLimit;
-      }
-    }
-
-    return dx;
-  }
-  /**
-   * Reverse pixel of bitmap(Horyzontal)
-   * @method flipBitmap
-   * @param {animation} animation
-   * @return {canvas} canvas
-   */
-  flipBitmap(animation) {
-    let canvas = document.createElement('canvas');
-    let context = canvas.getContext('2d');
+  static flipBitmap(animation) {
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
 
     canvas.width = animation.dx;
     canvas.height = animation.dy;
@@ -143,16 +124,16 @@ class Bitmap {
       animation.dy
     );
 
-    let imageData = context.getImageData(0, 0, animation.dx, animation.dy);
+    const imageData = context.getImageData(0, 0, animation.dx, animation.dy);
 
     /* Bitmap flipping */
     for (let i = 0; i < imageData.height; i++) {
       for (let j = 0; j < imageData.width / 2; j++) {
-        let index = (i * 4) * imageData.width + (j * 4);
-        let mirrorIndex = ((i + 1) * 4) * imageData.width - ((j + 1) * 4);
+        const index = ((i * 4) * imageData.width) + (j * 4);
+        const mirrorIndex = (((i + 1) * 4) * imageData.width) - ((j + 1) * 4);
 
         for (let p = 0; p < 4; p++) {
-          let temp = imageData.data[index + p];
+          const temp = imageData.data[index + p];
           imageData.data[index + p] = imageData.data[mirrorIndex + p];
           imageData.data[mirrorIndex + p] = temp;
         }

@@ -1,22 +1,26 @@
 /**
  * Scene Manager
  * @class Scene
- * @param {size} size
- * @param {number} ratio
  */
 ﻿class Scene {
+  /**
+   * Scene Manager
+   * @method constructor
+   * @param {size} size - Size of the map
+   * @param {number} ratio - Ratio of the map
+   */
   constructor(size, ratio) {
     this.map = [];
     this.ratio = ratio;
 
     this.cases = {
-      x : Math.ceil(size.dx / this.ratio),
-      y : Math.ceil(size.dy / this.ratio)
+      x: Math.ceil(size.dx / this.ratio),
+      y: Math.ceil(size.dy / this.ratio)
     };
 
-    for(var x = 0; x < this.cases.x; x++) {
+    for (let x = 0; x < this.cases.x; x++) {
       this.map[x] = [];
-      for(var y = 0; y < this.cases.y; y++) {
+      for (let y = 0; y < this.cases.y; y++) {
         this.map[x][y] = [];
       }
     }
@@ -24,28 +28,26 @@
   /**
    * Get entities in the zone defined
    * @method getEntities
-   * @param {zone} zone
+   * @param {zone} zone - Zone
    * @return {entity[]} entities
    */
   getEntities(zone) {
-    var firstCaseX = Math.floor(zone.x / this.ratio),
-        firstCaseY = Math.floor(zone.y / this.ratio),
-        lastCaseX = Math.ceil((zone.x + zone.dx) / this.ratio),
-        lastCaseY = Math.ceil((zone.y + zone.dy) / this.ratio),
-        entities = [],
-        list = [],
-        x = firstCaseX;
+    const firstCaseX = Math.floor(zone.x / this.ratio);
+    const firstCaseY = Math.floor(zone.y / this.ratio);
+    const lastCaseX = Math.ceil((zone.x + zone.dx) / this.ratio);
+    const lastCaseY = Math.ceil((zone.y + zone.dy) / this.ratio);
+    const entities = [];
+    const list = [];
 
-    for(; x < lastCaseX; x++) {
+    for (let x = firstCaseX; x < lastCaseX; x++) {
       /* Read every cases in x between zone.x and zone.dx */
-      for(var y = firstCaseY; y < lastCaseY; y++) {
+      for (let y = firstCaseY; y < lastCaseY; y++) {
         /* Read every cases in y between zone.y and zone.dy */
-        var length = this.map[x][y].length,
-            z=0;
+        const length = this.map[x][y].length;
 
-        for(; z < length; z++) {
+        for (let z = 0; z < length; z++) {
           /* Read every entity in this case */
-          if(typeof list[this.map[x][y][z]] == "undefined") {
+          if (typeof list[this.map[x][y][z]] === 'undefined') {
             /* The entity is not set yet */
             entities[entities.length] = this.map[x][y][z];
             list[this.map[x][y][z]] = true;
@@ -59,9 +61,10 @@
   /**
    * Update entity position
    * @method update
-   * @param {zone} oldZone
-   * @param {zone} newZone
-   * @param {string} id
+   * @param {zone} oldZone - Previous localization zone
+   * @param {zone} newZone - Next localization zone
+   * @param {string} id - Id entity to search
+   * @return {void}
    */
   update(oldZone, newZone, id) {
     this.delete(oldZone, id);
@@ -70,42 +73,41 @@
   /**
    * Add entity in map
    * @method add
-   * @param {zone} zone
-   * @param {string} id
+   * @param {zone} zone - Search zone
+   * @param {string} id - Id entity to search
+   * @return {void}
    */
   add(zone, id) {
-    var firstCaseX = Math.floor(zone.x / this.ratio),
-        firstCaseY = Math.floor(zone.y / this.ratio),
-        lastCaseX = Math.ceil((zone.x + zone.dx) / this.ratio),
-        lastCaseY = Math.ceil((zone.y + zone.dy) / this.ratio),
-        x = firstCaseX;
+    const firstCaseX = Math.floor(zone.x / this.ratio);
+    const firstCaseY = Math.floor(zone.y / this.ratio);
+    const lastCaseX = Math.ceil((zone.x + zone.dx) / this.ratio);
+    const lastCaseY = Math.ceil((zone.y + zone.dy) / this.ratio);
 
-    for(; x < lastCaseX; x++) {
-      for(var y = firstCaseY; y < lastCaseY; y++) {
-        this.map[x][y][this.map[x][y].length] = id;
+    for (let x = firstCaseX; x < lastCaseX; x++) {
+      for (let y = firstCaseY; y < lastCaseY; y++) {
+        this.map[x][y].push(id);
       }
     }
   }
   /**
    * Delete entity in map
    * @method delete
-   * @param {zone} zone
-   * @param {string} id
+   * @param {zone} zone - Search zone
+   * @param {string} id - Id entity to search
+   * @return {void}
    */
   delete(zone, id) {
-    var firstCaseX = Math.floor(zone.x / this.ratio),
-      firstCaseY = Math.floor(zone.y / this.ratio),
-      lastCaseX = Math.ceil((zone.x + zone.dx) / this.ratio),
-      lastCaseY = Math.ceil((zone.y + zone.dy) / this.ratio),
-      x = firstCaseX;
+    const firstCaseX = Math.floor(zone.x / this.ratio);
+    const firstCaseY = Math.floor(zone.y / this.ratio);
+    const lastCaseX = Math.ceil((zone.x + zone.dx) / this.ratio);
+    const lastCaseY = Math.ceil((zone.y + zone.dy) / this.ratio);
 
-    for(;x < lastCaseX;x++){
-      for(var y = firstCaseY; y < lastCaseY; y++) {
-        var length = this.map[x][y].length,
-            z = 0;
+    for (let x = firstCaseX; x < lastCaseX; x++) {
+      for (let y = firstCaseY; y < lastCaseY; y++) {
+        const length = this.map[x][y].length;
 
-        for(; z < length; z++) {
-          if(this.map[x][y][z] == id) {
+        for (let z = 0; z < length; z++) {
+          if (this.map[x][y][z] === id) {
             this.map[x][y].splice(z, 1);
           }
         }

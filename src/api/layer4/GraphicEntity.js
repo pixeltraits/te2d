@@ -31,7 +31,7 @@ class GraphicEntity {
     this.parent = null;
     this.subGraphicEntities = [];
     this.graphicObject = null;
-    this.animation = null;
+    this.animation = false;
 
     /* Other */
     this.pause = false;
@@ -227,12 +227,12 @@ class GraphicEntity {
    * @return {void}
    */
   setBitmap(animation) {
-    this.graphicObject = new Bitmap();
-    this.animation = new Animation();
+    this.graphicObject = new Animation();
+    this.animation = true;
 
-    this.animation.setAnimation(animation);
+    this.graphicObject.setAnimation(animation);
 
-    this.setSize(this.animation.getSize());
+    this.setSize(this.graphicObject.getSize());
   }
   /**
    * Set new text
@@ -242,6 +242,7 @@ class GraphicEntity {
    */
   setText(text) {
     this.graphicObject = new Text();
+    this.animation = false;
     this.graphicObject.setText(text.words, text.style);
 
     this.setSize(this.graphicObject.getSize());
@@ -270,6 +271,7 @@ class GraphicEntity {
         this.graphicObject.setGeometry(geometry);
         break;
     }
+    this.animation = false;
     this.setSize(this.graphicObject.getSize());
   }
   /**
@@ -287,11 +289,11 @@ class GraphicEntity {
       y: mapPosition.y - cameraPosition.y
     };
     let animationInProcess;
-
+    
     if (this.animation) {
-      this.animation.updateAnimationFrame();
-      animationInProcess = this.animation.getAnimationInProcess();
-      this.graphicObject.show(animationInProcess, relativePosition, this.angle, canvasSize, canvasCtx);
+      this.graphicObject.updateAnimationFrame();
+      animationInProcess = this.graphicObject.getAnimationInProcess();
+      Bitmap.show(animationInProcess, relativePosition, this.angle, canvasSize, canvasCtx);
     } else {
       this.graphicObject.show(relativePosition, this.angle, canvasSize, canvasCtx);
     }
@@ -324,16 +326,18 @@ class GraphicEntity {
    */
   addToScene(scene) {
     if (this.scene == null) {
-      this.scene = scene;
-      this.scene.add(
+      const zoneWithAngle = GeometricMath.getZoneWithAngle(
         {
           x: this.position.x,
           y: this.position.y,
           dx: this.size.dx,
           dy: this.size.dy
         },
-        this.id
+        this.angle
       );
+
+      this.scene = scene;
+      this.scene.add(zoneWithAngle, this.id);
 
       /* Update subObject */
       const subGraphicEntitiesLength = this.subGraphicEntities.length;
@@ -350,13 +354,18 @@ class GraphicEntity {
    */
   deleteToScene() {
     if (this.scene != null) {
-      this.scene.delete(
+      const zoneWithAngle = GeometricMath.getZoneWithAngle(
         {
           x: this.position.x,
           y: this.position.y,
           dx: this.size.dx,
           dy: this.size.dy
         },
+        this.angle
+      );
+
+      this.scene.delete(
+        zoneWithAngle,
         this.id
       );
       this.scene = null;

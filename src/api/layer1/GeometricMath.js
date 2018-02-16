@@ -42,6 +42,31 @@ class GeometricMath {
     return polygonBox;
   }
   /**
+   * Get length visible in dxLimit between x and x2
+   * @method getVisibleLength
+   * @param {number} x - Position x
+   * @param {number} x2 - Position x3
+   * @param {number} dxLimit - Max length
+   * @return {number} dx - Visible length
+   */
+  static getVisibleLength(x, x2, dxLimit) {
+    let dx = 0;
+
+    if (x > 0) {
+      if (x2 < dxLimit) {
+        dx = x2 - x;
+      } else {
+        dx = dxLimit - x;
+      }
+    } else if (x2 < dxLimit) {
+      dx = x2;
+    } else {
+      dx = dxLimit;
+    }
+
+    return dx;
+  }
+  /**
    * Get size of a circle
    * @method getCircleSize
    * @param {number} radius - Radius of the circle
@@ -72,8 +97,8 @@ class GeometricMath {
     const sin = Math.sin(angle);
 
     return {
-      x: (cos * distance.x) - (sin * distance.y) + center.x,
-      y: (sin * distance.x) + (cos * distance.y) + center.y
+      x: ((cos * distance.x) - (sin * distance.y)) + center.x,
+      y: ((sin * distance.x) + (cos * distance.y)) + center.y
     };
   }
   /**
@@ -93,5 +118,47 @@ class GeometricMath {
     }
 
     return rotatedVertices;
+  }
+  /**
+   * Get zone with angle
+   * @method getZoneWithAngle
+   * @param {zone} zone - Zone to rotate
+   * @param {number} angle - Angle of the zone
+   * @return {void}
+   */
+  static getZoneWithAngle(zone, angle) {
+    const polygon = GeometricMath.getRotatedPolygon(
+      [
+        {
+          x: zone.x,
+          y: zone.y
+        },
+        {
+          x: zone.x + zone.dx,
+          y: zone.y
+        },
+        {
+          x: zone.x + zone.dx,
+          y: zone.y + zone.dy
+        },
+        {
+          x: zone.x,
+          y: zone.y + zone.dy
+        }
+      ],
+      angle,
+      {
+        x: zone.x,
+        y: zone.y
+      }
+    );
+    const polygonBox = GeometricMath.getPolygonBox(polygon);
+
+    return {
+      x: polygonBox.x1,
+      y: polygonBox.y1,
+      dx: polygonBox.x2 - polygonBox.x1,
+      dy: polygonBox.y2 - polygonBox.y1
+    };
   }
 }
