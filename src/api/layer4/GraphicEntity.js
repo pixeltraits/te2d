@@ -289,7 +289,7 @@ class GraphicEntity {
       y: mapPosition.y - cameraPosition.y
     };
     let animationInProcess;
-    
+
     if (this.animation) {
       this.graphicObject.updateAnimationFrame();
       animationInProcess = this.graphicObject.getAnimationInProcess();

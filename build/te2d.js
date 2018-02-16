@@ -360,7 +360,16 @@ class Audio {
   }
 }
 
+/**
+ * Class animation
+ * @class Animation
+ */
 class Animation {
+  /**
+   * Class animation
+   * @method constructor
+   * @return {void}
+   */
   constructor() {
     this.animation = 0;//Animation in progress
     this.animations = [];//Animation group in progress
@@ -386,21 +395,33 @@ class Animation {
   /**
    * Get the animation in process
    * @method getAnimationInProcess
-   * @return {animation}
+   * @return {animation} - animation
    */
   getAnimationInProcess() {
-    let animationInProcess = {
-      bitmap : this.animations[this.animation].bitmap,
-      dx : this.animations[this.animation].dx,
-      dy : this.animations[this.animation].dy,
-      name : this.animations[this.animation].name,
-      repeatX : this.animations[this.animation].repeatX,
-      repeatY : this.animations[this.animation].repeatY,
-      reverse : this.animations[this.animation].reverse,
-      x : this.animations[this.animation].x + (this.frame * this.animations[this.animation].dx),
-      y : this.animations[this.animation].y
+    const position = {
+      x: 0,
+      y: 0
+    };
+
+    if (this.animations[this.animation].sens === 'horyzontal') {
+      position.x = this.animations[this.animation].x + (this.frame * this.animations[this.animation].dx);
+      position.y = this.animations[this.animation].y;
+    } else {
+      position.x = this.animations[this.animation].x;
+      position.y = this.animations[this.animation].y + (this.frame * this.animations[this.animation].dy);
     }
-    return animationInProcess;
+
+    return {
+      bitmap: this.animations[this.animation].bitmap,
+      dx: this.animations[this.animation].dx,
+      dy: this.animations[this.animation].dy,
+      name: this.animations[this.animation].name,
+      repeatX: this.animations[this.animation].repeatX,
+      repeatY: this.animations[this.animation].repeatY,
+      reverse: this.animations[this.animation].reverse,
+      x: position.x,
+      y: position.y
+    };
   }
   /**
    * Get the size of bitmap with texture repetition
@@ -1985,7 +2006,7 @@ class GraphicEntity {
       y: mapPosition.y - cameraPosition.y
     };
     let animationInProcess;
-    
+
     if (this.animation) {
       this.graphicObject.updateAnimationFrame();
       animationInProcess = this.graphicObject.getAnimationInProcess();
@@ -2611,14 +2632,19 @@ class PhysicEntity {
    */
   addToScene(scene) {
     if (this.scene == null) {
-      this.scene = scene;
-      this.scene.add(
+      const zoneWithAngle = GeometricMath.getZoneWithAngle(
         {
           x: this.position.x,
           y: this.position.y,
           dx: this.size.dx,
           dy: this.size.dy
         },
+        this.angle
+      );
+
+      this.scene = scene;
+      this.scene.add(
+        zoneWithAngle,
         this.id,
         'physic'
       );
@@ -2632,13 +2658,17 @@ class PhysicEntity {
    */
   deleteToScene() {
     if (this.scene != null) {
-      this.scene.delete(
+      const zoneWithAngle = GeometricMath.getZoneWithAngle(
         {
           x: this.position.x,
           y: this.position.y,
           dx: this.size.dx,
           dy: this.size.dy
         },
+        this.angle
+      );
+      this.scene.delete(
+        zoneWithAngle,
         this.id
       );
       this.scene = null;

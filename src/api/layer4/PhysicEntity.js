@@ -482,14 +482,19 @@ class PhysicEntity {
    */
   addToScene(scene) {
     if (this.scene == null) {
-      this.scene = scene;
-      this.scene.add(
+      const zoneWithAngle = GeometricMath.getZoneWithAngle(
         {
           x: this.position.x,
           y: this.position.y,
           dx: this.size.dx,
           dy: this.size.dy
         },
+        this.angle
+      );
+
+      this.scene = scene;
+      this.scene.add(
+        zoneWithAngle,
         this.id,
         'physic'
       );
@@ -503,13 +508,17 @@ class PhysicEntity {
    */
   deleteToScene() {
     if (this.scene != null) {
-      this.scene.delete(
+      const zoneWithAngle = GeometricMath.getZoneWithAngle(
         {
           x: this.position.x,
           y: this.position.y,
           dx: this.size.dx,
           dy: this.size.dy
         },
+        this.angle
+      );
+      this.scene.delete(
+        zoneWithAngle,
         this.id
       );
       this.scene = null;

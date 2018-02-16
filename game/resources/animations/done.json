@@ -10,5 +10,5 @@
   "repeatY" : 1,
   "frames" : 0,
   "fps" : 33,
-  "sens" : "h"
+  "sens" : "horyzontal"
 }
