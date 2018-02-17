@@ -226,11 +226,11 @@ class GraphicEntity {
    * @param {animation} animation - New animation properties
    * @return {void}
    */
-  setBitmap(animation) {
+  setBitmap(animation, animationCallbacks) {
     this.graphicObject = new Animation();
     this.animation = true;
 
-    this.graphicObject.setAnimation(animation);
+    this.graphicObject.setAnimation(animation, animationCallbacks);
 
     this.setSize(this.graphicObject.getSize());
   }

@@ -41,6 +41,32 @@ class Clone {
  */
 class GeometricMath {
   /**
+   * Get reference position
+   * @method getReferencePosition
+   * @private
+   * @param {string} positionReference - Position is top left or center of image
+   * @param {position} position - Position x and y
+   * @param {size} size - Size
+   * @return {position} - Position reference
+   */
+  static getReferencePosition(positionReference, position, size) {
+    let center = {
+      x: 0,
+      y: 0
+    };
+
+    if (positionReference === 'leftTop') {
+      center = position;
+    } else if (positionReference === 'center') {
+      center.x = position.x - (size.dx / 2);
+      center.y = position.y - (size.dy / 2);
+    } else {
+      center = position;
+    }
+
+    return center;
+  }
+  /**
    * Get size of a polygon
    * @method getPolygonSize
    * @param {position[]} vertices - Vertices of the polygon
@@ -385,7 +411,7 @@ class Animation {
    * @param {animationCallback[]} animationCallbacks
    */
   setAnimation(animations, animationCallbacks) {
-    if(!this.pause) {
+    if (!this.pause) {
       this.animationCallbacks = animationCallbacks;
       this.animations = animations;
       this.frame = 0;
@@ -494,10 +520,7 @@ class Bitmap {
    * @return {void}
    */
   static show(animation, position, angle, canvasSize, canvasCtx) {
-    const center = {
-      x: position.x,
-      y: position.y
-    };
+    const center = position;
     const repeat = Bitmap.getRepetitionBitmapToShow(animation, position, canvasSize, center, angle);
 
     canvasCtx.translate(center.x, center.y);
@@ -1943,11 +1966,11 @@ class GraphicEntity {
    * @param {animation} animation - New animation properties
    * @return {void}
    */
-  setBitmap(animation) {
+  setBitmap(animation, animationCallbacks) {
     this.graphicObject = new Animation();
     this.animation = true;
 
-    this.graphicObject.setAnimation(animation);
+    this.graphicObject.setAnimation(animation, animationCallbacks);
 
     this.setSize(this.graphicObject.getSize());
   }

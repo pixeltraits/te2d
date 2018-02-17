@@ -4,6 +4,32 @@
  */
 class GeometricMath {
   /**
+   * Get reference position
+   * @method getReferencePosition
+   * @private
+   * @param {string} positionReference - Position is top left or center of image
+   * @param {position} position - Position x and y
+   * @param {size} size - Size
+   * @return {position} - Position reference
+   */
+  static getReferencePosition(positionReference, position, size) {
+    let center = {
+      x: 0,
+      y: 0
+    };
+
+    if (positionReference === 'leftTop') {
+      center = position;
+    } else if (positionReference === 'center') {
+      center.x = position.x - (size.dx / 2);
+      center.y = position.y - (size.dy / 2);
+    } else {
+      center = position;
+    }
+
+    return center;
+  }
+  /**
    * Get size of a polygon
    * @method getPolygonSize
    * @param {position[]} vertices - Vertices of the polygon

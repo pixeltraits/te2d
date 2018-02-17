@@ -14,10 +14,7 @@ class Bitmap {
    * @return {void}
    */
   static show(animation, position, angle, canvasSize, canvasCtx) {
-    const center = {
-      x: position.x,
-      y: position.y
-    };
+    const center = position;
     const repeat = Bitmap.getRepetitionBitmapToShow(animation, position, canvasSize, center, angle);
 
     canvasCtx.translate(center.x, center.y);
