@@ -40,9 +40,9 @@ class Game {
     this.audioProfils = [];
     this.entityProfils = [];
     this.keyboardProfils = [];
-    this.mouseProfiles =  [];
-    this.textProfils =  [];
-    this.physicProfils =  [];
+    this.mouseProfiles = [];
+    this.textProfils = [];
+    this.physicProfils = [];
 
     //Physic Engine(Interface)
     this.physicInterface = new PhysicInterface(

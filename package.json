@@ -1,6 +1,6 @@
 {
   "name": "te2d",
-  "version": "0.7.8",
+  "version": "0.8.0beta",
   "description": "HTML5/ES6 Game Engine with Node.js server. The Physic engine used is Box2D",
   "private": false,
   "scripts": {

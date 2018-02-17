@@ -22,7 +22,7 @@ class Keyboard {
    * @param {keyboardEvent} event
    */
   handleEvent(event) {
-    switch(event.type) {
+    switch (event.type) {
       case 'keydown':
         this.keydown(event);
         break;
@@ -46,7 +46,7 @@ class Keyboard {
       key : event.key
     };
 
-    if(!this.isActive(keyInfo)) {
+    if (!this.isActive(keyInfo)) {
       this.addKey(keyInfo);
       this.onKeydown(keyInfo);
     }
@@ -75,7 +75,7 @@ class Keyboard {
     var x = 0,
         length = this.activeKey.length;
 
-    for(; x < length; x++) {
+    for (; x < length; x++) {
       this.onKeyup(this.activeKey[x]);
     }
     this.deleteAllKeys();
@@ -85,7 +85,7 @@ class Keyboard {
    * @method addEvents
    */
   addEvents() {
-    if(!this.active) {
+    if (!this.active) {
       this.domELement.addEventListener('keydown', this, false);
       this.domELement.addEventListener('keyup', this, false);
       this.domELement.addEventListener('blur', this, false);
@@ -97,7 +97,7 @@ class Keyboard {
    * @method deleteEvents
    */
   deleteEvents() {
-    if(!this.active) {
+    if (!this.active) {
       this.domELement.removeEventListener('keydown', this, false);
       this.domELement.removeEventListener('keyup', this, false);
       this.domELement.removeEventListener('blur', this, false);

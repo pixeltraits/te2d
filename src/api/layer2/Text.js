@@ -4,7 +4,6 @@
  */
 class Text {
   constructor() {
-    this.pause = false;
     this.dx = 0;
     this.dy = 0;
 
@@ -76,13 +75,5 @@ class Text {
 
     canvasCtx.translate(-absX, -absY);
     canvasCtx.rotate(-angle);
-  }
-  /**
-   * Active/Desactive the pause
-   * @method setPause
-   * @param {boolean} pause
-   */
-  setPause(pause) {
-    this.pause = pause;
   }
 }

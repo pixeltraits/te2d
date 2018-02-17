@@ -68,8 +68,8 @@ class Animation {
    */
   getSize() {
     return {
-      dx : this.animations[this.animation].dx * this.animations[this.animation].repeatX,
-      dy : this.animations[this.animation].dy * this.animations[this.animation].repeatY
+      dx: this.animations[this.animation].dx * this.animations[this.animation].repeatX,
+      dy: this.animations[this.animation].dy * this.animations[this.animation].repeatY
     };
   }
   /**
@@ -85,28 +85,28 @@ class Animation {
    * @method updateAnimationFrame
    */
   updateAnimationFrame() {
-    if(this.animations[this.animation].frames > 0 || this.animations.length > 1 || this.animation < this.animations.length - 1) {
+    if (this.animations[this.animation].frames > 0 || this.animations.length > 1 || this.animation < this.animations.length - 1) {
       /* The animation is not fix or is an animation group where is not the last animation */
       this.timer.setDelta(this.animations[this.animation].fps);
 
-      if(this.timer.whatTimeIsIt()) {
+      if (this.timer.whatTimeIsIt()) {
         /* The time rate is past */
 
-        if(!this.pause) {
+        if (!this.pause) {
           /* The pause is inactive */
 
-          if(this.frame >= this.animations[this.animation].frames) {
+          if (this.frame >= this.animations[this.animation].frames) {
             /* The animation is in the last frame */
             this.animationCallbacks[this.animation]();
             this.frame = 0;
 
-            if(this.animations.length > 1 && this.animation < this.animations.length - 1) {
+            if (this.animations.length > 1 && this.animation < this.animations.length - 1) {
               /* The animation is not the last or unique */
               this.animation++;
             }
           }
 
-          if(this.animations[this.animation].frames > 0) {
+          if (this.animations[this.animation].frames > 0) {
             /* The animation have more one frame */
             this.frame++;
           }
