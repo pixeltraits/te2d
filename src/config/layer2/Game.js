@@ -514,34 +514,22 @@ class Game {
     this.camera.stop();
   }
   /**
-     * Clone json configuration
-     * @method clone
-     * @param {json object} jsonObject
-     */
-  clone(jsonObject) {
-    if(typeof jsonObject != "undefined") {
-      return JSON.parse(JSON.stringify(jsonObject));
-    } else {
-      console.log("L'objet json à cloner est indéfini.");
-    }
-  }
-  /**
-     * Json actions
-     * @method setObjectOfSceneConfig
-     * @param {action} actionConfiguration
-     * @return the result function called by the action
-     */
+   * Json actions
+   * @method setObjectOfSceneConfig
+   * @param {action} actionConfiguration
+   * @return the result function called by the action
+   */
   setAction(actionConfiguration, self, him) {
-    var action = this.clone(actionConfiguration);
+    var action = Clone.cloneDataObject(actionConfiguration);
     //try {
-      switch(action.type) {
-        case "action" :
-          if(action.id != false) {
-            switch(action.id) {
-              case "self":
+      switch (action.type) {
+        case 'action' :
+          if (action.id != false) {
+            switch (action.id) {
+              case 'self':
                 action.id = self;
                 break;
-              case "him":
+              case 'him':
                 action.id = him;
                 break;
             }
@@ -551,16 +539,16 @@ class Game {
           }
           return objectReference[action.method](this.setAction(action.argument, self, him));
           break;
-        case "simple" :
+        case 'simple' :
           return action.argument;
           break;
-        case "resource" :
-          if(action.id != false) {
-            switch(action.id) {
-              case "self":
+        case 'resource' :
+          if (action.id != false) {
+            switch (action.id) {
+              case 'self':
                 action.id = self;
                 break;
-              case "him":
+              case 'him':
                 action.id = him;
                 break;
             }
@@ -569,12 +557,12 @@ class Game {
             return this[action.context];
           }
           break;
-        case "object" :
+        case 'object' :
           var resource = {},
               x = 0,
               length = action.properties.length;
 
-          for(; x < length; x++) {
+          for (; x < length; x++) {
             resource[action.properties[x].name] = this.setAction(action.properties[x].content, self, him);
           }
 
@@ -623,9 +611,9 @@ class Game {
      */
   setObjectOfSceneConfig(config, id) {
     var length = config.length,
-    objectConfig = this.clone(config),
-    x = 0;
-    for(; x < length; x++) {
+    objectConfig = Clone.cloneComplexObject(config);
+
+    for (let x = 0; x < length; x++) {
       this.setAction(objectConfig[x], id, '');
     }
   }
@@ -638,13 +626,13 @@ class Game {
      */
   createSceneObject(configuration, id) {
     var objectId = id != "auto" ? id : IdGenerator.generate(),
-        objectConf = this.clone(configuration);
+        objectConf = Clone.cloneDataObject(configuration);
 
     this.entities[objectId] = this.entitiesFactory.getInstance(
       objectConf.type,
       {
-        properties : objectConf,
-        id : objectId
+        properties: objectConf,
+        id: objectId
       }
     );
 
@@ -703,14 +691,14 @@ class Game {
     var y = 0,
         lengthY = this.physicProfils.length;
 
-    for(; y < length; y++) {
-      if(typeof this.physicProfils[y][type][this.entities[hitboxA].name] != 'undefined') {
-        if(typeof this.physicProfils[y][type][this.entities[hitboxA].name][this.entities[hitboxB].name] != 'undefined') {
-          var actions = this.clone(this.physicProfils[y][type][this.entities[hitboxA].name][this.entities[hitboxB].name]),
+    for (; y < length; y++) {
+      if (typeof this.physicProfils[y][type][this.entities[hitboxA].name] != 'undefined') {
+        if (typeof this.physicProfils[y][type][this.entities[hitboxA].name][this.entities[hitboxB].name] != 'undefined') {
+          var actions = Clone.cloneDataObject(this.physicProfils[y][type][this.entities[hitboxA].name][this.entities[hitboxB].name]),
           x = 0,
           length = actions.length;
 
-          for(; x < length; x++) {
+          for (; x < length; x++) {
             this.setAction(actions[x], this.entities[hitboxA].parent.id, this.entities[hitboxB].parent.id);
           }
         }

@@ -4,34 +4,22 @@
  */
 class Clone {
   /**
-   * Clone object with Img object
+   * Clone complex object
    * @method cloneComplexObject
-   * @param  {object} complexObject, an object like Image
-   * @return {object} clone
+   * @param {object} complexObject - Complex object to clone
+   * @return {object} Clone of the complex object
    */
-  cloneComplexObject(complexObject) {
-    const clone = {};
-
-    for (let i in complexObject) {
-      if (complexObject.hasOwnProperty(i)) {
-        if (typeof complexObject[i] != 'object' || complexObject[i] instanceof HTMLImageElement) {
-          clone[i] = complexObject[i];
-        } else {
-          clone[i] = this.cloneObject(complexObject[i]);
-        }
-      }
-    }
-
-    return clone;
+  static cloneComplexObject(complexObject) {
+    return Object.assign({}, complexObject);
   }
   /**
-   * Clone simple object
-   * @method cloneObject
-   * @param  {object} simpleObject, js basic object
-   * @return {object} clone of the simpleObject
+   * Clone data object
+   * @method cloneDataObject
+   * @param {object} dataObject - data object
+   * @return {object} clone of the data object
    */
-  static cloneObject(simpleObject) {
-    return JSON.parse(JSON.stringify(simpleObject));
+  static cloneDataObject(dataObject) {
+    return JSON.parse(JSON.stringify(dataObject));
   }
 }
 
@@ -456,8 +444,8 @@ class Animation {
    */
   getSize() {
     return {
-      dx : this.animations[this.animation].dx * this.animations[this.animation].repeatX,
-      dy : this.animations[this.animation].dy * this.animations[this.animation].repeatY
+      dx: this.animations[this.animation].dx * this.animations[this.animation].repeatX,
+      dy: this.animations[this.animation].dy * this.animations[this.animation].repeatY
     };
   }
   /**
@@ -473,28 +461,28 @@ class Animation {
    * @method updateAnimationFrame
    */
   updateAnimationFrame() {
-    if(this.animations[this.animation].frames > 0 || this.animations.length > 1 || this.animation < this.animations.length - 1) {
+    if (this.animations[this.animation].frames > 0 || this.animations.length > 1 || this.animation < this.animations.length - 1) {
       /* The animation is not fix or is an animation group where is not the last animation */
       this.timer.setDelta(this.animations[this.animation].fps);
 
-      if(this.timer.whatTimeIsIt()) {
+      if (this.timer.whatTimeIsIt()) {
         /* The time rate is past */
 
-        if(!this.pause) {
+        if (!this.pause) {
           /* The pause is inactive */
 
-          if(this.frame >= this.animations[this.animation].frames) {
+          if (this.frame >= this.animations[this.animation].frames) {
             /* The animation is in the last frame */
             this.animationCallbacks[this.animation]();
             this.frame = 0;
 
-            if(this.animations.length > 1 && this.animation < this.animations.length - 1) {
+            if (this.animations.length > 1 && this.animation < this.animations.length - 1) {
               /* The animation is not the last or unique */
               this.animation++;
             }
           }
 
-          if(this.animations[this.animation].frames > 0) {
+          if (this.animations[this.animation].frames > 0) {
             /* The animation have more one frame */
             this.frame++;
           }
@@ -654,7 +642,6 @@ class Bitmap {
  */
 class Text {
   constructor() {
-    this.pause = false;
     this.dx = 0;
     this.dy = 0;
 
@@ -727,14 +714,6 @@ class Text {
     canvasCtx.translate(-absX, -absY);
     canvasCtx.rotate(-angle);
   }
-  /**
-   * Active/Desactive the pause
-   * @method setPause
-   * @param {boolean} pause
-   */
-  setPause(pause) {
-    this.pause = pause;
-  }
 }
 
 /**
@@ -744,7 +723,6 @@ class Text {
 class Geometry {
   constructor() {
     this.type = "";
-    this.pause = false;
     this.color = "";
     this.borderColor = "";
     this.borderSize = 0;
@@ -770,14 +748,6 @@ class Geometry {
     this.color = geometry.color;
     this.borderColor = geometry.borderColor;
     this.borderSize = geometry.borderSize;
-  }
-  /**
-   * Active/Desactive the pause
-   * @method setPause
-   * @param {boolean} pause
-   */
-  setPause(pause) {
-    this.pause = pause;
   }
   /**
    * Show Geometry on the canvas context
@@ -1015,7 +985,7 @@ class Keyboard {
    * @param {keyboardEvent} event
    */
   handleEvent(event) {
-    switch(event.type) {
+    switch (event.type) {
       case 'keydown':
         this.keydown(event);
         break;
@@ -1039,7 +1009,7 @@ class Keyboard {
       key : event.key
     };
 
-    if(!this.isActive(keyInfo)) {
+    if (!this.isActive(keyInfo)) {
       this.addKey(keyInfo);
       this.onKeydown(keyInfo);
     }
@@ -1068,7 +1038,7 @@ class Keyboard {
     var x = 0,
         length = this.activeKey.length;
 
-    for(; x < length; x++) {
+    for (; x < length; x++) {
       this.onKeyup(this.activeKey[x]);
     }
     this.deleteAllKeys();
@@ -1078,7 +1048,7 @@ class Keyboard {
    * @method addEvents
    */
   addEvents() {
-    if(!this.active) {
+    if (!this.active) {
       this.domELement.addEventListener('keydown', this, false);
       this.domELement.addEventListener('keyup', this, false);
       this.domELement.addEventListener('blur', this, false);
@@ -1090,7 +1060,7 @@ class Keyboard {
    * @method deleteEvents
    */
   deleteEvents() {
-    if(!this.active) {
+    if (!this.active) {
       this.domELement.removeEventListener('keydown', this, false);
       this.domELement.removeEventListener('keyup', this, false);
       this.domELement.removeEventListener('blur', this, false);
@@ -3583,9 +3553,9 @@ class Game {
     this.audioProfils = [];
     this.entityProfils = [];
     this.keyboardProfils = [];
-    this.mouseProfiles =  [];
-    this.textProfils =  [];
-    this.physicProfils =  [];
+    this.mouseProfiles = [];
+    this.textProfils = [];
+    this.physicProfils = [];
 
     //Physic Engine(Interface)
     this.physicInterface = new PhysicInterface(
@@ -4057,34 +4027,22 @@ class Game {
     this.camera.stop();
   }
   /**
-     * Clone json configuration
-     * @method clone
-     * @param {json object} jsonObject
-     */
-  clone(jsonObject) {
-    if(typeof jsonObject != "undefined") {
-      return JSON.parse(JSON.stringify(jsonObject));
-    } else {
-      console.log("L'objet json à cloner est indéfini.");
-    }
-  }
-  /**
      * Json actions
      * @method setObjectOfSceneConfig
      * @param {action} actionConfiguration
      * @return the result function called by the action
      */
   setAction(actionConfiguration, self, him) {
-    var action = this.clone(actionConfiguration);
+    var action = Clone.cloneDataObject(actionConfiguration);
     //try {
-      switch(action.type) {
-        case "action" :
-          if(action.id != false) {
-            switch(action.id) {
-              case "self":
+      switch (action.type) {
+        case 'action' :
+          if (action.id != false) {
+            switch (action.id) {
+              case 'self':
                 action.id = self;
                 break;
-              case "him":
+              case 'him':
                 action.id = him;
                 break;
             }
@@ -4094,16 +4052,16 @@ class Game {
           }
           return objectReference[action.method](this.setAction(action.argument, self, him));
           break;
-        case "simple" :
+        case 'simple' :
           return action.argument;
           break;
-        case "resource" :
-          if(action.id != false) {
-            switch(action.id) {
-              case "self":
+        case 'resource' :
+          if (action.id != false) {
+            switch (action.id) {
+              case 'self':
                 action.id = self;
                 break;
-              case "him":
+              case 'him':
                 action.id = him;
                 break;
             }
@@ -4112,12 +4070,12 @@ class Game {
             return this[action.context];
           }
           break;
-        case "object" :
+        case 'object' :
           var resource = {},
               x = 0,
               length = action.properties.length;
 
-          for(; x < length; x++) {
+          for (; x < length; x++) {
             resource[action.properties[x].name] = this.setAction(action.properties[x].content, self, him);
           }
 
@@ -4166,9 +4124,9 @@ class Game {
      */
   setObjectOfSceneConfig(config, id) {
     var length = config.length,
-    objectConfig = this.clone(config),
-    x = 0;
-    for(; x < length; x++) {
+    objectConfig = Clone.cloneComplexObject(config);
+
+    for (let x = 0; x < length; x++) {
       this.setAction(objectConfig[x], id, '');
     }
   }
@@ -4181,13 +4139,13 @@ class Game {
      */
   createSceneObject(configuration, id) {
     var objectId = id != "auto" ? id : IdGenerator.generate(),
-        objectConf = this.clone(configuration);
+        objectConf = Clone.cloneDataObject(configuration);
 
     this.entities[objectId] = this.entitiesFactory.getInstance(
       objectConf.type,
       {
-        properties : objectConf,
-        id : objectId
+        properties: objectConf,
+        id: objectId
       }
     );
 
@@ -4246,14 +4204,14 @@ class Game {
     var y = 0,
         lengthY = this.physicProfils.length;
 
-    for(; y < length; y++) {
-      if(typeof this.physicProfils[y][type][this.entities[hitboxA].name] != 'undefined') {
-        if(typeof this.physicProfils[y][type][this.entities[hitboxA].name][this.entities[hitboxB].name] != 'undefined') {
-          var actions = this.clone(this.physicProfils[y][type][this.entities[hitboxA].name][this.entities[hitboxB].name]),
+    for (; y < length; y++) {
+      if (typeof this.physicProfils[y][type][this.entities[hitboxA].name] != 'undefined') {
+        if (typeof this.physicProfils[y][type][this.entities[hitboxA].name][this.entities[hitboxB].name] != 'undefined') {
+          var actions = Clone.cloneDataObject(this.physicProfils[y][type][this.entities[hitboxA].name][this.entities[hitboxB].name]),
           x = 0,
           length = actions.length;
 
-          for(; x < length; x++) {
+          for (; x < length; x++) {
             this.setAction(actions[x], this.entities[hitboxA].parent.id, this.entities[hitboxB].parent.id);
           }
         }

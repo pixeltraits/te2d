@@ -3,6 +3,11 @@
  * @class Audio
  */
 class Audio {
+  /**
+   * Manage audio
+   * @method constructor
+   * @return {void}
+   */
   constructor() {
     this.active = false;
     this.pannerNode = null;
@@ -12,13 +17,14 @@ class Audio {
   /**
    * Play audio
    * @method setAudio
-   * @param {audioProfil} audioProfil
-   * @param {audioContext} audioContext
+   * @param {audioProfil} audioProfil - audioProfil
+   * @param {audioContext} audioContext - audioContext
+   * @return {void}
    */
   setAudio(audioProfil, audioContext) {
-    var self = this;
+    const self = this;
 
-    if(!this.active && !this.pause) {
+    if (!this.active && !this.pause) {
       this.active = true;
 
       /* Audio content implementation */
@@ -35,7 +41,7 @@ class Audio {
 
       /* Repetition number and end play event */
       this.source.loop = audioProfil.loop;
-      this.source.onended = function() {
+      this.source.onended = () => {
         self.active = false;
       };
 
@@ -45,9 +51,10 @@ class Audio {
   /**
    * Stop audio
    * @method unsetAudio
+   * @return {void}
    */
   unsetAudio() {
-    if(!this.pause) {
+    if (!this.pause) {
       this.active = false;
       this.source.loop = false;
       this.source.disconnect(this.pannerNode);
@@ -56,7 +63,8 @@ class Audio {
   /**
    * Active/Desactive the pause
    * @method setPause
-   * @param {boolean} pause
+   * @param {boolean} pause - New pause value
+   * @return {void}
    */
   setPause(pause) {
     /** Pause sound for 1.0

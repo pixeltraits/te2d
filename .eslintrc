@@ -10,6 +10,7 @@
     "comma-dangle": ["error", "never"],
     "linebreak-style": ["error", "unix"],
     "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
+    "max-len": ["error", { "code": 120 }],
     "prefer-destructuring": ["error", { "object": false, "array": false }],
     "valid-jsdoc": ["error", {
       "requireReturn": true,

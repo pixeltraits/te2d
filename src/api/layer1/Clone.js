@@ -4,33 +4,21 @@
  */
 class Clone {
   /**
-   * Clone object with Img object
+   * Clone complex object
    * @method cloneComplexObject
-   * @param  {object} complexObject, an object like Image
-   * @return {object} clone
+   * @param {object} complexObject - Complex object to clone
+   * @return {object} Clone of the complex object
    */
-  cloneComplexObject(complexObject) {
-    const clone = {};
-
-    for (let i in complexObject) {
-      if (complexObject.hasOwnProperty(i)) {
-        if (typeof complexObject[i] != 'object' || complexObject[i] instanceof HTMLImageElement) {
-          clone[i] = complexObject[i];
-        } else {
-          clone[i] = this.cloneObject(complexObject[i]);
-        }
-      }
-    }
-
-    return clone;
+  static cloneComplexObject(complexObject) {
+    return Object.assign({}, complexObject);
   }
   /**
-   * Clone simple object
-   * @method cloneObject
-   * @param  {object} simpleObject, js basic object
-   * @return {object} clone of the simpleObject
+   * Clone data object
+   * @method cloneDataObject
+   * @param {object} dataObject - data object
+   * @return {object} clone of the data object
    */
-  static cloneObject(simpleObject) {
-    return JSON.parse(JSON.stringify(simpleObject));
+  static cloneDataObject(dataObject) {
+    return JSON.parse(JSON.stringify(dataObject));
   }
 }
