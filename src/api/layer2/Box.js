@@ -3,15 +3,21 @@
  * @class Box
  */
 class Box extends Geometry {
+  /**
+   * Manage Box
+   * @method constructor
+   * @return {void}
+   */
   constructor() {
     super();
 
-    this.type = "box";
+    this.type = 'box';
   }
   /**
    * Set geometry
    * @method setGeometry
-   * @param {box} box
+   * @param {box} box - box properties
+   * @return {void}
    */
   setGeometry(box) {
     super.setGeometry(box);
@@ -22,17 +28,18 @@ class Box extends Geometry {
   /**
    * Show Geometry on the canvas context
    * @method show
-   * @param {position} position
-   * @param {number} angle
-   * @param {size} canvasSize
-   * @param {canvas2dContext} canvasCtx
+   * @param {position} position - Box position
+   * @param {number} angle - Box angle
+   * @param {size} canvasSize - Canvas size
+   * @param {canvas2dContext} canvasCtx - Canvas context
+   * @return {void}
    */
   show(position, angle, canvasSize, canvasCtx) {
     super.show(position, angle, canvasSize, canvasCtx);
 
-    var center = {
-      x : position.x,
-      y : position.y
+    const center = {
+      x: position.x,
+      y: position.y
     };
 
     canvasCtx.translate(center.x, center.y);

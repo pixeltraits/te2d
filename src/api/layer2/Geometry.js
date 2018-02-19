@@ -3,20 +3,25 @@
  * @class Geometry
  */
 class Geometry {
+  /**
+   * Manage Geometry
+   * @method constructor
+   * @return {void}
+   */
   constructor() {
-    this.type = "";
-    this.color = "";
-    this.borderColor = "";
+    this.type = '';
+    this.color = '';
+    this.borderColor = '';
     this.borderSize = 0;
     this.size = {
-      dx : 0,
-      dy : 0
+      dx: 0,
+      dy: 0
     };
   }
   /**
    * Get size
    * @method getSize
-   * @return {size}
+   * @return {size} - Geometry size
    */
   getSize() {
     return this.size;
@@ -24,7 +29,8 @@ class Geometry {
   /**
    * Set geometry
    * @method setGeometry
-   * @param {geometry} geometry
+   * @param {geometry} geometry - Geometry properties
+   * @return {void}
    */
   setGeometry(geometry) {
     this.color = geometry.color;
@@ -34,10 +40,11 @@ class Geometry {
   /**
    * Show Geometry on the canvas context
    * @method show
-   * @param {position} position
-   * @param {number} angle
-   * @param {size} canvasSize
-   * @param {canvas2dContext} canvasCtx
+   * @param {position} position - Geometry position
+   * @param {number} angle - Geometry angle
+   * @param {size} canvasSize - Canvas size
+   * @param {canvas2dContext} canvasCtx - Canvas context
+   * @return {void}
    */
   show(position, angle, canvasSize, canvasCtx) {
   }

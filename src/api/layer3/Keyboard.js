@@ -1,11 +1,16 @@
 /**
  * Manage keyboard event
  * @class Keyboard
- * @param {domElement} domELement
- * @param {keyboardEvent} onKeydown
- * @param {keyboardEvent} onKeyup
  */
 class Keyboard {
+  /**
+   * Manage keyboard event
+   * @method constructor
+   * @param {domElement} domELement - Dom Element
+   * @param {keyboardEvent} onKeydown - Closure execute on keydown
+   * @param {keyboardEvent} onKeyup - Closure execute on keyup
+   * @return {void}
+   */
   constructor(domELement, onKeydown, onKeyup) {
     this.domELement = domELement;
     this.onKeydown = onKeydown;
@@ -20,6 +25,7 @@ class Keyboard {
    * @method handleEvent
    * @private
    * @param {keyboardEvent} event
+   * @return {void}
    */
   handleEvent(event) {
     switch (event.type) {
@@ -32,18 +38,22 @@ class Keyboard {
       case 'blur':
         this.blur();
         break;
+      default:
+        console.log(`This event don't exist`);
+        break;
     }
   }
   /**
    * Called everytime one key is down
    * @method keydown
    * @private
-   * @param {keyboardEvent} event
+   * @param {keyboardEvent} event - Keydown event
+   * @return {void}
    */
   keydown(event) {
-    var keyInfo = {
-      code : event.code,
-      key : event.key
+    const keyInfo = {
+      code: event.code,
+      key: event.key
     };
 
     if (!this.isActive(keyInfo)) {
@@ -55,12 +65,13 @@ class Keyboard {
    * Called everytime one key is up
    * @method keyup
    * @private
-   * @param {keyboardEvent} event
+   * @param {keyboardEvent} event - Keyup event
+   * @return {void}
    */
   keyup(event) {
-    var keyInfo = {
-      code : event.code,
-      key : event.key
+    const keyInfo = {
+      code: event.code,
+      key: event.key
     };
 
     this.deleteKey(keyInfo);
@@ -70,12 +81,12 @@ class Keyboard {
    * Called everytime the domElement is focusout
    * @method blur
    * @private
+   * @return {void}
    */
   blur() {
-    var x = 0,
-        length = this.activeKey.length;
+    const activeKeyLength = this.activeKey.length;
 
-    for (; x < length; x++) {
+    for (let x = 0; x < activeKeyLength; x++) {
       this.onKeyup(this.activeKey[x]);
     }
     this.deleteAllKeys();
@@ -83,6 +94,7 @@ class Keyboard {
   /**
    * Active all events
    * @method addEvents
+   * @return {void}
    */
   addEvents() {
     if (!this.active) {
@@ -95,6 +107,7 @@ class Keyboard {
   /**
    * Delete all events
    * @method deleteEvents
+   * @return {void}
    */
   deleteEvents() {
     if (!this.active) {
@@ -108,7 +121,8 @@ class Keyboard {
    * Add one key
    * @method addKey
    * @private
-   * @param {keyInfo} keyInfo
+   * @param {keyInfo} keyInfo - Key info
+   * @return {void}
    */
   addKey(keyInfo) {
     this.activeKey[this.activeKey.length] = keyInfo;
@@ -117,14 +131,14 @@ class Keyboard {
    * Delete one key
    * @method deleteKey
    * @private
-   * @param {keyInfo} keyInfo
+   * @param {keyInfo} keyInfo - Key info
+   * @return {void}
    */
   deleteKey(keyInfo) {
-    var x = 0,
-        length = this.activeKey.length;
+    const activeKeyLength = this.activeKey.length;
 
-    for(; x < length; x++) {
-      if(this.activeKey[x].code == keyInfo.code) {
+    for (let x = 0; x < activeKeyLength; x++) {
+      if (this.activeKey[x].code == keyInfo.code) {
         this.activeKey.splice(x, 1);
 
         return;
@@ -135,6 +149,7 @@ class Keyboard {
    * Delete all keys
    * @method deleteAllKeys
    * @private
+   * @return {void}
    */
   deleteAllKeys() {
     this.activeKey = [];
@@ -142,15 +157,14 @@ class Keyboard {
   /**
    * Get the status of key
    * @method isActive
-   * @param {keyInfo} keyInfo
-   * @return {boolean}
+   * @param {keyInfo} keyInfo - Key info
+   * @return {boolean} - status of key
    */
   isActive(keyInfo) {
-    var x = 0,
-        length = this.activeKey.length;
+    const activeKeyLength = this.activeKey.length;
 
-    for(; x < length; x++) {
-      if(this.activeKey[x].code == keyInfo.code) {
+    for (let x = 0; x < activeKeyLength; x++) {
+      if (this.activeKey[x].code == keyInfo.code) {
         return true;
       }
     }

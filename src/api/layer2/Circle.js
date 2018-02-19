@@ -3,15 +3,21 @@
  * @class Circle
  */
 class Circle extends Geometry {
+  /**
+   * Manage Circle
+   * @method constructor
+   * @return {void}
+   */
   constructor() {
     super();
 
-    this.type = "circle";
+    this.type = 'circle';
     this.radius = 0;
   }
   /**
    * Update the size of geometry
    * @method updateSize
+   * @return {void}
    */
   updateSize() {
     this.size = GeometricMath.getCircleSize(this.radius);
@@ -19,7 +25,8 @@ class Circle extends Geometry {
   /**
    * Set geometry
    * @method setGeometry
-   * @param {circle} circle
+   * @param {circle} circle - Circle Properties
+   * @return {void}
    */
   setGeometry(circle) {
     super.setGeometry(circle);
@@ -30,18 +37,21 @@ class Circle extends Geometry {
   /**
    * Show Geometry on the canvas context
    * @method show
-   * @param {position} position
-   * @param {number} angle
-   * @param {size} canvasSize
-   * @param {canvas2dContext} canvasCtx
+   * @param {position} position - Circle position
+   * @param {number} angle - Circle angle
+   * @param {size} canvasSize - Canvas size
+   * @param {canvas2dContext} canvasCtx - Canvas context
+   * @return {void}
    */
   show(position, angle, canvasSize, canvasCtx) {
     super.show(position, angle, canvasSize, canvasCtx);
 
-    var centerX = position.x + this.radius,
-        centerY = position.y + this.radius;
+    const center = {
+      x: position.x + this.radius,
+      y: position.y + this.radius
+    };
 
-    canvasCtx.translate(centerX, centerY);
+    canvasCtx.translate(center.x, center.y);
     canvasCtx.rotate(angle);
 
     canvasCtx.beginPath();
@@ -60,6 +70,6 @@ class Circle extends Geometry {
     canvasCtx.stroke();
 
     canvasCtx.rotate(-angle);
-    canvasCtx.translate(-centerX, -centerY);
+    canvasCtx.translate(-center.x, -center.y);
   }
 }
