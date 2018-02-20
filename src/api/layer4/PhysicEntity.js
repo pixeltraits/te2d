@@ -82,7 +82,8 @@ class PhysicEntity {
    * Set original size
    * @method setOriginalSize
    * @private
-   * @param {size} originalSize
+   * @param {size} originalSize - Original size
+   * @return {void}
    */
   setOriginalSize(originalSize) {
     this.originalSize = originalSize;
@@ -91,10 +92,10 @@ class PhysicEntity {
   /**
    * Get original size
    * @method getOriginalSize
-   * @return {size}
+   * @return {size} - Original size
    */
   getOriginalSize() {
-    this.originalSize;
+    return this.originalSize;
   }
   /**
    * Set size
@@ -148,15 +149,11 @@ class PhysicEntity {
    */
   updateHitboxesPosition() {
     const hitboxesLength = this.hitboxes.length;
-    let graphicEntityPosition = {
+    const graphicEntityPosition = {
       x: 0,
       y: 0,
       z: 9999999
     };
-
-    if (this.graphicEntity != null) {
-      //graphicEntityPosition = this.graphicEntity.getPosition();
-    }
 
     for (let x = 0; x < hitboxesLength; x++) {
       this.hitboxes[x].graphicEntity.setPosition({
@@ -231,10 +228,11 @@ class PhysicEntity {
   /**
    * Add hitbox to the gravity point
    * @method addHitbox
-   * @param {hitbox} hitbox
+   * @param {hitbox} hitbox - hitboxe
+   * @return {void}
    */
   addHitbox(hitbox) {
-    if(!this.verifyHitbox(hitbox.hitbox.id)) {
+    if (!this.verifyHitbox(hitbox.hitbox.id)) {
       let size = {
         dx: 0,
         dy: 0
@@ -242,27 +240,30 @@ class PhysicEntity {
 
       hitbox.graphicEntity.setGeometry(hitbox.hitbox);
 
-      switch(hitbox.hitbox.type) {
-        case "circle" :
+      switch (hitbox.hitbox.type) {
+        case 'circle':
           size = GeometricMath.getCircleSize(hitbox.hitbox.radius);
           break;
-        case "box" :
+        case 'box':
           size.dx = hitbox.hitbox.dx;
           size.dy = hitbox.hitbox.dx;
           break;
-        case "polygon" :
+        case 'polygon':
           size = GeometricMath.getPolygonSize(hitbox.hitbox.vertices);
+          break;
+        default:
+          console.log('Hitbox not defined');
           break;
       }
 
-      let hit = this.hitboxes.push({
-        fixture : hitbox.hitbox,
-        graphicEntity : hitbox.graphicEntity,
-        originalSize : size,
-        id : hitbox.hitbox.id
+      const hit = this.hitboxes.push({
+        fixture: hitbox.hitbox,
+        graphicEntity: hitbox.graphicEntity,
+        originalSize: size,
+        id: hitbox.hitbox.id
       });
 
-      if(this.physicBody != null) {
+      if (this.physicBody != null) {
         this.addFixtureToBody(hit.fixture);
       }
     }
@@ -270,31 +271,31 @@ class PhysicEntity {
   /**
    * Verify if hitbox already exist
    * @method verifyHitbox
-   * @param {string} id
-   * @return {boolean}
+   * @param {string} id - id entity
+   * @return {boolean} - hitbox presence
    */
   verifyHitbox(id) {
-    var length = this.hitboxes.length,
-        x = 0;
+    const length = this.hitboxes.length;
 
-    for(; x < length; x++) {
-      if(this.hitboxes[x].id == id) {
+    for (let x = 0; x < length; x++) {
+      if (this.hitboxes[x].id === id) {
         return true;
       }
     }
+
     return false;
   }
   /**
    * Delete hitbox to the gravity point
    * @method deleteHitbox
-   * @param {string} id
+   * @param {string} id - Entity id
+   * @return {void}
    */
   deleteHitbox(id) {
-    var length = this.hitboxes.length,
-        x = 0;
+    const length = this.hitboxes.length;
 
-    for(; x < length; x++) {
-      if(this.hitboxes[x].id == id) {
+    for (let x = 0; x < length; x++) {
+      if (this.hitboxes[x].id === id) {
         this.hitboxes.splice(x, 1);
         return;
       }
@@ -303,13 +304,13 @@ class PhysicEntity {
   /**
    * Update size with angle
    * @method updateSize
+   * @return {void}
    */
   updateSize() {
-    var x = 0,
-        length = this.perimeter.length,
-        polygon = [];
+    const length = this.perimeter.length;
+    const polygon = [];
 
-    for(; x < length; x++) {
+    for (let x = 0; x < length; x++) {
       polygon[x] = GeometricMath.getRotatedPoint(
         this.perimeter[x],
         this.angle,
@@ -329,49 +330,59 @@ class PhysicEntity {
    */
   updateOriginalSize() {
     const length = this.hitboxes.length;
+    let minX = 0;
+    let maxX = 0;
+    let minY = 0;
+    let maxY = 0;
 
     if (length > 0) {
       switch (this.hitboxes[0].fixture.shape) {
         case 'circle':
-          var minX = this.hitboxes[0].fixture.x,
-              maxX = this.hitboxes[0].fixture.x - this.hitboxes[0].fixture.radius,
-              minY = this.hitboxes[0].fixture.y,
-              maxY = this.hitboxes[0].fixture.y - this.hitboxes[0].fixture.radius;
+          minX = this.hitboxes[0].fixture.x;
+          maxX = this.hitboxes[0].fixture.x - this.hitboxes[0].fixture.radius;
+          minY = this.hitboxes[0].fixture.y;
+          maxY = this.hitboxes[0].fixture.y - this.hitboxes[0].fixture.radius;
           break;
         case 'box':
-          var minX = this.hitboxes[0].fixture.x,
-              maxX = this.hitboxes[0].fixture.x + this.hitboxes[0].fixture.dx,
-              minY = this.hitboxes[0].fixture.y,
-              maxY = this.hitboxes[0].fixture.y + this.hitboxes[0].fixture.dy;
+          minX = this.hitboxes[0].fixture.x;
+          maxX = this.hitboxes[0].fixture.x + this.hitboxes[0].fixture.dx;
+          minY = this.hitboxes[0].fixture.y;
+          maxY = this.hitboxes[0].fixture.y + this.hitboxes[0].fixture.dy;
           break;
         case 'polygon':
-          var minX = this.hitboxes[0].fixture.x,
-              maxX = this.hitboxes[0].fixture.x + this.hitboxes[0].fixture.dx,
-              minY = this.hitboxes[0].fixture.y,
-              maxY = this.hitboxes[0].fixture.y + this.hitboxes[0].fixture.dy;
+          minX = this.hitboxes[0].fixture.x;
+          maxX = this.hitboxes[0].fixture.x + this.hitboxes[0].fixture.dx;
+          minY = this.hitboxes[0].fixture.y;
+          maxY = this.hitboxes[0].fixture.y + this.hitboxes[0].fixture.dy;
+          break;
+        default:
+          console.log('Hitbox not defined');
           break;
       }
     }
 
-    for(let x = 0; x < length; x++) {
-      switch(this.hitboxes[x].fixture.shape) {
-        case "circle" :
+    for (let x = 0; x < length; x++) {
+      switch (this.hitboxes[x].fixture.shape) {
+        case 'circle':
           minX = Math.min(minX, this.hitboxes[x].fixture.x - this.hitboxes[x].fixture.radius);
           maxX = Math.max(maxX, this.hitboxes[x].fixture.x + this.hitboxes[x].fixture.radius);
           minY = Math.min(minY, this.hitboxes[x].fixture.y - this.hitboxes[x].fixture.radius);
           maxY = Math.max(maxY, this.hitboxes[x].fixture.y + this.hitboxes[x].fixture.radius);
           break;
-        case "box" :
+        case 'box':
           minX = Math.min(minX, this.hitboxes[x].fixture.x);
           maxX = Math.max(maxX, this.hitboxes[x].fixture.x + this.hitboxes[x].fixture.dx);
           minY = Math.min(minY, this.hitboxes[x].fixture.y);
           maxY = Math.max(maxY, this.hitboxes[x].fixture.y + this.hitboxes[x].fixture.dy);
           break;
-        case "polygon" :
+        case 'polygon':
           minX = Math.min(minX, this.hitboxes[x].fixture.x);
           maxX = Math.max(maxX, this.hitboxes[x].fixture.x + this.hitboxes[x].fixture.dx);
           minY = Math.min(minY, this.hitboxes[x].fixture.y);
           maxY = Math.max(maxY, this.hitboxes[x].fixture.y + this.hitboxes[x].fixture.dy);
+          break;
+        default:
+          console.log('Hitbox not defined');
           break;
       }
     }
@@ -467,6 +478,8 @@ class PhysicEntity {
   /**
    * Delete the physic object to the physic context
    * @method deleteToPhysicContext
+   * @param {scene} scene - Scene object
+   * @return {void}
    */
   deleteToPhysicContext(scene) {
     if (this.physicBody != null) {

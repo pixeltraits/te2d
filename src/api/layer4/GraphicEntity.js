@@ -224,6 +224,7 @@ class GraphicEntity {
    * Set new animation bitmap
    * @method setBitmap
    * @param {animation} animation - New animation properties
+   * @param {function[]} animationCallbacks - animationCallbacks
    * @return {void}
    */
   setBitmap(animation, animationCallbacks) {
@@ -277,9 +278,9 @@ class GraphicEntity {
   /**
    * Update graphic object
    * @method updateGraphicObject
-   * @param {canvasCtx} canvasCtx
-   * @param {size} canvasSize
-   * @param {position} cameraPosition
+   * @param {canvasCtx} canvasCtx - Canvas context
+   * @param {size} canvasSize - Canvas size
+   * @param {position} cameraPosition - Camera position
    * @return {void}
    */
   updateGraphicObject(canvasCtx, canvasSize, cameraPosition) {

@@ -305,6 +305,11 @@ class Timer {
  * @class Audio
  */
 class Audio {
+  /**
+   * Manage audio
+   * @method constructor
+   * @return {void}
+   */
   constructor() {
     this.active = false;
     this.pannerNode = null;
@@ -314,13 +319,14 @@ class Audio {
   /**
    * Play audio
    * @method setAudio
-   * @param {audioProfil} audioProfil
-   * @param {audioContext} audioContext
+   * @param {audioProfil} audioProfil - audioProfil
+   * @param {audioContext} audioContext - audioContext
+   * @return {void}
    */
   setAudio(audioProfil, audioContext) {
-    var self = this;
+    const self = this;
 
-    if(!this.active && !this.pause) {
+    if (!this.active && !this.pause) {
       this.active = true;
 
       /* Audio content implementation */
@@ -337,7 +343,7 @@ class Audio {
 
       /* Repetition number and end play event */
       this.source.loop = audioProfil.loop;
-      this.source.onended = function() {
+      this.source.onended = () => {
         self.active = false;
       };
 
@@ -347,9 +353,10 @@ class Audio {
   /**
    * Stop audio
    * @method unsetAudio
+   * @return {void}
    */
   unsetAudio() {
-    if(!this.pause) {
+    if (!this.pause) {
       this.active = false;
       this.source.loop = false;
       this.source.disconnect(this.pannerNode);
@@ -358,7 +365,8 @@ class Audio {
   /**
    * Active/Desactive the pause
    * @method setPause
-   * @param {boolean} pause
+   * @param {boolean} pause - New pause value
+   * @return {void}
    */
   setPause(pause) {
     /** Pause sound for 1.0
@@ -385,18 +393,19 @@ class Animation {
    * @return {void}
    */
   constructor() {
-    this.animation = 0;//Animation in progress
-    this.animations = [];//Animation group in progress
+    this.animation = 0;
+    this.animations = [];
     this.animationCallbacks = [];
     this.timer = new Timer();
     this.pause = false;
-    this.frame = 0;//Animation frame in progress
+    this.frame = 0;
   }
   /**
    * Set the animation
    * @method setAnimation
-   * @param {animation[]} animations
-   * @param {animationCallback[]} animationCallbacks
+   * @param {animation[]} animations - Animations list
+   * @param {animationCallback[]} animationCallbacks - Animation callbacks
+   * @return {void}
    */
   setAnimation(animations, animationCallbacks) {
     if (!this.pause) {
@@ -440,7 +449,7 @@ class Animation {
   /**
    * Get the size of bitmap with texture repetition
    * @method getSize
-   * @return {size}
+   * @return {size} - Size with repeat texture
    */
   getSize() {
     return {
@@ -451,7 +460,8 @@ class Animation {
   /**
    * Active/Desactive the pause
    * @method setPause
-   * @param {boolean} pause
+   * @param {boolean} pause - New pause value
+   * @return {void}
    */
   setPause(pause) {
     this.pause = pause;
@@ -459,6 +469,7 @@ class Animation {
   /**
    * Update the frame of the animation
    * @method updateAnimationFrame
+   * @return {void}
    */
   updateAnimationFrame() {
     if (this.animations[this.animation].frames > 0 || this.animations.length > 1 || this.animation < this.animations.length - 1) {
@@ -478,13 +489,13 @@ class Animation {
 
             if (this.animations.length > 1 && this.animation < this.animations.length - 1) {
               /* The animation is not the last or unique */
-              this.animation++;
+              this.animation += 1;
             }
           }
 
           if (this.animations[this.animation].frames > 0) {
             /* The animation have more one frame */
-            this.frame++;
+            this.frame += 1;
           }
         }
       }
@@ -641,28 +652,34 @@ class Bitmap {
  * @class Text
  */
 class Text {
+  /**
+   * Manage text
+   * @method Text
+   * @return {void}
+   */
   constructor() {
     this.dx = 0;
     this.dy = 0;
 
     /* Text content */
-    this.text = "";
+    this.text = 'black';
 
     /* Text style */
-    this.color = "";
-    this.font = "";
+    this.color = '';
+    this.font = '';
     this.fontSize = 0;
   }
   /**
    * Update size
    * @method updateSize
    * @private
+   * @return {void}
    */
   updateSize() {
-    var canvas = document.createElement('canvas'),
-        canvasCtx = canvas.getContext('2d');
+    const canvas = document.createElement('canvas');
+    const canvasCtx = canvas.getContext('2d');
 
-    canvasCtx.font = this.fontSize + "px " + this.font;
+    canvasCtx.font = `${this.fontSize}px ${this.font}`;
 
     this.dx = canvasCtx.measureText(this.text).width;
     this.dy = this.fontSize;
@@ -670,19 +687,20 @@ class Text {
   /**
    * Get size
    * @method getSize
-   * @return {size}
+   * @return {size} - Text size
    */
   getSize() {
     return {
-      dx : this.dx,
-      dy : this.dy
+      dx: this.dx,
+      dy: this.dy
     };
   }
   /**
    * Set text
    * @method setText
-   * @param {string} text
-   * @param {textProfil} style
+   * @param {string} text - Text string
+   * @param {textProfil} style - Text properties
+   * @return {void}
    */
   setText(text, style) {
     this.text = text;
@@ -695,23 +713,26 @@ class Text {
   /**
    * Show text on the canvas context
    * @method show
-   * @param {position} position
-   * @param {number} angle
-   * @param {size} canvasSize
-   * @param {canvas2dContext} canvasCtx
+   * @param {position} position - Text position
+   * @param {number} angle - Text angle
+   * @param {size} canvasSize - Canvas size
+   * @param {canvas2dContext} canvasCtx - Canvas context
+   * @return {void}
    */
   show(position, angle, canvasSize, canvasCtx) {
-    var absX = position.x + (this.dx / 2),
-        absY = position.y + (this.dy / 2);
+    const center = {
+      x: position.x + (this.dx / 2),
+      y: position.y + (this.dy / 2)
+    };
 
-    canvasCtx.translate(absX, absY);
+    canvasCtx.translate(center.x, center.y);
     canvasCtx.rotate(angle);
 
-    canvasCtx.font = this.fontSize + "px " + this.font;
+    canvasCtx.font = `${this.fontSize}px ${this.font}`;
     canvasCtx.fillStyle = this.color;
     canvasCtx.fillText(this.text, position.x, position.y);
 
-    canvasCtx.translate(-absX, -absY);
+    canvasCtx.translate(-center.x, -center.y);
     canvasCtx.rotate(-angle);
   }
 }
@@ -721,20 +742,25 @@ class Text {
  * @class Geometry
  */
 class Geometry {
+  /**
+   * Manage Geometry
+   * @method constructor
+   * @return {void}
+   */
   constructor() {
-    this.type = "";
-    this.color = "";
-    this.borderColor = "";
+    this.type = '';
+    this.color = '';
+    this.borderColor = '';
     this.borderSize = 0;
     this.size = {
-      dx : 0,
-      dy : 0
+      dx: 0,
+      dy: 0
     };
   }
   /**
    * Get size
    * @method getSize
-   * @return {size}
+   * @return {size} - Geometry size
    */
   getSize() {
     return this.size;
@@ -742,7 +768,8 @@ class Geometry {
   /**
    * Set geometry
    * @method setGeometry
-   * @param {geometry} geometry
+   * @param {geometry} geometry - Geometry properties
+   * @return {void}
    */
   setGeometry(geometry) {
     this.color = geometry.color;
@@ -752,10 +779,11 @@ class Geometry {
   /**
    * Show Geometry on the canvas context
    * @method show
-   * @param {position} position
-   * @param {number} angle
-   * @param {size} canvasSize
-   * @param {canvas2dContext} canvasCtx
+   * @param {position} position - Geometry position
+   * @param {number} angle - Geometry angle
+   * @param {size} canvasSize - Canvas size
+   * @param {canvas2dContext} canvasCtx - Canvas context
+   * @return {void}
    */
   show(position, angle, canvasSize, canvasCtx) {
   }
@@ -766,15 +794,21 @@ class Geometry {
  * @class Box
  */
 class Box extends Geometry {
+  /**
+   * Manage Box
+   * @method constructor
+   * @return {void}
+   */
   constructor() {
     super();
 
-    this.type = "box";
+    this.type = 'box';
   }
   /**
    * Set geometry
    * @method setGeometry
-   * @param {box} box
+   * @param {box} box - box properties
+   * @return {void}
    */
   setGeometry(box) {
     super.setGeometry(box);
@@ -785,17 +819,18 @@ class Box extends Geometry {
   /**
    * Show Geometry on the canvas context
    * @method show
-   * @param {position} position
-   * @param {number} angle
-   * @param {size} canvasSize
-   * @param {canvas2dContext} canvasCtx
+   * @param {position} position - Box position
+   * @param {number} angle - Box angle
+   * @param {size} canvasSize - Canvas size
+   * @param {canvas2dContext} canvasCtx - Canvas context
+   * @return {void}
    */
   show(position, angle, canvasSize, canvasCtx) {
     super.show(position, angle, canvasSize, canvasCtx);
 
-    var center = {
-      x : position.x,
-      y : position.y
+    const center = {
+      x: position.x,
+      y: position.y
     };
 
     canvasCtx.translate(center.x, center.y);
@@ -826,15 +861,21 @@ class Box extends Geometry {
  * @class Circle
  */
 class Circle extends Geometry {
+  /**
+   * Manage Circle
+   * @method constructor
+   * @return {void}
+   */
   constructor() {
     super();
 
-    this.type = "circle";
+    this.type = 'circle';
     this.radius = 0;
   }
   /**
    * Update the size of geometry
    * @method updateSize
+   * @return {void}
    */
   updateSize() {
     this.size = GeometricMath.getCircleSize(this.radius);
@@ -842,7 +883,8 @@ class Circle extends Geometry {
   /**
    * Set geometry
    * @method setGeometry
-   * @param {circle} circle
+   * @param {circle} circle - Circle Properties
+   * @return {void}
    */
   setGeometry(circle) {
     super.setGeometry(circle);
@@ -853,18 +895,21 @@ class Circle extends Geometry {
   /**
    * Show Geometry on the canvas context
    * @method show
-   * @param {position} position
-   * @param {number} angle
-   * @param {size} canvasSize
-   * @param {canvas2dContext} canvasCtx
+   * @param {position} position - Circle position
+   * @param {number} angle - Circle angle
+   * @param {size} canvasSize - Canvas size
+   * @param {canvas2dContext} canvasCtx - Canvas context
+   * @return {void}
    */
   show(position, angle, canvasSize, canvasCtx) {
     super.show(position, angle, canvasSize, canvasCtx);
 
-    var centerX = position.x + this.radius,
-        centerY = position.y + this.radius;
+    const center = {
+      x: position.x + this.radius,
+      y: position.y + this.radius
+    };
 
-    canvasCtx.translate(centerX, centerY);
+    canvasCtx.translate(center.x, center.y);
     canvasCtx.rotate(angle);
 
     canvasCtx.beginPath();
@@ -883,7 +928,7 @@ class Circle extends Geometry {
     canvasCtx.stroke();
 
     canvasCtx.rotate(-angle);
-    canvasCtx.translate(-centerX, -centerY);
+    canvasCtx.translate(-center.x, -center.y);
   }
 }
 
@@ -892,6 +937,11 @@ class Circle extends Geometry {
  * @class Polygon
  */
 class Polygon extends Geometry {
+  /**
+   * Manage Polygon
+   * @method constructor
+   * @return {void}
+   */
   constructor() {
     super();
 
@@ -901,6 +951,7 @@ class Polygon extends Geometry {
   /**
    * Update the size of geometry
    * @method updateSize
+   * @return {void}
    */
   updateSize() {
     this.size = GeometricMath.getPolygonSize(this.vertices);
@@ -908,7 +959,8 @@ class Polygon extends Geometry {
   /**
    * Set geometry
    * @method setGeometry
-   * @param {polygon} polygon
+   * @param {polygon} polygon - Polygon properties
+   * @return {void}
    */
   setGeometry(polygon) {
     super.setGeometry(polygon);
@@ -919,26 +971,27 @@ class Polygon extends Geometry {
   /**
    * Show Geometry on the canvas context
    * @method show
-   * @param {position} position
-   * @param {number} angle
-   * @param {size} canvasSize
-   * @param {canvas2dContext} canvasCtx
+   * @param {position} position - Polygon properties
+   * @param {number} angle - Polygon properties
+   * @param {size} canvasSize - Canvas size
+   * @param {canvas2dContext} canvasCtx - Canvas context
+   * @return {void}
    */
   show(position, angle, canvasSize, canvasCtx) {
     super.show(position, angle, canvasSize, canvasCtx);
 
-    var centerX = position.x + (this.size.dx / 2),
-        centerY = position.y + (this.size.dy / 2),
-        x = 0,
-        length = this.vertices.length;
+    const center = {
+      x: position.x + (this.size.dx / 2),
+      y: position.y + (this.size.dy / 2)
+    };
+    const verticesLength = this.vertices.length;
 
-    canvasCtx.translate(centerX, centerY);
+    canvasCtx.translate(center.x, center.y);
     canvasCtx.rotate(angle);
 
-    //Draw Geometry
     canvasCtx.beginPath();
 
-    for (; x < length; x++) {
+    for (let x = 0; x < verticesLength; x++) {
       canvasCtx.moveTo(
         this.vertices[x].x + position.x,
         this.vertices[x].y + position.y
@@ -948,7 +1001,6 @@ class Polygon extends Geometry {
     canvasCtx.lineTo(this.vertices[0].x + position.x, this.vertices[0].y + position.y);
     canvasCtx.closePath();
 
-    //Style geometry
     canvasCtx.fillStyle = this.color;
     canvasCtx.lineWidth = this.borderSize;
     canvasCtx.strokeStyle = this.borderColor;
@@ -957,18 +1009,23 @@ class Polygon extends Geometry {
     canvasCtx.stroke();
 
     canvasCtx.rotate(-angle);
-    canvasCtx.translate(-centerX, -centerY);
+    canvasCtx.translate(-center.x, -center.y);
   }
 }
 
 /**
  * Manage keyboard event
  * @class Keyboard
- * @param {domElement} domELement
- * @param {keyboardEvent} onKeydown
- * @param {keyboardEvent} onKeyup
  */
 class Keyboard {
+  /**
+   * Manage keyboard event
+   * @method constructor
+   * @param {domElement} domELement - Dom Element
+   * @param {keyboardEvent} onKeydown - Closure execute on keydown
+   * @param {keyboardEvent} onKeyup - Closure execute on keyup
+   * @return {void}
+   */
   constructor(domELement, onKeydown, onKeyup) {
     this.domELement = domELement;
     this.onKeydown = onKeydown;
@@ -983,6 +1040,7 @@ class Keyboard {
    * @method handleEvent
    * @private
    * @param {keyboardEvent} event
+   * @return {void}
    */
   handleEvent(event) {
     switch (event.type) {
@@ -995,18 +1053,22 @@ class Keyboard {
       case 'blur':
         this.blur();
         break;
+      default:
+        console.log(`This event don't exist`);
+        break;
     }
   }
   /**
    * Called everytime one key is down
    * @method keydown
    * @private
-   * @param {keyboardEvent} event
+   * @param {keyboardEvent} event - Keydown event
+   * @return {void}
    */
   keydown(event) {
-    var keyInfo = {
-      code : event.code,
-      key : event.key
+    const keyInfo = {
+      code: event.code,
+      key: event.key
     };
 
     if (!this.isActive(keyInfo)) {
@@ -1018,12 +1080,13 @@ class Keyboard {
    * Called everytime one key is up
    * @method keyup
    * @private
-   * @param {keyboardEvent} event
+   * @param {keyboardEvent} event - Keyup event
+   * @return {void}
    */
   keyup(event) {
-    var keyInfo = {
-      code : event.code,
-      key : event.key
+    const keyInfo = {
+      code: event.code,
+      key: event.key
     };
 
     this.deleteKey(keyInfo);
@@ -1033,12 +1096,12 @@ class Keyboard {
    * Called everytime the domElement is focusout
    * @method blur
    * @private
+   * @return {void}
    */
   blur() {
-    var x = 0,
-        length = this.activeKey.length;
+    const activeKeyLength = this.activeKey.length;
 
-    for (; x < length; x++) {
+    for (let x = 0; x < activeKeyLength; x++) {
       this.onKeyup(this.activeKey[x]);
     }
     this.deleteAllKeys();
@@ -1046,6 +1109,7 @@ class Keyboard {
   /**
    * Active all events
    * @method addEvents
+   * @return {void}
    */
   addEvents() {
     if (!this.active) {
@@ -1058,6 +1122,7 @@ class Keyboard {
   /**
    * Delete all events
    * @method deleteEvents
+   * @return {void}
    */
   deleteEvents() {
     if (!this.active) {
@@ -1071,7 +1136,8 @@ class Keyboard {
    * Add one key
    * @method addKey
    * @private
-   * @param {keyInfo} keyInfo
+   * @param {keyInfo} keyInfo - Key info
+   * @return {void}
    */
   addKey(keyInfo) {
     this.activeKey[this.activeKey.length] = keyInfo;
@@ -1080,14 +1146,14 @@ class Keyboard {
    * Delete one key
    * @method deleteKey
    * @private
-   * @param {keyInfo} keyInfo
+   * @param {keyInfo} keyInfo - Key info
+   * @return {void}
    */
   deleteKey(keyInfo) {
-    var x = 0,
-        length = this.activeKey.length;
+    const activeKeyLength = this.activeKey.length;
 
-    for(; x < length; x++) {
-      if(this.activeKey[x].code == keyInfo.code) {
+    for (let x = 0; x < activeKeyLength; x++) {
+      if (this.activeKey[x].code == keyInfo.code) {
         this.activeKey.splice(x, 1);
 
         return;
@@ -1098,6 +1164,7 @@ class Keyboard {
    * Delete all keys
    * @method deleteAllKeys
    * @private
+   * @return {void}
    */
   deleteAllKeys() {
     this.activeKey = [];
@@ -1105,15 +1172,14 @@ class Keyboard {
   /**
    * Get the status of key
    * @method isActive
-   * @param {keyInfo} keyInfo
-   * @return {boolean}
+   * @param {keyInfo} keyInfo - Key info
+   * @return {boolean} - status of key
    */
   isActive(keyInfo) {
-    var x = 0,
-        length = this.activeKey.length;
+    const activeKeyLength = this.activeKey.length;
 
-    for(; x < length; x++) {
-      if(this.activeKey[x].code == keyInfo.code) {
+    for (let x = 0; x < activeKeyLength; x++) {
+      if (this.activeKey[x].code == keyInfo.code) {
         return true;
       }
     }
@@ -1125,11 +1191,8 @@ class Keyboard {
 /**
  * Manage Click event
  * @class Mouse
- * For 0.9 version
  */
 class Mouse {
-	constructor() {
-  }
 }
 
 /**
@@ -1170,8 +1233,8 @@ class PhysicBox2D {
   /**
    * Get a body
    * @method getBody
-   * @param {string} id
-   * @param {number} x
+   * @param {string} id - Entity id
+   * @param {number} x - Entity position
    * @param {number} y
    * @param {number} angle
    * @param {number} mass
@@ -1181,9 +1244,9 @@ class PhysicBox2D {
    * @return body object
    */
   getBody(id, x, y, angle, mass, angularConstraint, angularInertia, dynamic) {
-    var bodyDef = new this.b2BodyDef;
+    const bodyDef = new this.b2BodyDef;
 
-    if(!dynamic) {
+    if (!dynamic) {
       bodyDef.type = this.b2Body.b2_staticBody;
     } else {
       bodyDef.type = this.b2Body.b2_dynamicBody;
@@ -1216,24 +1279,24 @@ class PhysicBox2D {
    * @return {fixture}
    */
   getBox(id, x, y, dx, dy, angle, sensor, restitution, friction, density, bodyRef) {
-    //Create box with polygon methode
-    let leftTopPoint = {
-      x : this.pixelToMetter(x),
-      y : this.pixelToMetter(y)
+    // Create box with polygon methode
+    const leftTopPoint = {
+      x: this.pixelToMetter(x),
+      y: this.pixelToMetter(y)
     };
-    let rightTopPoint = {
-      x : this.pixelToMetter(x + dx),
-      y : this.pixelToMetter(y)
+    const rightTopPoint = {
+      x: this.pixelToMetter(x + dx),
+      y: this.pixelToMetter(y)
     };
-    let leftBottomPoint = {
-      x : this.pixelToMetter(x),
-      y : this.pixelToMetter(y + dy)
+    const leftBottomPoint = {
+      x: this.pixelToMetter(x),
+      y: this.pixelToMetter(y + dy)
     };
-    let rightBottomPoint = {
-      x : this.pixelToMetter(x + dx),
-      y : this.pixelToMetter(y + dy)
+    const rightBottomPoint = {
+      x: this.pixelToMetter(x + dx),
+      y: this.pixelToMetter(y + dy)
     };
-    let vertices = [leftTopPoint, rightTopPoint, rightBottomPoint, leftBottomPoint];
+    const vertices = [leftTopPoint, rightTopPoint, rightBottomPoint, leftBottomPoint];
 
     return this.getPolygon(
       id,
@@ -1262,7 +1325,7 @@ class PhysicBox2D {
    * @return {fixture}
    */
   getCircle(id, x, y, radius, angle, sensor, restitution, friction, density, bodyRef) {
-    var fixDef = new this.b2FixtureDef;
+    const fixDef = new this.b2FixtureDef;
 
     fixDef.density = density;
     fixDef.friction = friction;
@@ -1292,11 +1355,11 @@ class PhysicBox2D {
    * @return {fixture}
    */
   getPolygon(id, vertices, angle, sensor, restitution, friction, density, bodyRef) {
-    let fixDef = new this.b2FixtureDef;
-    let polygonPoints = [];
+    const fixDef = new this.b2FixtureDef;
+    const polygonPoints = [];
     const verticesLength = vertices.length;
 
-    for(let x = 0; x < verticesLength; x++) {
+    for (let x = 0; x < verticesLength; x++) {
       polygonPoints[x] = new this.b2Vec2;
       polygonPoints[x].Set(vertices[x].x, vertices[x].y);
     }
@@ -1368,11 +1431,11 @@ class PhysicBox2D {
    * @return {position} position
    */
   getPosition(bodyRef) {
-    var position = bodyRef.GetPosition();
+    const position = bodyRef.GetPosition();
 
     return {
-      x : this.metterToPixel(position.x),
-      y : this.metterToPixel(position.y)
+      x: this.metterToPixel(position.x),
+      y: this.metterToPixel(position.y)
     };
   }
   /**
@@ -1385,11 +1448,11 @@ class PhysicBox2D {
     //physicObject.state.angular.pos.set(angle);
   }
   /**
-     * Get angle of a body
-     * @method getAngle
-     * @param {body} bodyRef
-     * @return {number}
-     */
+   * Get angle of a body
+   * @method getAngle
+   * @param {body} bodyRef
+   * @return {number}
+   */
   getAngle(bodyRef) {
     return bodyRef.GetAngle();
   }
@@ -1401,7 +1464,6 @@ class PhysicBox2D {
    * @param {number} positionPrecision - position iterations
    */
   updateEngine(framerate, velocityPrecision, positionPrecision) {
-    //console.log(framerate)
     this.physicContext.Step(
       framerate,
       velocityPrecision,
@@ -1415,18 +1477,14 @@ class PhysicBox2D {
    * @param {body} bodyRef
    */
   stopForces(bodyRef) {
-    var velocity = bodyRef.GetLinearVelocity(),
-        force = {
-          x : -(bodyRef.GetMass() * velocity.x) * 4,
-          y : 0
-        };
+    const velocity = bodyRef.GetLinearVelocity();
+    const force = {
+      x: -(bodyRef.GetMass() * velocity.x) * 4,
+      y: 0
+    };
 
-    //if(Math.abs(velocity.x) > 0.2) {
-      bodyRef.ApplyForce(new this.b2Vec2(force.x, force.y), bodyRef.GetWorldCenter());
-    //} else {
-    //  velocity.x = 0;
-    //  physicObject.SetLinearVelocity(velocity);
-    //}
+
+    bodyRef.ApplyForce(new this.b2Vec2(force.x, force.y), bodyRef.GetWorldCenter());
   }
   /**
    * Set velocity of a body
@@ -1435,7 +1493,7 @@ class PhysicBox2D {
    * @param vector
    */
   setImpulse(bodyRef, vector) {
-    var velocity = bodyRef.GetLinearVelocity();
+    const velocity = bodyRef.GetLinearVelocity();
     velocity.y = this.pixelToMetter(vector.y);
     bodyRef.SetLinearVelocity(velocity);
   }
@@ -1446,11 +1504,10 @@ class PhysicBox2D {
    * @param {vector} vector
    */
   setVelocity(bodyRef, vector) {
-    var velocity = bodyRef.GetLinearVelocity(),
-        force = {
-          x : this.pixelToMetter(vector.x),
-          y : this.pixelToMetter(vector.y)
-        };
+    const force = {
+      x: this.pixelToMetter(vector.x),
+      y: this.pixelToMetter(vector.y)
+    };
 
     bodyRef.ApplyForce(new this.b2Vec2(force.x, force.y), bodyRef.GetWorldCenter());
   }
@@ -1475,12 +1532,17 @@ class PhysicBox2D {
 }
 
 /**
+ * Interface of physic API
+ * @class PhysicInterface
+ */
+class PhysicInterface {
+  /**
    * Interface of physic API
-   * @class PhysicInterface
+   * @method PhysicInterface
    * @param {function} collisionStart
    * @param {function} collisionEnd
+   * @return {void}
    */
-class PhysicInterface {
   constructor(collisionStart, collisionEnd) {
     this.physic = new PhysicBox2D(collisionStart, collisionEnd);
   }
@@ -1934,6 +1996,7 @@ class GraphicEntity {
    * Set new animation bitmap
    * @method setBitmap
    * @param {animation} animation - New animation properties
+   * @param {function[]} animationCallbacks - animationCallbacks
    * @return {void}
    */
   setBitmap(animation, animationCallbacks) {
@@ -1987,9 +2050,9 @@ class GraphicEntity {
   /**
    * Update graphic object
    * @method updateGraphicObject
-   * @param {canvasCtx} canvasCtx
-   * @param {size} canvasSize
-   * @param {position} cameraPosition
+   * @param {canvasCtx} canvasCtx - Canvas context
+   * @param {size} canvasSize - Canvas size
+   * @param {position} cameraPosition - Camera position
    * @return {void}
    */
   updateGraphicObject(canvasCtx, canvasSize, cameraPosition) {
@@ -2225,7 +2288,8 @@ class PhysicEntity {
    * Set original size
    * @method setOriginalSize
    * @private
-   * @param {size} originalSize
+   * @param {size} originalSize - Original size
+   * @return {void}
    */
   setOriginalSize(originalSize) {
     this.originalSize = originalSize;
@@ -2234,10 +2298,10 @@ class PhysicEntity {
   /**
    * Get original size
    * @method getOriginalSize
-   * @return {size}
+   * @return {size} - Original size
    */
   getOriginalSize() {
-    this.originalSize;
+    return this.originalSize;
   }
   /**
    * Set size
@@ -2291,15 +2355,11 @@ class PhysicEntity {
    */
   updateHitboxesPosition() {
     const hitboxesLength = this.hitboxes.length;
-    let graphicEntityPosition = {
+    const graphicEntityPosition = {
       x: 0,
       y: 0,
       z: 9999999
     };
-
-    if (this.graphicEntity != null) {
-      //graphicEntityPosition = this.graphicEntity.getPosition();
-    }
 
     for (let x = 0; x < hitboxesLength; x++) {
       this.hitboxes[x].graphicEntity.setPosition({
@@ -2374,10 +2434,11 @@ class PhysicEntity {
   /**
    * Add hitbox to the gravity point
    * @method addHitbox
-   * @param {hitbox} hitbox
+   * @param {hitbox} hitbox - hitboxe
+   * @return {void}
    */
   addHitbox(hitbox) {
-    if(!this.verifyHitbox(hitbox.hitbox.id)) {
+    if (!this.verifyHitbox(hitbox.hitbox.id)) {
       let size = {
         dx: 0,
         dy: 0
@@ -2385,27 +2446,30 @@ class PhysicEntity {
 
       hitbox.graphicEntity.setGeometry(hitbox.hitbox);
 
-      switch(hitbox.hitbox.type) {
-        case "circle" :
+      switch (hitbox.hitbox.type) {
+        case 'circle':
           size = GeometricMath.getCircleSize(hitbox.hitbox.radius);
           break;
-        case "box" :
+        case 'box':
           size.dx = hitbox.hitbox.dx;
           size.dy = hitbox.hitbox.dx;
           break;
-        case "polygon" :
+        case 'polygon':
           size = GeometricMath.getPolygonSize(hitbox.hitbox.vertices);
+          break;
+        default:
+          console.log('Hitbox not defined');
           break;
       }
 
-      let hit = this.hitboxes.push({
-        fixture : hitbox.hitbox,
-        graphicEntity : hitbox.graphicEntity,
-        originalSize : size,
-        id : hitbox.hitbox.id
+      const hit = this.hitboxes.push({
+        fixture: hitbox.hitbox,
+        graphicEntity: hitbox.graphicEntity,
+        originalSize: size,
+        id: hitbox.hitbox.id
       });
 
-      if(this.physicBody != null) {
+      if (this.physicBody != null) {
         this.addFixtureToBody(hit.fixture);
       }
     }
@@ -2413,31 +2477,31 @@ class PhysicEntity {
   /**
    * Verify if hitbox already exist
    * @method verifyHitbox
-   * @param {string} id
-   * @return {boolean}
+   * @param {string} id - id entity
+   * @return {boolean} - hitbox presence
    */
   verifyHitbox(id) {
-    var length = this.hitboxes.length,
-        x = 0;
+    const length = this.hitboxes.length;
 
-    for(; x < length; x++) {
-      if(this.hitboxes[x].id == id) {
+    for (let x = 0; x < length; x++) {
+      if (this.hitboxes[x].id === id) {
         return true;
       }
     }
+
     return false;
   }
   /**
    * Delete hitbox to the gravity point
    * @method deleteHitbox
-   * @param {string} id
+   * @param {string} id - Entity id
+   * @return {void}
    */
   deleteHitbox(id) {
-    var length = this.hitboxes.length,
-        x = 0;
+    const length = this.hitboxes.length;
 
-    for(; x < length; x++) {
-      if(this.hitboxes[x].id == id) {
+    for (let x = 0; x < length; x++) {
+      if (this.hitboxes[x].id === id) {
         this.hitboxes.splice(x, 1);
         return;
       }
@@ -2446,13 +2510,13 @@ class PhysicEntity {
   /**
    * Update size with angle
    * @method updateSize
+   * @return {void}
    */
   updateSize() {
-    var x = 0,
-        length = this.perimeter.length,
-        polygon = [];
+    const length = this.perimeter.length;
+    const polygon = [];
 
-    for(; x < length; x++) {
+    for (let x = 0; x < length; x++) {
       polygon[x] = GeometricMath.getRotatedPoint(
         this.perimeter[x],
         this.angle,
@@ -2472,49 +2536,59 @@ class PhysicEntity {
    */
   updateOriginalSize() {
     const length = this.hitboxes.length;
+    let minX = 0;
+    let maxX = 0;
+    let minY = 0;
+    let maxY = 0;
 
     if (length > 0) {
       switch (this.hitboxes[0].fixture.shape) {
         case 'circle':
-          var minX = this.hitboxes[0].fixture.x,
-              maxX = this.hitboxes[0].fixture.x - this.hitboxes[0].fixture.radius,
-              minY = this.hitboxes[0].fixture.y,
-              maxY = this.hitboxes[0].fixture.y - this.hitboxes[0].fixture.radius;
+          minX = this.hitboxes[0].fixture.x;
+          maxX = this.hitboxes[0].fixture.x - this.hitboxes[0].fixture.radius;
+          minY = this.hitboxes[0].fixture.y;
+          maxY = this.hitboxes[0].fixture.y - this.hitboxes[0].fixture.radius;
           break;
         case 'box':
-          var minX = this.hitboxes[0].fixture.x,
-              maxX = this.hitboxes[0].fixture.x + this.hitboxes[0].fixture.dx,
-              minY = this.hitboxes[0].fixture.y,
-              maxY = this.hitboxes[0].fixture.y + this.hitboxes[0].fixture.dy;
+          minX = this.hitboxes[0].fixture.x;
+          maxX = this.hitboxes[0].fixture.x + this.hitboxes[0].fixture.dx;
+          minY = this.hitboxes[0].fixture.y;
+          maxY = this.hitboxes[0].fixture.y + this.hitboxes[0].fixture.dy;
           break;
         case 'polygon':
-          var minX = this.hitboxes[0].fixture.x,
-              maxX = this.hitboxes[0].fixture.x + this.hitboxes[0].fixture.dx,
-              minY = this.hitboxes[0].fixture.y,
-              maxY = this.hitboxes[0].fixture.y + this.hitboxes[0].fixture.dy;
+          minX = this.hitboxes[0].fixture.x;
+          maxX = this.hitboxes[0].fixture.x + this.hitboxes[0].fixture.dx;
+          minY = this.hitboxes[0].fixture.y;
+          maxY = this.hitboxes[0].fixture.y + this.hitboxes[0].fixture.dy;
+          break;
+        default:
+          console.log('Hitbox not defined');
           break;
       }
     }
 
-    for(let x = 0; x < length; x++) {
-      switch(this.hitboxes[x].fixture.shape) {
-        case "circle" :
+    for (let x = 0; x < length; x++) {
+      switch (this.hitboxes[x].fixture.shape) {
+        case 'circle':
           minX = Math.min(minX, this.hitboxes[x].fixture.x - this.hitboxes[x].fixture.radius);
           maxX = Math.max(maxX, this.hitboxes[x].fixture.x + this.hitboxes[x].fixture.radius);
           minY = Math.min(minY, this.hitboxes[x].fixture.y - this.hitboxes[x].fixture.radius);
           maxY = Math.max(maxY, this.hitboxes[x].fixture.y + this.hitboxes[x].fixture.radius);
           break;
-        case "box" :
+        case 'box':
           minX = Math.min(minX, this.hitboxes[x].fixture.x);
           maxX = Math.max(maxX, this.hitboxes[x].fixture.x + this.hitboxes[x].fixture.dx);
           minY = Math.min(minY, this.hitboxes[x].fixture.y);
           maxY = Math.max(maxY, this.hitboxes[x].fixture.y + this.hitboxes[x].fixture.dy);
           break;
-        case "polygon" :
+        case 'polygon':
           minX = Math.min(minX, this.hitboxes[x].fixture.x);
           maxX = Math.max(maxX, this.hitboxes[x].fixture.x + this.hitboxes[x].fixture.dx);
           minY = Math.min(minY, this.hitboxes[x].fixture.y);
           maxY = Math.max(maxY, this.hitboxes[x].fixture.y + this.hitboxes[x].fixture.dy);
+          break;
+        default:
+          console.log('Hitbox not defined');
           break;
       }
     }
@@ -2610,6 +2684,8 @@ class PhysicEntity {
   /**
    * Delete the physic object to the physic context
    * @method deleteToPhysicContext
+   * @param {scene} scene - Scene object
+   * @return {void}
    */
   deleteToPhysicContext(scene) {
     if (this.physicBody != null) {
@@ -2795,7 +2871,7 @@ class PhysicEntity {
           /* Read every entity in this case */
           if (typeof list[this.map[x][y][z]] === 'undefined') {
             /* The entity is not set yet */
-            entities[entities.length] = this.map[x][y][z];
+            entities.push(this.map[x][y][z]);
             list[this.map[x][y][z]] = true;
           }
         }
@@ -3098,7 +3174,18 @@ class Camera extends PhysicEntity {
   }
 }
 
+/**
+ * Player2D manager
+ * @class Player2D
+ */
 class Player2D extends PhysicEntity {
+  /**
+   * Player2D manager
+   * @method constructor
+   * @param {player2d} properties - Object Properties
+   * @param {string} id - Object ID
+   * @return {void}
+   */
   constructor(properties, id) {
     super(properties, id);
 
@@ -3106,47 +3193,75 @@ class Player2D extends PhysicEntity {
     this.accLeft = 0;
     this.maxSpeed = 3;
   }
+  /**
+   * Make spring to player
+   * @method spring
+   * @param {vector} vector - Vector force
+   * @return {void}
+   */
   spring(vector) {
     this.physicInterface.setImpulse(this.physicBody, vector);
   }
+  /**
+   * Set walk action to player
+   * @method setWalk
+   * @param {walkObject} walkObject - Walk Object
+   * @return {void}
+   */
   setWalk(walkObject) {
-    switch(walkObject.direction) {
-      case "right" :
+    switch (walkObject.direction) {
+      case 'right':
         this.accRight = walkObject.acc;
         break;
-      case "left" :
+      case 'left':
         this.accLeft = -walkObject.acc;
+        break;
+      default:
+        console.log('Action walk not defined');
         break;
     }
     this.maxSpeed = walkObject.speed;
   }
+  /**
+   * Unset walk action
+   * @method unsetWalk
+   * @param {string} direction - Direction
+   * @return {void}
+   */
   unsetWalk(direction) {
-    var velocity =  this.getVelocity();
-    switch(direction) {
-      case "right" :
+    switch (direction) {
+      case 'right':
         this.accRight = 0;
         break;
-      case "left" :
+      case 'left':
         this.accLeft = 0;
+        break;
+      default:
+        console.log('Action walk not defined');
         break;
     }
   }
+  /**
+   * Update walk action
+   * @method updatePhysicPosition
+   * @return {void}
+   */
   updatePhysicPosition() {
     super.updatePhysicPosition();
 
-    var velocity = this.getVelocity(),
-        force = {
-          x : 0,
-          y : 0
-        };
+    const velocity = this.getVelocity();
+    const force = {
+      x: 0,
+      y: 0
+    };
 
-    if(velocity.x < this.maxSpeed) {
+    if (velocity.x < this.maxSpeed) {
       force.x += this.accRight;
     }
-    if(velocity.x > -this.maxSpeed) {
+    if (velocity.x > -this.maxSpeed) {
       force.x += this.accLeft;
     }
-    if(this.accLeft == 0 && this.accRight == 0) {
+    if (this.accLeft === 0 && this.accRight === 0) {
       this.physicInterface.stopForces(this.physicBody);
     }
 
@@ -4027,11 +4142,11 @@ class Game {
     this.camera.stop();
   }
   /**
-     * Json actions
-     * @method setObjectOfSceneConfig
-     * @param {action} actionConfiguration
-     * @return the result function called by the action
-     */
+   * Json actions
+   * @method setObjectOfSceneConfig
+   * @param {action} actionConfiguration
+   * @return the result function called by the action
+   */
   setAction(actionConfiguration, self, him) {
     var action = Clone.cloneDataObject(actionConfiguration);
     //try {

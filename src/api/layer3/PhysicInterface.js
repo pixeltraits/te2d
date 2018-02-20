@@ -1,10 +1,15 @@
 /**
+ * Interface of physic API
+ * @class PhysicInterface
+ */
+class PhysicInterface {
+  /**
    * Interface of physic API
-   * @class PhysicInterface
+   * @method PhysicInterface
    * @param {function} collisionStart
    * @param {function} collisionEnd
+   * @return {void}
    */
-class PhysicInterface {
   constructor(collisionStart, collisionEnd) {
     this.physic = new PhysicBox2D(collisionStart, collisionEnd);
   }

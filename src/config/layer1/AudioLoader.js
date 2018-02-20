@@ -3,6 +3,11 @@
  * @class AudioLoader
  */
 class AudioLoader {
+  /**
+   * Load Audio ressource.
+   * @method constructor
+   * @return {void}
+   */
   constructor() {
     this.context = new (window.AudioContext || window.webkitAudioContext)();
   }
@@ -17,29 +22,29 @@ class AudioLoader {
   /**
    * Create Image object and load Bitmap ressource with ajax.
    * @method load
-   * @param {ajaxRequest} ajaxRequest
+   * @param {ajaxRequest} ajaxRequest - ajaxrequest
+   * @return {void}
    */
-	load(ajaxRequest) {
-    var requestType = typeof ajaxRequest.type != "undefined" ? ajaxRequest.type : 'GET',
-        requestRef = typeof ajaxRequest.ref != "undefined" ? ajaxRequest.ref : "",
-        requestOnload = ajaxRequest.onLoad,
-        requestUrl = ajaxRequest.url,
-        xhr = new XMLHttpRequest(),
-        self = this;
+  load(ajaxRequest) {
+    const requestType = typeof ajaxRequest.type !== 'undefined' ? ajaxRequest.type : 'GET';
+    const requestRef = typeof ajaxRequest.ref !== 'undefined' ? ajaxRequest.ref : '';
+    const requestOnload = ajaxRequest.onLoad;
+    const requestUrl = ajaxRequest.url;
+    const xhr = new XMLHttpRequest();
+    const self = this;
 
     try {
       xhr.open(requestType, requestUrl, true);
       xhr.responseType = 'arraybuffer';
-      xhr.onload = function() {
-        self.context.decodeAudioData(xhr.response, function(buffer) {
+      xhr.onload = () => {
+        self.context.decodeAudioData(xhr.response, (buffer) => {
           requestOnload(buffer, requestRef);
         });
-      }
+      };
       xhr.send();
-    }
-    catch(e) {
+    } catch (e) {
       console.log('An ajax request(Audio) have an error : ', e.message);
-      console.log("Request parameters : ", ajaxRequest);
+      console.log('Request parameters : ', ajaxRequest);
     }
   }
 }

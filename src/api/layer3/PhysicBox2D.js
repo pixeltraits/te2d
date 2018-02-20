@@ -36,8 +36,8 @@ class PhysicBox2D {
   /**
    * Get a body
    * @method getBody
-   * @param {string} id
-   * @param {number} x
+   * @param {string} id - Entity id
+   * @param {number} x - Entity position
    * @param {number} y
    * @param {number} angle
    * @param {number} mass
@@ -47,9 +47,9 @@ class PhysicBox2D {
    * @return body object
    */
   getBody(id, x, y, angle, mass, angularConstraint, angularInertia, dynamic) {
-    var bodyDef = new this.b2BodyDef;
+    const bodyDef = new this.b2BodyDef;
 
-    if(!dynamic) {
+    if (!dynamic) {
       bodyDef.type = this.b2Body.b2_staticBody;
     } else {
       bodyDef.type = this.b2Body.b2_dynamicBody;
@@ -82,24 +82,24 @@ class PhysicBox2D {
    * @return {fixture}
    */
   getBox(id, x, y, dx, dy, angle, sensor, restitution, friction, density, bodyRef) {
-    //Create box with polygon methode
-    let leftTopPoint = {
-      x : this.pixelToMetter(x),
-      y : this.pixelToMetter(y)
+    // Create box with polygon methode
+    const leftTopPoint = {
+      x: this.pixelToMetter(x),
+      y: this.pixelToMetter(y)
     };
-    let rightTopPoint = {
-      x : this.pixelToMetter(x + dx),
-      y : this.pixelToMetter(y)
+    const rightTopPoint = {
+      x: this.pixelToMetter(x + dx),
+      y: this.pixelToMetter(y)
     };
-    let leftBottomPoint = {
-      x : this.pixelToMetter(x),
-      y : this.pixelToMetter(y + dy)
+    const leftBottomPoint = {
+      x: this.pixelToMetter(x),
+      y: this.pixelToMetter(y + dy)
     };
-    let rightBottomPoint = {
-      x : this.pixelToMetter(x + dx),
-      y : this.pixelToMetter(y + dy)
+    const rightBottomPoint = {
+      x: this.pixelToMetter(x + dx),
+      y: this.pixelToMetter(y + dy)
     };
-    let vertices = [leftTopPoint, rightTopPoint, rightBottomPoint, leftBottomPoint];
+    const vertices = [leftTopPoint, rightTopPoint, rightBottomPoint, leftBottomPoint];
 
     return this.getPolygon(
       id,
@@ -128,7 +128,7 @@ class PhysicBox2D {
    * @return {fixture}
    */
   getCircle(id, x, y, radius, angle, sensor, restitution, friction, density, bodyRef) {
-    var fixDef = new this.b2FixtureDef;
+    const fixDef = new this.b2FixtureDef;
 
     fixDef.density = density;
     fixDef.friction = friction;
@@ -158,11 +158,11 @@ class PhysicBox2D {
    * @return {fixture}
    */
   getPolygon(id, vertices, angle, sensor, restitution, friction, density, bodyRef) {
-    let fixDef = new this.b2FixtureDef;
-    let polygonPoints = [];
+    const fixDef = new this.b2FixtureDef;
+    const polygonPoints = [];
     const verticesLength = vertices.length;
 
-    for(let x = 0; x < verticesLength; x++) {
+    for (let x = 0; x < verticesLength; x++) {
       polygonPoints[x] = new this.b2Vec2;
       polygonPoints[x].Set(vertices[x].x, vertices[x].y);
     }
@@ -234,11 +234,11 @@ class PhysicBox2D {
    * @return {position} position
    */
   getPosition(bodyRef) {
-    var position = bodyRef.GetPosition();
+    const position = bodyRef.GetPosition();
 
     return {
-      x : this.metterToPixel(position.x),
-      y : this.metterToPixel(position.y)
+      x: this.metterToPixel(position.x),
+      y: this.metterToPixel(position.y)
     };
   }
   /**
@@ -251,11 +251,11 @@ class PhysicBox2D {
     //physicObject.state.angular.pos.set(angle);
   }
   /**
-     * Get angle of a body
-     * @method getAngle
-     * @param {body} bodyRef
-     * @return {number}
-     */
+   * Get angle of a body
+   * @method getAngle
+   * @param {body} bodyRef
+   * @return {number}
+   */
   getAngle(bodyRef) {
     return bodyRef.GetAngle();
   }
@@ -267,7 +267,6 @@ class PhysicBox2D {
    * @param {number} positionPrecision - position iterations
    */
   updateEngine(framerate, velocityPrecision, positionPrecision) {
-    //console.log(framerate)
     this.physicContext.Step(
       framerate,
       velocityPrecision,
@@ -281,18 +280,14 @@ class PhysicBox2D {
    * @param {body} bodyRef
    */
   stopForces(bodyRef) {
-    var velocity = bodyRef.GetLinearVelocity(),
-        force = {
-          x : -(bodyRef.GetMass() * velocity.x) * 4,
-          y : 0
-        };
+    const velocity = bodyRef.GetLinearVelocity();
+    const force = {
+      x: -(bodyRef.GetMass() * velocity.x) * 4,
+      y: 0
+    };
 
-    //if(Math.abs(velocity.x) > 0.2) {
-      bodyRef.ApplyForce(new this.b2Vec2(force.x, force.y), bodyRef.GetWorldCenter());
-    //} else {
-    //  velocity.x = 0;
-    //  physicObject.SetLinearVelocity(velocity);
-    //}
+
+    bodyRef.ApplyForce(new this.b2Vec2(force.x, force.y), bodyRef.GetWorldCenter());
   }
   /**
    * Set velocity of a body
@@ -301,7 +296,7 @@ class PhysicBox2D {
    * @param vector
    */
   setImpulse(bodyRef, vector) {
-    var velocity = bodyRef.GetLinearVelocity();
+    const velocity = bodyRef.GetLinearVelocity();
     velocity.y = this.pixelToMetter(vector.y);
     bodyRef.SetLinearVelocity(velocity);
   }
@@ -312,11 +307,10 @@ class PhysicBox2D {
    * @param {vector} vector
    */
   setVelocity(bodyRef, vector) {
-    var velocity = bodyRef.GetLinearVelocity(),
-        force = {
-          x : this.pixelToMetter(vector.x),
-          y : this.pixelToMetter(vector.y)
-        };
+    const force = {
+      x: this.pixelToMetter(vector.x),
+      y: this.pixelToMetter(vector.y)
+    };
 
     bodyRef.ApplyForce(new this.b2Vec2(force.x, force.y), bodyRef.GetWorldCenter());
   }
