@@ -1,27 +1,32 @@
 /**
-   * Load contents configuration
-   * @class Loader
-   * @param {bitmap object} bitmapLoader
-   * @param {elements positions in bitmapLoader} bitmapConfig
-   * @param {HTML5 canvas object} canvas
-   * @param {function called when the loading is at 100%} onEnd
-   */
+ * Load contents configuration
+ * @class Loader
+ */
 class Loader {
+  /**
+   * Load contents configuration
+   * @method Loader
+   * @param {bitmap} bitmapLoader - bitmap of the loader
+   * @param {bitmapConfig} bitmapConfig - elements positions in bitmapLoader
+   * @param {canvas} canvasProperties - HTML5 canvas object
+   * @param {function} onComplete - function called when the loading is at 100%
+   * @return {void}
+   */
   constructor(bitmapLoader, bitmapConfig, canvasProperties, onComplete) {
     this.loading = 0;
-    this.infoLoad = "";
+    this.infoLoad = '';
     this.canvasContext = canvasProperties.context;
     this.displayDx = canvasProperties.dx;
     this.displayDy = canvasProperties.dy;
     this.dx = bitmapConfig.dx;
     this.infoFont = bitmapConfig.infoFont;
     this.pourcentFont = bitmapConfig.pourcentFont;
-    this.onComplete = onComplete != undefined ? onComplete : function(){};
+    this.onComplete = onComplete !== 'undefined' ? onComplete : () => {};
 
-    //Bitmap ressource of loader
+    // Bitmap ressource of loader
     this.bitmapLoader = bitmapLoader;
 
-    //Bitmap Configuration
+    // Bitmap Configuration
     this.emptyLoader = bitmapConfig.emptyLoader;
     this.completedLoader = bitmapConfig.completedLoader;
     this.pourcentDesign = bitmapConfig.pourcentDesign;
@@ -29,89 +34,94 @@ class Loader {
     this.upCanvasDisplay();
   }
   /**
-     * Set onComplete method,
-     * called when the loader is complete
-     * @method setOnCompleteMethod
-     */
+   * Set onComplete method,
+   * called when the loader is complete
+   * @method setOnCompleteMethod
+   * @param {function} onComplete - onComplete
+   * @return {void}
+   */
   setOnCompleteMethod(onComplete) {
     this.onComplete = onComplete;
   }
   /**
-     * Add int to pourcent value of loading
-     * @method getPourcentCompleted
-     * @return {value of pourcent loaded}
-     */
+   * Add int to pourcent value of loading
+   * @method getPourcentCompleted
+   * @return {number} - value of pourcent loaded
+   */
   getPourcentCompleted() {
     return this.loading;
   }
   /**
-     * Add int to pourcent value of loading
-     * @method addPourcentLoaded
-     * @param {value of pourcent added} x
-     */
+   * Add int to pourcent value of loading
+   * @method addPourcentLoaded
+   * @param {number} x - number of pourcent added
+   * @return {void}
+   */
   addPourcentLoaded(x) {
     this.loading += x;
     this.upCanvasDisplay();
-    if(this.loading >= 100){
+    if (this.loading >= 100) {
       this.onComplete();
     }
   }
   /**
-     * Change text information
-     * @method upTextInfo
-     * @param {text info} info
-     */
+   * Change text information
+   * @method upTextInfo
+   * @param {textInfo} info - text info
+   * @return {void}
+   */
   upTextInfo(info) {
     this.infoLoad = info;
     this.upCanvasDisplay();
   }
   /**
-     * Update canvas display
-     * @method getCenteredPosition(Private)
-     * @param {size of child element} childDx
-     * @param {size of parent element} parentDx
-     * @return {centered position of child element}
-     */
-  getCenteredPosition(childDx, parentDx){
-    return (parentDx/2)-(childDx/2);
+   * Update canvas display
+   * @method getCenteredPosition
+   * @param {size} childDx - size of child element
+   * @param {size} parentDx - size of parent element
+   * @return {position} - centered position
+   */
+  static getCenteredPosition(childDx, parentDx) {
+    return (parentDx / 2) - (childDx / 2);
   }
   /**
-     * Update canvas display
-     * @method upCanvasDisplay
-     */
+   * Update canvas display
+   * @method upCanvasDisplay
+   * @return {void}
+   */
   upCanvasDisplay() {
-    var displayDx = this.displayDx,
-    displayDy = this.displayDy,
-    totalDx = Math.round((this.dx/100)*displayDx),
-    varientDx = Math.round((totalDx-this.emptyLoader.end.dx-this.emptyLoader.start.dx)/this.emptyLoader.varient.dx),
-    completedDx = Math.round(varientDx*(this.getPourcentCompleted()/100)),
-
-    start = {
-      x : parseInt(this.getCenteredPosition(totalDx, displayDx)),
-      y : parseInt(this.getCenteredPosition(this.emptyLoader.start.dy, displayDy))
-    },
-    varient = {
-      x : start.x+this.emptyLoader.start.dx,
-      y : start.y
-    },
-    end = {
-      x : varient.x+varientDx,
-      y : start.y
-    },
-    pourcentText = {
-      x : varient.x+completedDx-20,
-      y : start.y-60
-    },
-    infoText = {
-      x : start.x,
-      y : start.y+120
-    },
-    x=0;
+    const displayDx = this.displayDx;
+    const displayDy = this.displayDy;
+    const totalDx = Math.round((this.dx / 100) * displayDx);
+    const varientDx = Math.round(
+      (totalDx - this.emptyLoader.end.dx - this.emptyLoader.start.dx) / this.emptyLoader.varient.dx
+    );
+    const completedDx = Math.round(varientDx * (this.getPourcentCompleted() / 100));
+    const start = {
+      x: parseInt(Loader.getCenteredPosition(totalDx, displayDx), 10),
+      y: parseInt(Loader.getCenteredPosition(this.emptyLoader.start.dy, displayDy), 10)
+    };
+    const varient = {
+      x: start.x + this.emptyLoader.start.dx,
+      y: start.y
+    };
+    const end = {
+      x: varient.x + varientDx,
+      y: start.y
+    };
+    const pourcentText = {
+      x: varient.x + (completedDx - 20),
+      y: start.y - 60
+    };
+    const infoText = {
+      x: start.x,
+      y: start.y + 120
+    };
 
     this.canvasContext.clearRect(0, 0, displayDx, displayDy);
 
-    //Draw empty part
-    //Start part
+    // Draw empty part
+    // Start part
     this.canvasContext.drawImage(
       this.bitmapLoader,
       this.emptyLoader.start.x,
@@ -123,21 +133,21 @@ class Loader {
       this.emptyLoader.start.dx,
       this.emptyLoader.start.dy
     );
-    //Varient part
-    for(; x < varientDx; x += this.emptyLoader.varient.dx){
+    // Varient part
+    for (let x = 0; x < varientDx; x += this.emptyLoader.varient.dx) {
       this.canvasContext.drawImage(
         this.bitmapLoader,
         this.emptyLoader.varient.x,
         this.emptyLoader.varient.y,
         this.emptyLoader.varient.dx,
         this.emptyLoader.varient.dy,
-        varient.x+x,
+        varient.x + x,
         varient.y,
         this.emptyLoader.varient.dx,
         this.emptyLoader.varient.dy
       );
     }
-    //End part
+    // End part
     this.canvasContext.drawImage(
       this.bitmapLoader,
       this.emptyLoader.end.x,
@@ -150,8 +160,8 @@ class Loader {
       this.emptyLoader.end.dy
     );
 
-    //Draw completed part
-    //Start part
+    // Draw completed part
+    // Start part
     this.canvasContext.drawImage(
       this.bitmapLoader,
       this.completedLoader.start.x,
@@ -163,56 +173,56 @@ class Loader {
       this.completedLoader.start.dx,
       this.completedLoader.start.dy
     );
-    //Varient part
-    for(x = 0; x < completedDx; x += this.emptyLoader.varient.dx){
+    // Varient part
+    for (let x = 0; x < completedDx; x += this.emptyLoader.varient.dx) {
       this.canvasContext.drawImage(
         this.bitmapLoader,
         this.completedLoader.varient.x,
         this.completedLoader.varient.y,
         this.completedLoader.varient.dx,
         this.completedLoader.varient.dy,
-        varient.x+x,
+        varient.x + x,
         varient.y,
         this.completedLoader.varient.dx,
         this.completedLoader.varient.dy
       );
     }
 
-    //End part
+    // End part
     this.canvasContext.drawImage(
       this.bitmapLoader,
       this.completedLoader.end.x,
       this.completedLoader.end.y,
       this.completedLoader.end.dx,
       this.completedLoader.end.dy,
-      varient.x+completedDx,
+      varient.x + completedDx,
       end.y,
       this.completedLoader.end.dx,
       this.completedLoader.end.dy
     );
 
-    //Image for pourcent value
+    // Image for pourcent value
     this.canvasContext.drawImage(
       this.bitmapLoader,
       this.pourcentDesign.x,
       this.pourcentDesign.y,
       this.pourcentDesign.dx,
       this.pourcentDesign.dy,
-      varient.x+completedDx-(this.pourcentDesign.dx/2),
-      end.y-50,
+      (varient.x + completedDx) - (this.pourcentDesign.dx / 2),
+      end.y - 50,
       this.pourcentDesign.dx,
       this.pourcentDesign.dy
     );
 
-    //Text part
-    this.canvasContext.font = this.pourcentFont.weight+' '+this.pourcentFont.size+'px '+this.pourcentFont.font;
+    // Text part
+    this.canvasContext.font = `${this.pourcentFont.weight} ${this.pourcentFont.size}px ${this.pourcentFont.font}`;
     this.canvasContext.fillStyle = this.pourcentFont.color;
-    this.canvasContext.fillText(this.loading+'%', pourcentText.x, pourcentText.y);
-    this.canvasContext.font = this.infoFont.size+'px '+this.infoFont.font;
+    this.canvasContext.fillText(`${this.loading}%`, pourcentText.x, pourcentText.y);
+    this.canvasContext.font = `${this.infoFont.size}px ${this.infoFont.font}`;
     this.canvasContext.fillStyle = this.infoFont.style;
     this.canvasContext.fillText(
       this.infoLoad,
-      this.getCenteredPosition(this.canvasContext.measureText(this.infoLoad).width, displayDx),
+      Loader.getCenteredPosition(this.canvasContext.measureText(this.infoLoad).width, displayDx),
       infoText.y
     );
   }
