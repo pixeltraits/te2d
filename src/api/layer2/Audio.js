@@ -2,7 +2,7 @@
  * Manage audio
  * @class Audio
  */
-class Audio {
+export default class Audio {
   /**
    * Manage audio
    * @method constructor
@@ -67,15 +67,5 @@ class Audio {
    * @return {void}
    */
   setPause(pause) {
-    /** Pause sound for 1.0
-      *  this.pause = pause;
-      *  if(this.active) {
-      *    if(this.pause) {
-      *      this.source.stop();
-      *    } else {
-      *      this.source.start();
-      *    }
-      *  }
-    */
   }
 }

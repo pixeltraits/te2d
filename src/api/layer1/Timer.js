@@ -2,7 +2,7 @@
  * Timer system
  * @class Timer
  */
-class Timer {
+export default class Timer {
   /**
    * Timer system
    * @method constructor

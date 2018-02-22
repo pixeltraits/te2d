@@ -1,8 +1,17 @@
+import Animation from '../layer2/Animation.js';
+import Text from '../layer2/Text.js';
+import Polygon from '../layer2/Polygon.js';
+import Box from '../layer2/Box.js';
+import Circle from '../layer2/Circle.js';
+import Audio from '../layer2/Audio.js';
+import Bitmap from '../layer2/Bitmap.js';
+import GeometricMath from '../layer1/GeometricMath.js';
+
 /**
  * Graphic Entity
  * @class GraphicEntity
  */
-class GraphicEntity {
+export default class GraphicEntity {
   /**
    * Graphic Entity
    * @class GraphicEntity
@@ -145,7 +154,7 @@ class GraphicEntity {
    */
   updateZ() {
     if (this.size.dz !== 0) {
-      this.position.z = this.position.y + this.size.dy - this.size.dz;
+      this.position.z = (this.position.y + this.size.dy) - this.size.dz;
     }
   }
   /**

@@ -2,7 +2,7 @@
  * Load contents configuration
  * @class Loader
  */
-class Loader {
+export default class Loader {
   /**
    * Load contents configuration
    * @method Loader

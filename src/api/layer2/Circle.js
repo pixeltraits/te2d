@@ -1,8 +1,11 @@
+import Geometry from './Geometry.js';
+import GeometricMath from '../layer1/GeometricMath.js';
+
 /**
  * Manage Circle
  * @class Circle
  */
-class Circle extends Geometry {
+export default class Circle extends Geometry {
   /**
    * Manage Circle
    * @method constructor

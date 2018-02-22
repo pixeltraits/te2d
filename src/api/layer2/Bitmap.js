@@ -1,8 +1,10 @@
+import GeometricMath from '../layer1/GeometricMath.js';
+
 /**
  * Create animations for bitmap
  * @class Bitmap
  */
-class Bitmap {
+export default class Bitmap {
   /**
    * Show bitmap on the canvas context
    * @method show

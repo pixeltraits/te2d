@@ -2,7 +2,7 @@
  * Scene Manager
  * @class Scene
  */
-﻿class Scene {
+export default class Scene {
   /**
    * Scene Manager
    * @method constructor

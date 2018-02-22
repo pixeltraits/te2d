@@ -2,7 +2,7 @@
  * Clone object
  * @class Clone
  */
-class Clone {
+export default class Clone {
   /**
    * Clone complex object
    * @method cloneComplexObject

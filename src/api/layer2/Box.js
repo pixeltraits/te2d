@@ -1,8 +1,10 @@
+import Geometry from './Geometry.js';
+
 /**
  * Manage Box
  * @class Box
  */
-class Box extends Geometry {
+export default class Box extends Geometry {
   /**
    * Manage Box
    * @method constructor

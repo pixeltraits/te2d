@@ -2,7 +2,7 @@
  * Math tool for geometry
  * @class GeometricMath
  */
-class GeometricMath {
+export default class GeometricMath {
   /**
    * Get reference position
    * @method getReferencePosition

@@ -4,7 +4,7 @@
  * @param {function} collisionStart
  * @param {function} collisionEnd
  */
-class PhysicBox2D {
+export default class PhysicBox2D {
   constructor(collisionStart, collisionEnd) {
     //Box2D implementation
     this.b2Vec2 = Box2D.Common.Math.b2Vec2;

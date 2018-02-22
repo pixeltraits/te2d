@@ -1,8 +1,10 @@
+import GeometricMath from '../layer1/GeometricMath.js';
+
 /**
  * Physic Entity
  * @class PhysicEntity
  */
-class PhysicEntity {
+export default class PhysicEntity {
   /**
    * Physic Entity
    * @method constructor

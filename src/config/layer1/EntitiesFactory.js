@@ -1,8 +1,13 @@
+import GraphicEntity from '../../api/layer4/GraphicEntity.js';
+import PhysicEntity from '../../api/layer4/PhysicEntity.js';
+import Camera from '../../api/layer5/Camera.js';
+import Player2D from '../../api/layer5/Player2D.js';
+
 /**
  * Load Bitmap ressource.
  * @class BitmapLoader
  */
-class EntitiesFactory {
+export default class EntitiesFactory {
   /**
    * Create Image object and load Bitmap ressource with ajax.
    * @method load

@@ -2,7 +2,7 @@
  * LoadUtils
  * @class LoadUtils
  */
-class LoadUtils {
+export default class LoadUtils {
   /**
    * Load contents configuration
    * @method loadContent

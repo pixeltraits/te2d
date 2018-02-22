@@ -2,7 +2,7 @@
  * Manage Geometry
  * @class Geometry
  */
-class Geometry {
+export default class Geometry {
   /**
    * Manage Geometry
    * @method constructor

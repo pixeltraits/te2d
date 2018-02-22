@@ -2,7 +2,7 @@
  * Generate unique ID
  * @class IdGenerator
  */
-class IdGenerator {
+export default class IdGenerator {
   /**
    * JsFiddle source code
    * http://jsfiddle.net/briguy37/2mvfd/

@@ -8,6 +8,7 @@
   },
   "rules": {
     "comma-dangle": ["error", "never"],
+    "import/extensions": ["always", {ignorePackages: true} ],
     "linebreak-style": ["error", "unix"],
     "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
     "max-len": ["error", { "code": 120 }],

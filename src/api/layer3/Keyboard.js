@@ -2,7 +2,7 @@
  * Manage keyboard event
  * @class Keyboard
  */
-class Keyboard {
+export default class Keyboard {
   /**
    * Manage keyboard event
    * @method constructor
@@ -24,7 +24,7 @@ class Keyboard {
    * Event implementation
    * @method handleEvent
    * @private
-   * @param {keyboardEvent} event
+   * @param {keyboardEvent} event - event
    * @return {void}
    */
   handleEvent(event) {

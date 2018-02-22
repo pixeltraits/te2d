@@ -2,5 +2,5 @@
  * Manage Click event
  * @class Mouse
  */
-class Mouse {
+export default class Mouse {
 }

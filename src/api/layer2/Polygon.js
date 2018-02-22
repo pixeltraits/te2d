@@ -1,8 +1,11 @@
+import Geometry from './Geometry.js';
+import GeometricMath from '../layer1/GeometricMath.js';
+
 /**
  * Manage Polygon
  * @class Polygon
  */
-class Polygon extends Geometry {
+export default class Polygon extends Geometry {
   /**
    * Manage Polygon
    * @method constructor
@@ -11,7 +14,7 @@ class Polygon extends Geometry {
   constructor() {
     super();
 
-    this.type = "Polygon";
+    this.type = 'Polygon';
     this.vertices = [];
   }
   /**

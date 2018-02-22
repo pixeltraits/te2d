@@ -1,8 +1,10 @@
+import Timer from '../layer1/Timer.js';
+
 /**
  * Class animation
  * @class Animation
  */
-class Animation {
+export default class Animation {
   /**
    * Class animation
    * @method constructor

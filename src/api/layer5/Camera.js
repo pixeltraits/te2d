@@ -1,8 +1,10 @@
+import PhysicEntity from '../layer4/PhysicEntity.js';
+
 /**
  * Display manager
  * @class Camera
  */
-class Camera extends PhysicEntity {
+export default class Camera extends PhysicEntity {
   /**
    * Display manager
    * @method constructor

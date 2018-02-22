@@ -2,7 +2,7 @@
  * Manage text
  * @class Text
  */
-class Text {
+export default class Text {
   /**
    * Manage text
    * @method Text

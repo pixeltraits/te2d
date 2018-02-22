@@ -1,8 +1,10 @@
+import PhysicBox2D from './PhysicBox2D.js';
+
 /**
  * Interface of physic API
  * @class PhysicInterface
  */
-class PhysicInterface {
+export default class PhysicInterface {
   /**
    * Interface of physic API
    * @method PhysicInterface

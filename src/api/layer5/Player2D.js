@@ -1,8 +1,10 @@
+import PhysicEntity from '../layer4/PhysicEntity.js';
+
 /**
  * Player2D manager
  * @class Player2D
  */
-class Player2D extends PhysicEntity {
+export default class Player2D extends PhysicEntity {
   /**
    * Player2D manager
    * @method constructor

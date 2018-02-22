@@ -1,8 +1,18 @@
+import PhysicInterface from './api/layer3/PhysicInterface.js';
+import Camera from './api/layer5/Camera.js';
+import LoadUtils from './config/layer1/LoadUtils.js';
+import Loader from './config/layer1/Loader.js';
+import Keyboard from './api/layer3/Keyboard.js';
+import Scene from './api/layer4/Scene.js';
+import EntitiesFactory from './config/layer1/EntitiesFactory.js';
+import Clone from './api/layer1/Clone.js';
+import IdGenerator from './api/layer1/IdGenerator.js';
+
 /**
  * Load contents configuration
  * @class Game
  */
-class Game {
+export default class Game {
   /**
    * Load contents configuration
    * @method Game
@@ -280,7 +290,7 @@ class Game {
             self.loader.addPourcentLoaded(10);
           },
           (entityProfil) => {// When One content is loaded
-            self.loader.upTextInfo("La configuration de l'objet "+entityProfil.name+" a été chargé.");
+            self.loader.upTextInfo(`La configuration de l'objet ${entityProfil.name} a été chargé.`);
           }
         );
 
@@ -290,7 +300,7 @@ class Game {
           // Mouse -- 1.0
           // Keyboard
           LoadUtils.loadContent(
-            self.configUrl + "resources/controlerProfils/keyboards/",
+            `${self.configUrl}resources/controlerProfils/keyboards/`,
             levelConfig.keyboard,
             {
               type: 'jsonLoader',
