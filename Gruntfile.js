@@ -1,6 +1,20 @@
 module.exports = (grunt) => {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
+    includes: {
+      js: {
+        options: {
+          includeRegexp: /^\/\/\s*import\s+['"]?([^'"]+)['"]?\s*$/,
+          duplicates: false,
+          debug: true
+        },
+        files: [{
+          cwd: '.',
+          src: 'src/**/*.js',
+          dest: 'build/js/lib/te2d'
+        }]
+      }
+    },
     concat: {
       options: {
         banner: '"use strict";'
@@ -20,9 +34,10 @@ module.exports = (grunt) => {
           'src/api/layer4/*.js',
           'src/api/layer5/*.js',
           'src/config/**/*.js',
-          'src/online/client/*.js'
+          'src/online/client/*.js',
+          'src/Game.js'
         ],
-        dest: 'build/te2d.js'
+        dest: 'build/js/lib/te2d.js'
       }
     },
     karma: {
@@ -39,8 +54,9 @@ module.exports = (grunt) => {
 
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-karma');
+  grunt.loadNpmTasks('grunt-includes');
 
   grunt.registerTask('test', ['karma:unit']);
   grunt.registerTask('coverage', ['karma:coverage']);
-  grunt.registerTask('build', ['concat']);
+  grunt.registerTask('build', ['includes']);
 };
