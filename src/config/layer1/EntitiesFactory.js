@@ -1,3 +1,4 @@
+import Logger from '../../api/layer1/Logger.js';
 import GraphicEntity from '../../api/layer4/GraphicEntity.js';
 import PhysicEntity from '../../api/layer4/PhysicEntity.js';
 import Camera from '../../api/layer5/Camera.js';
@@ -32,7 +33,7 @@ export default class EntitiesFactory {
         newObject = new Player2D(data.properties, data.id);
         break;
       default:
-        console.log('undefined');
+        Logger.log('undefined');
         break;
     }
 

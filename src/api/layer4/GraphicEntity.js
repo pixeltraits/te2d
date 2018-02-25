@@ -1,3 +1,4 @@
+import Logger from '../../api/layer1/Logger.js';
 import Animation from '../layer2/Animation.js';
 import Text from '../layer2/Text.js';
 import Polygon from '../layer2/Polygon.js';
@@ -118,7 +119,7 @@ export default class GraphicEntity {
   /**
    * Add position on z
    * @method addZPosition
-   * @param {number} z
+   * @param {number} z -z
    * @return {void}
    */
   addZPosition(z) {
@@ -127,7 +128,7 @@ export default class GraphicEntity {
   /**
    * Set plan position relative to parent
    * @method setRelativeZ
-   * @param {number} z
+   * @param {number} z - z
    * @return {void}
    */
   setRelativeZ(z) {
@@ -138,7 +139,7 @@ export default class GraphicEntity {
   /**
    * Set plan position(Fixe 2D)
    * @method setZ
-   * @param {number} z
+   * @param {number} z - z
    * @return {void}
    */
   setZ(z) {
@@ -160,7 +161,7 @@ export default class GraphicEntity {
   /**
    * Set plan size(0 = Fix)
    * @method setDz
-   * @param {number} dz
+   * @param {number} dz - dz
    * @return {void}
    */
   setDz(dz) {
@@ -211,6 +212,23 @@ export default class GraphicEntity {
    */
   getSize() {
     return this.size;
+  }
+  /**
+   * Set parent
+   * @method setParent
+   * @param {number} parent - parent
+   * @return {void}
+   */
+  setParent(parent) {
+    this.parent = parent;
+  }
+  /**
+   * Get parent
+   * @method getParent
+   * @return {graphicEntity} - parent
+   */
+  getParent() {
+    return this.parent;
   }
   /**
    * Set angle
@@ -266,7 +284,7 @@ export default class GraphicEntity {
   setGeometry(geometry) {
     switch (geometry.shape) {
       default:
-        console.log('This geometry does not exist.');
+        Logger.log('This geometry does not exist.');
         break;
       case 'box':
         this.graphicObject = new Box(geometry);
@@ -416,8 +434,8 @@ export default class GraphicEntity {
         y: this.position.y + subGraphicEntity.y
       });
 
-      subGraphicEntity.parent = this;
-      subGraphicEntity.dz = 0;
+      subGraphicEntity.setParent(this);
+      subGraphicEntity.setDz(0);
 
       this.subGraphicEntities.push(subGraphicEntity);
     }
@@ -433,7 +451,7 @@ export default class GraphicEntity {
 
     for (let x = 0; x < subGraphicEntitiesLength; x++) {
       if (this.subGraphicEntities[x].id === subGraphicEntity.id) {
-        subGraphicEntity.parent = null;
+        subGraphicEntity.setParent(null);
         this.subGraphicEntities.splice(x, 1);
         return;
       }
