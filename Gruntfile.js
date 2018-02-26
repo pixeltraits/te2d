@@ -3,16 +3,18 @@ module.exports = (grunt) => {
     pkg: grunt.file.readJSON('package.json'),
     includes: {
       js: {
-        options: {
-          includeRegexp: /^\/\/\s*import\s+['"]?([^'"]+)['"]?\s*$/,
-          duplicates: false,
-          debug: true
-        },
-        files: [{
-          cwd: '.',
-          src: 'src/**/*.js',
-          dest: 'build/js/lib/te2d'
-        }]
+        files: [
+          {
+            cwd: '.',
+            src: 'node_modules/js-uuid/js-uuid.js',
+            dest: 'src/lib/js-uuid.js'
+          },
+          {
+            cwd: '.',
+            src: 'node_modules/box2d-es6/box2d.js',
+            dest: 'src/lib/box2d.js'
+          }
+        ]
       }
     },
     concat: {

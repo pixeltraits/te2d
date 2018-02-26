@@ -17,7 +17,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use('/public/css/', express.static(path.join(__dirname, '/build/css')));
 app.use('/public/js/', express.static(path.join(__dirname, '/build/js')));
-app.use('/public/js/lib/', express.static(path.join(__dirname, '/node_modules/js-uuid/js-uuid.js')));
 app.use('/public/game/', express.static(path.join(__dirname, '/game')));
 app.use('/public/te2d/', express.static(path.join(__dirname, '/src')));
 

@@ -1,4 +1,4 @@
-import uuid from 'js-uuid';
+import { uuid } from '../../lib/js-uuid.js';
 
 /**
  * Generate unique ID

@@ -1,3 +1,5 @@
+import { Box2D } from '../../lib/box2d.js';
+
 /**
  * Physique engine implementation for Box2D
  * @class PhysicBox2D
