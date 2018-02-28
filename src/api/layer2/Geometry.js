@@ -40,12 +40,9 @@ export default class Geometry {
   /**
    * Show Geometry on the canvas context
    * @method show
-   * @param {position} position - Geometry position
-   * @param {number} angle - Geometry angle
-   * @param {size} canvasSize - Canvas size
-   * @param {canvas2dContext} canvasCtx - Canvas context
    * @return {void}
    */
-  show(position, angle, canvasSize, canvasCtx) {
+  show() {
+    throw new Error('Show is an abstract Method');
   }
 }

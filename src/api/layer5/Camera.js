@@ -56,8 +56,7 @@ export default class Camera extends PhysicEntity {
    * @return {void}
    */
   setDisplaySize(size) {
-    this.size.dx = size.dx;
-    this.size.dy = size.dy;
+    this.size = size;
     this.updateDisplaySize();
   }
   /**
@@ -86,7 +85,6 @@ export default class Camera extends PhysicEntity {
    * @return {void}
    */
   activeFullscreen() {
-    /* For 1.0, by default fullwindow mode is actived */
     this.activeFullwindow();
   }
   /**

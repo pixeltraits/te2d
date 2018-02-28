@@ -8,8 +8,8 @@ export default class PhysicInterface {
   /**
    * Interface of physic API
    * @method PhysicInterface
-   * @param {function} collisionStart
-   * @param {function} collisionEnd
+   * @param {function} collisionStart - function called when a collision begin
+   * @param {function} collisionEnd - function called when a collision ending
    * @return {void}
    */
   constructor(collisionStart, collisionEnd) {
