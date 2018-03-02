@@ -12,8 +12,8 @@ export default class PhysicInterface {
    * @param {function} collisionEnd - function called when a collision ending
    * @return {void}
    */
-  constructor(collisionStart, collisionEnd) {
-    this.physic = new PhysicBox2D(collisionStart, collisionEnd);
+  constructor(collisionStart, collisionEnd, gravity, pixelFactor) {
+    this.physic = new PhysicBox2D(collisionStart, collisionEnd, gravity, pixelFactor);
   }
   /**
    * Get a body

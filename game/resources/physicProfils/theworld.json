@@ -1,9 +1,14 @@
 {
-  "name" : "theworld",
+  "name": "theworld",
+  "gravity": {
+    "x": 0,
+    "y": 100 
+  },
+  "pixelFactor": 0.05,
   "active" : {
   },
-  "start" : {
+  "start": {
   },
-  "end" : {
+  "end": {
   }
 }

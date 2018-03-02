@@ -7,7 +7,7 @@ import { Box2D } from '../../lib/box2d.js';
  * @param {function} collisionEnd
  */
 export default class PhysicBox2D {
-  constructor(collisionStart, collisionEnd) {
+  constructor(collisionStart, collisionEnd, gravity, pixelFactor) {
     //Box2D implementation
     this.b2Vec2 = Box2D.Common.Math.b2Vec2;
     this.b2BodyDef = Box2D.Dynamics.b2BodyDef;
@@ -27,10 +27,10 @@ export default class PhysicBox2D {
     //Physic context configuration
     var listener = new Box2D.Dynamics.b2ContactListener;
     listener.BeginContact = collisionStart;
-    this.pixelMetterFactor = 0.05;
+    this.pixelMetterFactor = pixelFactor;
 
     this.physicContext = new this.b2World(
-       new this.b2Vec2(0, 100),
+       new this.b2Vec2(gravity.x, gravity.y),
        true
     );
     this.physicContext.SetContactListener(listener);
