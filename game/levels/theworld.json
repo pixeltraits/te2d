@@ -8,6 +8,11 @@
     "ratioScene": 300,
     "xCam": 0,
     "yCam": 0,
+    "gravity": {
+      "x": 0,
+      "y": 100
+    },
+    "pixelFactor": 0.05,
     "cameraId": "6de04c99-d92b-419f-ac4d-5552581554ab"
   },
   "physicProfils": [

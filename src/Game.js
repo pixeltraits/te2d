@@ -53,14 +53,7 @@ export default class Game {
     this.physicProfils = [];
 
     // Physic Engine(Interface)
-    this.physicInterface = new PhysicInterface(
-      (contact) => {
-        self.collisionStart(contact);
-      },
-      (contact) => {
-        self.collisionEnd(contact);
-      }
-    );
+    this.physicInterface = {};
     this.game = this;
 
     // Load game config file
@@ -363,6 +356,17 @@ export default class Game {
   startLevel() {
     const self = this;
 
+    this.physicInterface = new PhysicInterface(
+      (contact) => {
+        this.collisionStart(contact);
+      },
+      (contact) => {
+        this.collisionEnd(contact);
+      },
+      this.level.gravity,
+      this.level.pixelFactor
+    );
+
     this.entities[this.level.cameraId].setDisplayUpdateMethod((framerate) => {
       const cameraSize = self.entities[self.level.cameraId].getSize();
       const inView = self.scene.graphic.getEntities({
@@ -482,7 +486,6 @@ export default class Game {
                 action.id = him;
                 break;
               default:
-                console.log('');
                 break;
             }
             objectReference = this[action.context][action.id];
@@ -504,7 +507,6 @@ export default class Game {
                 action.id = him;
                 break;
               default:
-                console.log('');
                 break;
             }
             return this[action.context][action.id];
@@ -532,7 +534,6 @@ export default class Game {
                   action.id = him;
                   break;
                 default:
-                  console.log('');
                   break;
               }
               objectReference = this[action.context][action.id];

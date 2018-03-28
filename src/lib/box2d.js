@@ -15,8 +15,9 @@
 * misrepresented as being the original software.
 * 3. This notice may not be removed or altered from any source distribution.
 */
-'use strict';
-let Box2D = {};
+'use strict'
+
+export let Box2D = {};
 
 (((a2j, undefined) => {
 
@@ -11628,4 +11629,4 @@ Box2D.postDefs = [];
 let i;
 for (i = 0; i < Box2D.postDefs.length; ++i) Box2D.postDefs[i]();
 
-export Box2D;
+//export default Box2D;
