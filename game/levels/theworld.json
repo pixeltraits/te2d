@@ -81,8 +81,12 @@
       "content" : "playerOne.json"
     }
   ],
-  "entityGroups":[
-  ],
+  "entityGroups":{
+    "layer1" : [
+      "50ib636f-8779-47d5-9fcb-ff98c8583dec",
+      "50ib636f-8779-27d1-9fcb-ff98c8553dec"
+    ]
+  },
   "entityProfils":[
     {
       "name" : "background",

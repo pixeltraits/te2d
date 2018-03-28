@@ -36,7 +36,7 @@ export default class Game {
     this.audios = [];
     this.audioContext = new window.AudioContext();
     this.entities = [];
-    this.entityGroups = [];
+    this.entityGroups = {};
     this.texts = [];
     this.controlers = [];
     this.controlers.keyboard = [];
@@ -117,8 +117,9 @@ export default class Game {
     LoadUtils.jsonLoader({
       url: `${self.configUrl}/levels/${name}.json`,
       onLoad: (levelConfig, reference) => {
-        self.level = levelConfig.levelInfo;
-        self.startProperties = {
+        this.level = levelConfig.levelInfo;
+        this.entityGroups = levelConfig.entityGroups;
+        this.startProperties = {
           startActions: levelConfig.startActions,
           startObjects: levelConfig.entities
         };
@@ -666,6 +667,25 @@ export default class Game {
             this.setAction(actions[x], this.entities[hitboxA].parent.id, this.entities[hitboxB].parent.id);
           }
         }
+      }
+    }
+  }
+  /**
+   * Execute action on all entities of a group
+   * @method entityGroupAction
+   * @param {array} group - Entities array
+   * @param {array} actions - Actions array
+   * @return {void}
+   */
+  entityGroupAction(group, actions) {
+    const groupLength = group.length;
+    const actionLength = actions.length;
+
+    for (let y = 0; y < groupLength; y++) {
+      const cloneActions = Clone.cloneDataObject(actions);
+
+      for (let x = 0; x < actionLength; x++) {
+        this.setAction(cloneActions[x], this.entities[group[y]], null);
       }
     }
   }
