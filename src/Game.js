@@ -1,4 +1,4 @@
-import PhysicInterface from './api/layer3/PhysicInterface.js';
+import PhysicBox2D from './api/layer3/PhysicBox2D.js';
 import Camera from './api/layer5/Camera.js';
 import LoadUtils from './config/layer1/LoadUtils.js';
 import Loader from './config/layer1/Loader.js';
@@ -356,7 +356,7 @@ export default class Game {
    * @return {void}
    */
   startLevel() {
-    this.resources.physicInterface = new PhysicInterface(
+    this.resources.physicInterface = new PhysicBox2D(
       (contact) => {
         this.collisionSystem.collisionStart(contact);
       },

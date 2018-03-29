@@ -17,7 +17,11 @@
 */
 'use strict'
 
-export let Box2D = {};
+const Box2D = {};
+
+export {
+  Box2D
+};
 
 (((a2j, undefined) => {
 
@@ -11628,5 +11632,3 @@ Box2D.postDefs = [];
 }))();
 let i;
 for (i = 0; i < Box2D.postDefs.length; ++i) Box2D.postDefs[i]();
-
-//export default Box2D;

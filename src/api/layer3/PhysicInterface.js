@@ -1,5 +1,3 @@
-import PhysicBox2D from './PhysicBox2D.js';
-
 /**
  * Interface of physic API
  * @class PhysicInterface
@@ -10,10 +8,12 @@ export default class PhysicInterface {
    * @method PhysicInterface
    * @param {function} collisionStart - function called when a collision begin
    * @param {function} collisionEnd - function called when a collision ending
+   * @param {function} gravity - function called when a collision ending
+   * @param {function} pixelFactor - function called when a collision ending
    * @return {void}
    */
   constructor(collisionStart, collisionEnd, gravity, pixelFactor) {
-    this.physic = new PhysicBox2D(collisionStart, collisionEnd, gravity, pixelFactor);
+    //throw new Error(`Wrong implementation of => ${this.constructor.name}, constructor()`);
   }
   /**
    * Get a body
@@ -29,16 +29,7 @@ export default class PhysicInterface {
    * @return {body}
    */
   getBody(id, x, y, angle, mass, angularConstraint, angularInertia, dynamic) {
-    return this.physic.getBody(
-      id,
-      x,
-      y,
-      angle,
-      mass,
-      angularConstraint,
-      angularInertia,
-      dynamic
-    );
+    throw new Error(`Wrong implementation of => ${this.constructor.name}, getBody()`);
   }
   /**
    * Get a box fixture
@@ -57,19 +48,7 @@ export default class PhysicInterface {
    * @return {fixture}
    */
   getBox(id, x, y, dx, dy, angle, sensor, restitution, friction, density, bodyRef) {
-    return this.physic.getBox(
-      id,
-      x,
-      y,
-      dx,
-      dy,
-      angle,
-      sensor,
-      restitution,
-      friction,
-      density,
-      bodyRef
-    );
+    throw new Error(`Wrong implementation of => ${this.constructor.name}, getBox()`);
   }
   /**
    * Get an circle fixture
@@ -87,18 +66,7 @@ export default class PhysicInterface {
    * @return {fixture}
    */
   getCircle(id, x, y, radius, angle, sensor, restitution, friction, density, bodyRef) {
-    return this.physic.getCircle(
-      id,
-      x,
-      y,
-      radius,
-      angle,
-      sensor,
-      restitution,
-      friction,
-      density,
-      bodyRef
-    );
+    throw new Error(`Wrong implementation of => ${this.constructor.name}, getCircle()`);
   }
   /**
    * Get an polygon fixture
@@ -116,18 +84,7 @@ export default class PhysicInterface {
    * @return {fixture}
    */
   getPolygon(id, x, y, vertices, angle, sensor, restitution, friction, density, bodyRef) {
-    return this.physic.getPolygon(
-      id,
-      x,
-      y,
-      vertices,
-      angle,
-      sensor,
-      restitution,
-      friction,
-      density,
-      bodyRef
-    );
+    throw new Error(`Wrong implementation of => ${this.constructor.name}, getPolygon()`);
   }
   /**
    * Add the body to physic context
@@ -135,7 +92,7 @@ export default class PhysicInterface {
    * @param {body} bodyRef
    */
   addToPhysicContext(bodyRef) {
-    this.physic.addToPhysicContext(bodyRef);
+    throw new Error(`Wrong implementation of => ${this.constructor.name}, addToPhysicContext()`);
   }
   /**
    * Remove the body to physic context
@@ -143,7 +100,7 @@ export default class PhysicInterface {
    * @param {body} bodyRef
    */
   removeToPhysicContext(bodyRef) {
-    this.physic.removeToPhysicContext(bodyRef);
+    throw new Error(`Wrong implementation of => ${this.constructor.name}, removeToPhysicContext()`);
   }
   /**
    * Set position of a body, teleportation
@@ -153,7 +110,7 @@ export default class PhysicInterface {
    * @param {number} y
    */
   setPosition(bodyRef, x, y) {
-    this.physic.setPosition(bodyRef, x, y);
+    throw new Error(`Wrong implementation of => ${this.constructor.name}, setPosition()`);
   }
   /**
    * Get position of a body
@@ -162,7 +119,7 @@ export default class PhysicInterface {
    * @return {position}
    */
   getPosition(bodyRef) {
-    return this.physic.getPosition(bodyRef);
+    throw new Error(`Wrong implementation of => ${this.constructor.name}, getPosition()`);
   }
   /**
    * Set angle of a body, teleportation
@@ -171,7 +128,7 @@ export default class PhysicInterface {
    * @param {number} angle
    */
   setAngle(bodyRef, angle) {
-    this.physic.setAngle(bodyRef, angle);
+    throw new Error(`Wrong implementation of => ${this.constructor.name}, setAngle()`);
   }
   /**
    * Get angle of a body
@@ -180,7 +137,7 @@ export default class PhysicInterface {
    * @return {number}
    */
   getAngle(bodyRef) {
-    return this.physic.getAngle(bodyRef);
+    throw new Error(`Wrong implementation of => ${this.constructor.name}, getAngle()`);
   }
   /**
    * Recalculate of the physic context
@@ -190,16 +147,16 @@ export default class PhysicInterface {
    * @param {number} positionPrecision - position iterations
    */
   updateEngine(framerate, velocityPrecision, positionPrecision) {
-    this.physic.updateEngine(framerate, velocityPrecision, positionPrecision);
+    throw new Error(`Wrong implementation of => ${this.constructor.name}, updateEngine()`);
   }
   /**
-   * Set velocity of an physic object ------------------------Revision 0.8 final
+   * Set velocity of an physic object
    * @method setImpulse
    * @param physicObject
    * @param vector
    */
   setImpulse(physicObject, vector) {
-    this.physic.setImpulse(physicObject, vector);
+    throw new Error(`Wrong implementation of => ${this.constructor.name}, setImpulse()`);
   }
   /**
    * Set velocity of an physic object
@@ -208,7 +165,7 @@ export default class PhysicInterface {
    * @param vector
    */
   setVelocity(physicObject, vector) {
-    this.physic.setVelocity(physicObject, vector);
+    throw new Error(`Wrong implementation of => ${this.constructor.name}, setVelocity()`);
   }
   /**
    * Get velocity of an physic object
@@ -217,7 +174,7 @@ export default class PhysicInterface {
    * @return vector
    */
   getVelocity(physicObject) {
-    return this.physic.getVelocity(physicObject);
+    throw new Error(`Wrong implementation of => ${this.constructor.name}, getVelocity()`);
   }
   /**
    * Get speed of an physic object
@@ -226,7 +183,7 @@ export default class PhysicInterface {
    * @return speed
    */
   getSpeed(physicObject) {
-    return this.physic.getSpeed(physicObject);
+    throw new Error(`Wrong implementation of => ${this.constructor.name}, getSpeed()`);
   }
   /**
    * Get speed of an physic object
@@ -235,6 +192,6 @@ export default class PhysicInterface {
    * @return speed
    */
   stopForces(physicObject) {
-    return this.physic.stopForces(physicObject);
+    throw new Error(`Wrong implementation of => ${this.constructor.name}, stopForces()`);
   }
 }

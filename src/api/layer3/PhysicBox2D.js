@@ -1,37 +1,55 @@
-import { Box2D } from '../../lib/box2d.js';
+import {
+  B2Vec2,
+  B2BodyDef,
+  B2Body,
+  B2FixtureDef,
+  B2Fixture,
+  B2World,
+  B2MassData,
+  B2PolygonShape,
+  B2CircleShape,
+  B2DebugDraw,
+  B2ContactListener
+} from '../../lib/Box2D.js';
+
+import PhysicInterface from './PhysicInterface.js';
 
 /**
  * Physique engine implementation for Box2D
  * @class PhysicBox2D
- * @param {function} collisionStart
- * @param {function} collisionEnd
  */
-export default class PhysicBox2D {
+export default class PhysicBox2D extends PhysicInterface {
+  /**
+   * constructor
+   * @method constructor
+   * @param {function} collisionStart - collisionStart
+   * @param {function} collisionEnd - collisionEnd
+   * @param {object} gravity - collisionEnd
+   * @param {number} pixelFactor - collisionEnd
+   * @return {void}
+   */
   constructor(collisionStart, collisionEnd, gravity, pixelFactor) {
-    //Box2D implementation
-    this.b2Vec2 = Box2D.Common.Math.b2Vec2;
-    this.b2BodyDef = Box2D.Dynamics.b2BodyDef;
-    this.b2Body = Box2D.Dynamics.b2Body;
-    this.b2FixtureDef = Box2D.Dynamics.b2FixtureDef;
-    this.b2Fixture = Box2D.Dynamics.b2Fixture;
-    this.b2World = Box2D.Dynamics.b2World;
-    this.b2MassData = Box2D.Collision.Shapes.b2MassData;
-    this.b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape;
-    this.b2CircleShape = Box2D.Collision.Shapes.b2CircleShape;
-    this.b2DebugDraw = Box2D.Dynamics.b2DebugDraw;
-    this.b2Body.prototype.SetTransform = function (xf, angle) {//Correctif
-       this.SetPositionAndAngle({x:xf.x, y:xf.y}, angle);
+    super(collisionStart, collisionEnd, gravity, pixelFactor);
+
+    // Correctif de box2D
+    B2Body.prototype.SetTransform = (xf, angle) => {
+      this.SetPositionAndAngle(
+        {
+          x: xf.x,
+          y: xf.y
+        },
+        angle
+      );
     };
 
-
-    //Physic context configuration
-    var listener = new Box2D.Dynamics.b2ContactListener;
+    // Physic context configuration
+    const listener = new B2ContactListener();
     listener.BeginContact = collisionStart;
     this.pixelMetterFactor = pixelFactor;
 
-    this.physicContext = new this.b2World(
-       new this.b2Vec2(gravity.x, gravity.y),
-       true
+    this.physicContext = new B2World(
+      new B2Vec2(gravity.x, gravity.y),
+      true
     );
     this.physicContext.SetContactListener(listener);
   }
@@ -39,22 +57,23 @@ export default class PhysicBox2D {
    * Get a body
    * @method getBody
    * @param {string} id - Entity id
-   * @param {number} x - Entity position
-   * @param {number} y
-   * @param {number} angle
-   * @param {number} mass
-   * @param {boolean} angularConstraint
-   * @param {number} angularInertia
-   * @param {boolean} dynamic
-   * @return body object
+   * @param {number} x - x
+   * @param {number} y - y
+   * @param {number} angle - angle
+   * @param {number} mass - mass
+   * @param {boolean} angularConstraint - angularConstraint
+   * @param {number} angularInertia - angularInertia
+   * @param {boolean} dynamic - dynamic
+   * @return {body} body - body
    */
   getBody(id, x, y, angle, mass, angularConstraint, angularInertia, dynamic) {
-    const bodyDef = new this.b2BodyDef;
+    const bodyDef = new B2BodyDef();
+    const b2Body = new B2Body();
 
     if (!dynamic) {
-      bodyDef.type = this.b2Body.b2_staticBody;
+      bodyDef.type = b2Body.b2_staticBody;
     } else {
-      bodyDef.type = this.b2Body.b2_dynamicBody;
+      bodyDef.type = b2Body.b2_dynamicBody;
     }
 
     bodyDef.position.x = this.pixelToMetter(x);
@@ -70,18 +89,18 @@ export default class PhysicBox2D {
   /**
    * Get a box fixture
    * @method getBox
-   * @param {string} id
-   * @param {number} x
-   * @param {number} y
-   * @param {number} dx
-   * @param {number} dy
-   * @param {number} angle
-   * @param {boolean} sensor
-   * @param {number} restitution
-   * @param {number} friction
-   * @param {number} density
-   * @param {body} bodyRef
-   * @return {fixture}
+   * @param {string} id - id
+   * @param {number} x - x
+   * @param {number} y - y
+   * @param {number} dx - dx
+   * @param {number} dy - dy
+   * @param {number} angle - angle
+   * @param {boolean} sensor - sensor
+   * @param {number} restitution - restitution
+   * @param {number} friction - friction
+   * @param {number} density - density
+   * @param {body} bodyRef - bodyRef
+   * @return {fixture} fixture - fixture
    */
   getBox(id, x, y, dx, dy, angle, sensor, restitution, friction, density, bodyRef) {
     // Create box with polygon methode
@@ -117,20 +136,20 @@ export default class PhysicBox2D {
   /**
    * Get a circle fixture
    * @method getCircle
-   * @param {string} id
-   * @param {number} x
-   * @param {number} y
-   * @param {number} radius
-   * @param {number} angle
-   * @param {boolean} sensor
-   * @param {number} restitution
-   * @param {number} friction
-   * @param {number} density
-   * @param {body} bodyRef
-   * @return {fixture}
+   * @param {string} id - id
+   * @param {number} x - x
+   * @param {number} y - y
+   * @param {number} radius - radius
+   * @param {number} angle - angle
+   * @param {boolean} sensor - sensor
+   * @param {number} restitution - restitution
+   * @param {number} friction - friction
+   * @param {number} density - density
+   * @param {body} bodyRef - bodyRef
+   * @return {fixture} fixture - fixture
    */
   getCircle(id, x, y, radius, angle, sensor, restitution, friction, density, bodyRef) {
-    const fixDef = new this.b2FixtureDef;
+    const fixDef = new B2FixtureDef();
 
     fixDef.density = density;
     fixDef.friction = friction;
@@ -138,7 +157,7 @@ export default class PhysicBox2D {
     fixDef.isSensor = sensor;
     fixDef.userData = id;
 
-    fixDef.shape = new this.b2CircleShape;
+    fixDef.shape = new B2CircleShape();
     fixDef.shape.m_p.Set(this.pixelToMetter(x), this.pixelToMetter(y));
     fixDef.shape.m_radius(radius);
 
@@ -147,25 +166,23 @@ export default class PhysicBox2D {
   /**
    * Get a polygon fixture
    * @method getPolygon
-   * @param {string} id
-   * @param {number} x
-   * @param {number} y
-   * @param {position[]} vertices
-   * @param {number} angle
-   * @param {boolean} sensor
-   * @param {number} restitution
-   * @param {number} friction
-   * @param {number} density
-   * @param {body} bodyRef
-   * @return {fixture}
+   * @param {string} id - id
+   * @param {position[]} vertices - vertices
+   * @param {number} angle - angle
+   * @param {boolean} sensor - sensor
+   * @param {number} restitution - restitution
+   * @param {number} friction - friction
+   * @param {number} density - density
+   * @param {body} bodyRef - bodyRef
+   * @return {polygon} polygon - polygon
    */
   getPolygon(id, vertices, angle, sensor, restitution, friction, density, bodyRef) {
-    const fixDef = new this.b2FixtureDef;
+    const fixDef = new B2FixtureDef();
     const polygonPoints = [];
     const verticesLength = vertices.length;
 
     for (let x = 0; x < verticesLength; x++) {
-      polygonPoints[x] = new this.b2Vec2;
+      polygonPoints[x] = new B2Vec2();
       polygonPoints[x].Set(vertices[x].x, vertices[x].y);
     }
 
@@ -176,7 +193,7 @@ export default class PhysicBox2D {
     fixDef.userData = id;
     fixDef.angle = angle;
 
-    fixDef.shape = new this.b2PolygonShape;
+    fixDef.shape = new B2PolygonShape();
     fixDef.shape.SetAsArray(polygonPoints, verticesLength);
 
     return bodyRef.CreateFixture(fixDef);
@@ -184,8 +201,8 @@ export default class PhysicBox2D {
   /**
    * Translate pixel to metter
    * @method pixelToMetter
-   * @param {number} x
-   * @return {number}
+   * @param {number} x - x
+   * @return {number} metter
    */
   pixelToMetter(x) {
     return x * this.pixelMetterFactor;
@@ -193,8 +210,8 @@ export default class PhysicBox2D {
   /**
    * Translate metter to pixel
    * @method metterToPixel
-   * @param {number} x
-   * @return {number}
+   * @param {number} x - x
+   * @return {number} pixel
    */
   metterToPixel(x) {
     return x / this.pixelMetterFactor;
@@ -202,7 +219,8 @@ export default class PhysicBox2D {
   /**
    * Add the body to physic context
    * @method addToPhysicContext
-   * @param {body} bodyRef
+   * @param {body} bodyRef - bodyRef
+   * @return {body} bodyRef
    */
   addToPhysicContext(bodyRef) {
     return this.physicContext.CreateBody(bodyRef);
@@ -210,30 +228,27 @@ export default class PhysicBox2D {
   /**
    * Delete the body to physic context
    * @method deleteToPhysicContext
-   * @param {body} bodyRef
+   * @param {body} bodyRef - bodyRef
+   * @return {void}
    */
   deleteToPhysicContext(bodyRef) {
     this.physicContext.DestroyBody(bodyRef);
   }
   /**
-   * Set position of a body, teleportation ------ A revoir
+   * Set position of a body, teleportation - Do nothing
    * @method setPosition
-   * @param {body} bodyRef
-   * @param {number} x
-   * @param {number} y
+   * @param {body} bodyRef - bodyRef
+   * @param {number} x - x
+   * @param {number} y - y
+   * @return {void}
    */
   setPosition(bodyRef, x, y) {
-    //var position = new this.b2Vec2(0.02 * x, 0.02 * y);
-    //this.removeToPhysicContext(physicObject.reference);
-
-    //this.getRectangle(physicObject.reference);
-    //physicObject.reference.SetTransform(position, 1);
   }
   /**
    * Get position of an physic object
    * @method getPosition
-   * @param {body} bodyRef
-   * @return {position} position
+   * @param {body} bodyRef - bodyRef
+   * @return {position} position - position
    */
   getPosition(bodyRef) {
     const position = bodyRef.GetPosition();
@@ -244,19 +259,19 @@ export default class PhysicBox2D {
     };
   }
   /**
-   * Set angle of a body, teleportation -------------- A revoir
+   * Set angle of a body, teleportation - Do nothing
    * @method setAngle
-   * @param {body} bodyRef
-   * @param {number} angle
+   * @param {body} bodyRef - bodyRef
+   * @param {number} angle - angle
+   * @return {void}
    */
   setAngle(bodyRef, angle) {
-    //physicObject.state.angular.pos.set(angle);
   }
   /**
    * Get angle of a body
    * @method getAngle
-   * @param {body} bodyRef
-   * @return {number}
+   * @param {body} bodyRef - bodyRef
+   * @return {number} angle - angle
    */
   getAngle(bodyRef) {
     return bodyRef.GetAngle();
@@ -267,6 +282,7 @@ export default class PhysicBox2D {
    * @param {number} framerate - Time past since the last update
    * @param {number} velocityPrecision - velocity iterations
    * @param {number} positionPrecision - position iterations
+   * @return {void}
    */
   updateEngine(framerate, velocityPrecision, positionPrecision) {
     this.physicContext.Step(
@@ -279,7 +295,8 @@ export default class PhysicBox2D {
   /**
    * Set velocity of a body
    * @method stopForces
-   * @param {body} bodyRef
+   * @param {body} bodyRef - bodyRef
+   * @return {void}
    */
   stopForces(bodyRef) {
     const velocity = bodyRef.GetLinearVelocity();
@@ -288,14 +305,14 @@ export default class PhysicBox2D {
       y: 0
     };
 
-
-    bodyRef.ApplyForce(new this.b2Vec2(force.x, force.y), bodyRef.GetWorldCenter());
+    bodyRef.ApplyForce(new B2Vec2(force.x, force.y), bodyRef.GetWorldCenter());
   }
   /**
    * Set velocity of a body
    * @method setVelocity
-   * @param {body} bodyRef
-   * @param vector
+   * @param {body} bodyRef - bodyRef
+   * @param {vector} vector - vector
+   * @return {void}
    */
   setImpulse(bodyRef, vector) {
     const velocity = bodyRef.GetLinearVelocity();
@@ -305,8 +322,9 @@ export default class PhysicBox2D {
   /**
    * Set velocity of a body
    * @method setVelocity
-   * @param {body} bodyRef
-   * @param {vector} vector
+   * @param {body} bodyRef - bodyRef
+   * @param {vector} vector - vector
+   * @return {void}
    */
   setVelocity(bodyRef, vector) {
     const force = {
@@ -314,24 +332,15 @@ export default class PhysicBox2D {
       y: this.pixelToMetter(vector.y)
     };
 
-    bodyRef.ApplyForce(new this.b2Vec2(force.x, force.y), bodyRef.GetWorldCenter());
+    bodyRef.ApplyForce(new B2Vec2(force.x, force.y), bodyRef.GetWorldCenter());
   }
   /**
    * Get velocity of a body
    * @method getVelocity
-   * @param {body} bodyRef
-   * @return vector
+   * @param {body} bodyRef - bodyRef
+   * @return {vector} vector
    */
   getVelocity(bodyRef) {
     return bodyRef.GetLinearVelocity();
-  }
-  /**
-   * Get speed of an physic object ------------- A revoir
-   * @method getSpeed
-   * @param physicObject
-   * @return speed
-   */
-  getSpeed(physicObject) {
-    return 0;
   }
 }
