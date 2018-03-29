@@ -71,6 +71,67 @@
         }
       ]
     },
+    "KeyQ" : {
+      "config":{
+        "nameAction": "Direction Ouest",
+        "player": 1
+      },
+      "down":[
+        {
+          "type" : "action",
+          "context" : "game",
+          "id" : false,
+          "method" : "entityGroupAction",
+          "argument" : {
+            "type" : "object",
+            "properties" : [
+              {
+                "name": "group",
+                "content": {
+                  "type": "resource",
+                  "context": "entityGroups",
+                  "id" : "layer1"
+                }
+              },
+              {
+                "name": "actions",
+                "content": {
+                  "type" : "simple",
+                  "argument" : [
+                    {
+                      "type" : "action",
+                      "context" : "entities",
+                      "id" : "self",
+                      "method" : "setGraphicEntity",
+                      "argument" : {
+                        "type" : "newObject",
+                        "context" : "entityProfils",
+                        "id" : "yun",
+                        "config" : [
+                          {
+                            "type" : "action",
+                            "context": "entities",
+                            "id": "self",
+                            "method": "addToScene",
+                            "argument": {
+                              "type" : "resource",
+                              "context": "scene",
+                              "id": "graphic"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "up":[
+      ]
+    },
     "KeyE" : {
       "config":{
         "nameAction": "Saut",

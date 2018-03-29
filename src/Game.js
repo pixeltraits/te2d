@@ -673,19 +673,17 @@ export default class Game {
   /**
    * Execute action on all entities of a group
    * @method entityGroupAction
-   * @param {array} group - Entities array
-   * @param {array} actions - Actions array
+   * @param {object} actionGroup - Object actionGroup
    * @return {void}
    */
-  entityGroupAction(group, actions) {
-    const groupLength = group.length;
-    const actionLength = actions.length;
+  entityGroupAction(actionGroup) {
+    const groupLength = actionGroup.group.length;
+    const actionLength = actionGroup.actions.length;
+    const cloneActions = Clone.cloneDataObject(actionGroup.actions);
 
     for (let y = 0; y < groupLength; y++) {
-      const cloneActions = Clone.cloneDataObject(actions);
-
       for (let x = 0; x < actionLength; x++) {
-        this.setAction(cloneActions[x], this.entities[group[y]], null);
+        this.setAction(cloneActions[x], actionGroup.group[y], null);
       }
     }
   }
