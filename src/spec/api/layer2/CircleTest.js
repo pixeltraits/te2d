@@ -1,3 +1,5 @@
+import Circle from '../../../api/layer2/Circle.js';
+
 describe('Circle', function () {
 
     var circle;

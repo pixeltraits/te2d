@@ -1,3 +1,5 @@
+import GeometricMath from '../../../api/layer1/GeometricMath.js';
+
 describe('GeometricMath', function () {
 
     var geometricMath;

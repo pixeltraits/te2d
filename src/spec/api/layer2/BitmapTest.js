@@ -1,3 +1,5 @@
+import Bitmap from '../../../api/layer2/Bitmap.js';
+
 describe('Bitmap', function () {
 
     var bitmap,
@@ -468,5 +470,5 @@ describe('Bitmap', function () {
           expect(reversedImage.data).toEqual(reverseImage.data);
         });
     });
-    
+
 });

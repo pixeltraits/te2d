@@ -1,3 +1,5 @@
+import Keyboard from '../../../api/layer3/Keyboard.js';
+
 describe('Keyboard', () => {
 
     let keyboard;

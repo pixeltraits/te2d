@@ -1,10 +1,8 @@
 module.exports = (config) => {
   config.set({
-    frameworks: ['jasmine'],
+    frameworks: ['mocha'],
     files: [
-      'build/te2d.js',
-      'build/Box2D.js',
-      'spec/**/*.*'
+      'src/spec/**/*.*'
     ],
     reporters: [
       'progress',
@@ -14,7 +12,7 @@ module.exports = (config) => {
     autoWatch: true,
     singleRun: true,
     plugins: [
-      'karma-jasmine',
+      'karma-mocha',
       'karma-coverage',
       'karma-chrome-launcher'
     ],

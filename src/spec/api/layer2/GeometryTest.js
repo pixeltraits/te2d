@@ -1,3 +1,5 @@
+import Geometry from '../../../api/layer2/Geometry.js';
+
 describe('Geometry', function () {
 
     var geometry;

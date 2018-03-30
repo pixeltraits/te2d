@@ -1,3 +1,5 @@
+import Text from '../../../api/layer2/Text.js';
+
 describe('Text', function () {
 
     var text;

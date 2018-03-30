@@ -1,4 +1,5 @@
 import GeometricMath from '../layer1/GeometricMath.js';
+import Logger from '../layer1/Logger.js';
 
 /**
  * Physic Entity
@@ -254,7 +255,7 @@ export default class PhysicEntity {
           size = GeometricMath.getPolygonSize(hitbox.hitbox.vertices);
           break;
         default:
-          console.log('Hitbox not defined');
+          Logger.log('Hitbox not defined');
           break;
       }
 
@@ -358,7 +359,7 @@ export default class PhysicEntity {
           maxY = this.hitboxes[0].fixture.y + this.hitboxes[0].fixture.dy;
           break;
         default:
-          console.log('Hitbox not defined');
+          Logger.log('Hitbox not defined');
           break;
       }
     }
@@ -384,7 +385,7 @@ export default class PhysicEntity {
           maxY = Math.max(maxY, this.hitboxes[x].fixture.y + this.hitboxes[x].fixture.dy);
           break;
         default:
-          console.log('Hitbox not defined');
+          Logger.log('Hitbox not defined');
           break;
       }
     }
@@ -403,7 +404,7 @@ export default class PhysicEntity {
   addFixtureToBody(collisionGeometry) {
     switch (collisionGeometry.fixture.shape) {
       default:
-        console.log('Ce type de geometry est inconnu');
+        Logger.log('Ce type de geometry est inconnu');
         break;
       case 'circle':
         this.physicInterface.getCircle(

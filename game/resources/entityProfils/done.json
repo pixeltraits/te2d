@@ -9,10 +9,42 @@
       "context" : "entities",
       "id" : "self",
       "method" : "setBitmap",
-      "argument" : {
-        "type" : "resource",
-        "context" : "animations",
-        "id" : "done"
+      "argument": {
+        "type" : "object",
+        "properties" : [
+          {
+            "name" : "animations",
+            "content" : {
+              "type" : "resource",
+              "context" : "animations",
+              "id" : "done"
+            }
+          },
+          {
+            "name" : "animationCallbacks",
+            "content" : {
+              "type" : "callbacks",
+              "methods" : [
+                [
+                  {
+                    "type" : "action",
+                    "context" : "entities",
+                    "id" : "self",
+                    "method" : "deleteToScene",
+                    "argument": false
+                  },
+                  {
+                    "type" : "action",
+                    "context" : "entities",
+                    "id" : "500b636f-8789-47d5-9fcb-ff54c823ee3c",
+                    "method" : "deleteToScene",
+                    "argument": false
+                  }
+                ]
+              ]
+            }
+          }
+        ]
       }
     }
   ]

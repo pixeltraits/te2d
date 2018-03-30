@@ -1,3 +1,5 @@
+import Scene from '../../../api/layer4/Scene.js';
+
 describe('Scene', () => {
 
     let scene;

@@ -1,3 +1,5 @@
+import Clone from '../../../api/layer1/Clone.js';
+
 describe('Clone', function () {
 
     var clone;

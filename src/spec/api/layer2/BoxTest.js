@@ -1,3 +1,5 @@
+import Box from '../../../api/layer2/Box.js';
+
 describe('Box', function () {
 
     var box;

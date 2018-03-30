@@ -254,11 +254,11 @@ export default class GraphicEntity {
    * @param {function[]} animationCallbacks - animationCallbacks
    * @return {void}
    */
-  setBitmap(animation, animationCallbacks) {
+  setBitmap(animation) {
     this.graphicObject = new Animation();
     this.animation = true;
 
-    this.graphicObject.setAnimation(animation, animationCallbacks);
+    this.graphicObject.setAnimation(animation.animations, animation.animationCallbacks);
 
     this.setSize(this.graphicObject.getSize());
   }

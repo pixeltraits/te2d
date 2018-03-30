@@ -1,3 +1,5 @@
+import Polygon from '../../../api/layer2/Polygon.js';
+
 describe('Polygon', function () {
 
     var polygon;

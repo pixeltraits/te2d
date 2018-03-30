@@ -11,9 +11,24 @@
       "id" : "self",
       "method" : "setBitmap",
       "argument" : {
-        "type" : "resource",
-        "context" : "animations",
-        "id" : "ground"
+        "type" : "object",
+        "properties" : [
+          {
+            "name" : "animations",
+            "content" : {
+              "type" : "resource",
+              "context" : "animations",
+              "id" : "ground"
+            }
+          },
+          {
+            "name" : "animationCallbacks",
+            "content" : {
+              "type" : "simple",
+              "argument" : []
+            }
+          }
+        ]
       }
     },
     {

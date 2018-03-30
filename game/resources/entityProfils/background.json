@@ -10,9 +10,24 @@
       "id" : "self",
       "method" : "setBitmap",
       "argument" : {
-        "type" : "resource",
-        "context" : "animations",
-        "id" : "starSky"
+        "type" : "object",
+        "properties" : [
+          {
+            "name" : "animations",
+            "content" : {
+              "type" : "resource",
+              "context" : "animations",
+              "id" : "starSky"
+            }
+          },
+          {
+            "name" : "animationCallbacks",
+            "content" : {
+              "type" : "simple",
+              "argument" : []
+            }
+          }
+        ]
       }
     }
   ]

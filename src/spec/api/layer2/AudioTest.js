@@ -1,3 +1,5 @@
+import Audio from '../../../api/layer2/Audio.js';
+
 describe('Audio', function () {
 
     var audio,

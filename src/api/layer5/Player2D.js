@@ -1,4 +1,5 @@
 import PhysicEntity from '../layer4/PhysicEntity.js';
+import Logger from '../layer1/Logger.js';
 
 /**
  * Player2D manager
@@ -43,7 +44,7 @@ export default class Player2D extends PhysicEntity {
         this.accLeft = -walkObject.acc;
         break;
       default:
-        console.log('Action walk not defined');
+        Logger.log('Action walk not defined');
         break;
     }
     this.maxSpeed = walkObject.speed;
@@ -63,7 +64,7 @@ export default class Player2D extends PhysicEntity {
         this.accLeft = 0;
         break;
       default:
-        console.log('Action walk not defined');
+        Logger.log('Action walk not defined');
         break;
     }
   }

@@ -1,9 +1,11 @@
-describe('Timer', function () {
+import Timer from '../../../api/layer1/Timer.js';
 
-    var timer;
+describe('Timer', () => {
+
+    let timer;
 
     beforeEach(function () {
-        var delta = 10;
+        let delta = 10;
         timer = new Timer(delta);
     });
 

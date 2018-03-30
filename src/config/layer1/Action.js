@@ -16,7 +16,7 @@ export default class Action {
    */
   constructor(resources) {
     this.resources = resources;
-    this.resources.actionSystem = this; 
+    this.resources.actionSystem = this;
   }
   /**
    * Set action
@@ -30,7 +30,7 @@ export default class Action {
     const action = Clone.cloneDataObject(actionConfiguration);
     let returnValue = null;
 
-    //try {
+    try {
       switch (action.type) {
         case 'action':
           returnValue = this.executeAction(action, self, him);
@@ -47,17 +47,20 @@ export default class Action {
         case 'newObject':
           returnValue = this.getNewObject(action, self, him);
           break;
+        case 'callbacks':
+          returnValue = this.generateCallbacks(action, self);
+          break;
         default:
           Logger.log('Unknown');
           break;
       }
-    //} catch (e) {
-    //  Logger.log(`Une action est buguée : ${e.message}`);
-    //  Logger.log(`Son context : ${action.context}`);
-    //  Logger.log(`Son objet : ${action.id}`);
-    //  Logger.log(`Sa methode : ${action.method}`);
-    //  Logger.log(`Son Argument : ${action.argument}`);
-    //}
+    } catch (e) {
+      Logger.log(`Une action est buguée : ${e.message}`);
+      Logger.log(`Son context : ${action.context}`);
+      Logger.log(`Son objet : ${action.id}`);
+      Logger.log(`Sa methode : ${action.method}`);
+      Logger.log(`Son Argument : ${action.argument}`);
+    }
 
     return returnValue;
   }
@@ -133,6 +136,31 @@ export default class Action {
 
     for (let x = 0; x < length; x++) {
       resource[actionClone.properties[x].name] = this.setAction(actionClone.properties[x].content, self, him);
+    }
+
+    return resource;
+  }
+  /**
+   * Generate Callbacks
+   * @method generateCallbacks
+   * @param {object} action - action
+   * @param {string} self - id
+   * @return {void}
+   */
+  generateCallbacks(action, self) {
+    const actionClone = action;
+    const methodsLength = actionClone.methods.length;
+    const resource = [];
+
+    for (let x = 0; x < methodsLength; x++) {
+      resource[x] = () => {
+        const actions = actionClone.methods[x];
+        const actionsLength = actions.length;
+
+        for (let y = 0; y < actionsLength; y++) {
+          this.setAction(actions[y], self, null);
+        }
+      };
     }
 
     return resource;

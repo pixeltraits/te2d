@@ -1,3 +1,5 @@
+import Logger from '../../api/layer1/Logger.js';
+
 /**
  * LoadUtils
  * @class LoadUtils
@@ -39,7 +41,7 @@ export default class LoadUtils {
         allContentLoad([]);
       }
     } catch (e) {
-      console.log(e.message);
+      Logger.log(e.message);
     }
   }
   /**
@@ -65,8 +67,8 @@ export default class LoadUtils {
       };
       xhr.send();
     } catch (e) {
-      console.log('An ajax request(Audio) have an error : ', e.message);
-      console.log('Request parameters : ', ajaxRequest);
+      Logger.log('An ajax request(Audio) have an error : ', e.message);
+      Logger.log('Request parameters : ', ajaxRequest);
     }
   }
   /**
@@ -85,8 +87,8 @@ export default class LoadUtils {
       bitmap.src = requestUrl;
       bitmap.onload = requestOnload(bitmap, requestRef);
     } catch (e) {
-      console.log('An ajax request(Bitmap) have an error : ', e.message);
-      console.log('Request parameters : ', ajaxRequest);
+      Logger.log('An ajax request(Bitmap) have an error : ', e.message);
+      Logger.log('Request parameters : ', ajaxRequest);
     }
   }
   /**
@@ -115,8 +117,8 @@ export default class LoadUtils {
       xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
       xhr.send(requestData);
     } catch (e) {
-      console.log('An ajax request have an error : ', e.message);
-      console.log('Request parameters : ', ajaxRequest);
+      Logger.log('An ajax request have an error : ', e.message);
+      Logger.log('Request parameters : ', ajaxRequest);
     }
   }
 }

@@ -1,3 +1,5 @@
+import Logger from '../layer1/Logger.js';
+
 /**
  * Manage keyboard event
  * @class Keyboard
@@ -39,7 +41,7 @@ export default class Keyboard {
         this.blur();
         break;
       default:
-        console.log(`This event don't exist`);
+        Logger.log(`This event don't exist`);
         break;
     }
   }
