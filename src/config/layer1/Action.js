@@ -16,6 +16,7 @@ export default class Action {
    */
   constructor(resources) {
     this.resources = resources;
+    this.resources.actionSystem = this; 
   }
   /**
    * Set action
@@ -29,7 +30,7 @@ export default class Action {
     const action = Clone.cloneDataObject(actionConfiguration);
     let returnValue = null;
 
-    try {
+    //try {
       switch (action.type) {
         case 'action':
           returnValue = this.executeAction(action, self, him);
@@ -50,13 +51,13 @@ export default class Action {
           Logger.log('Unknown');
           break;
       }
-    } catch (e) {
-      Logger.log(`Une action est buguée : ${e.message}`);
-      Logger.log(`Son context : ${action.context}`);
-      Logger.log(`Son objet : ${action.id}`);
-      Logger.log(`Sa methode : ${action.method}`);
-      Logger.log(`Son Argument : ${action.argument}`);
-    }
+    //} catch (e) {
+    //  Logger.log(`Une action est buguée : ${e.message}`);
+    //  Logger.log(`Son context : ${action.context}`);
+    //  Logger.log(`Son objet : ${action.id}`);
+    //  Logger.log(`Sa methode : ${action.method}`);
+    //  Logger.log(`Son Argument : ${action.argument}`);
+    //}
 
     return returnValue;
   }

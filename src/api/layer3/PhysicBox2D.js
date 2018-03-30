@@ -32,7 +32,7 @@ export default class PhysicBox2D extends PhysicInterface {
     super(collisionStart, collisionEnd, gravity, pixelFactor);
 
     // Correctif de box2D
-    B2Body.prototype.SetTransform = (xf, angle) => {
+    B2Body.prototype.SetTransform = function(xf, angle) {
       this.SetPositionAndAngle(
         {
           x: xf.x,
@@ -68,12 +68,11 @@ export default class PhysicBox2D extends PhysicInterface {
    */
   getBody(id, x, y, angle, mass, angularConstraint, angularInertia, dynamic) {
     const bodyDef = new B2BodyDef();
-    const b2Body = new B2Body();
 
     if (!dynamic) {
-      bodyDef.type = b2Body.b2_staticBody;
+      bodyDef.type = B2Body.b2_staticBody;
     } else {
-      bodyDef.type = b2Body.b2_dynamicBody;
+      bodyDef.type = B2Body.b2_dynamicBody;
     }
 
     bodyDef.position.x = this.pixelToMetter(x);

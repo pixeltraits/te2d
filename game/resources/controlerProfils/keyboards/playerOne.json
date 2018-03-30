@@ -71,7 +71,7 @@
         }
       ]
     },
-    "KeyQ" : {
+    "KeyY" : {
       "config":{
         "nameAction": "Direction Ouest",
         "player": 1
@@ -79,7 +79,7 @@
       "down":[
         {
           "type" : "action",
-          "context" : "game",
+          "context" : "actionSystem",
           "id" : false,
           "method" : "entityGroupAction",
           "argument" : {

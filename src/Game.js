@@ -51,6 +51,7 @@ export default class Game {
       textProfils: [],
       physicProfils: [],
       physicInterface: {},
+      actionSystem: {},
       game: this
     };
 
