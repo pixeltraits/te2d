@@ -282,7 +282,7 @@ export default class GraphicEntity {
    * @return {void}
    */
   setGeometry(geometry) {
-    switch (geometry.shape) {
+    switch (geometry.type) {
       default:
         Logger.log('This geometry does not exist.');
         break;

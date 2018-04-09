@@ -1,8 +1,10 @@
 {
-  "name": "groundPhysic",
-  "type": "PhysicEntity",
-  "dynamic": false,
-  "angle": 0,
+  "name": "playerYunPhysic",
+  "type": "Player2D",
+  "inertie": 0,
+  "angularConstraint": true,
+  "mass": 0,
+  "dynamic": true,
   "config": [
     {
       "type": "action",
@@ -26,10 +28,10 @@
           {
             "name" : "hitbox",
             "content" : {
-              "type": "simple",
+              "type" : "simple",
               "argument" : {
                 "id" : "1",
-                "name" : "hitboxGround",
+                "name" : "hitboxPlayer",
                 "sensor" : false,
                 "restitution" : 0,
                 "friction" : 0,
@@ -37,12 +39,12 @@
                 "angle": 0,
                 "type" : "box",
                 "color" : "blue",
-                "borderColor" : "green",
+                "borderColor" : "red",
                 "borderSize" : 2,
                 "x" : 0,
                 "y" : 0,
-                "dx" : 507,
-                "dy" : 27
+                "dx" : 15,
+                "dy" : 50
               }
             }
           },
@@ -52,10 +54,10 @@
               "type" : "newObject",
               "context" : false,
               "argument" : {
-                "name": "hitboxGround",
-                "type": "GraphicEntity",
-                "dz": 0,
-                "z": 4
+                "name" : "hitboxPlayer",
+                "type" : "GraphicEntity",
+                "dz" : 0,
+                "z" : 5
               }
             }
           }
@@ -70,7 +72,7 @@
       "argument" : {
         "type" : "newObject",
         "context" : "entityProfils",
-        "id" : "ground",
+        "id" : "yun",
         "config" : [
           {
             "type" : "action",
@@ -84,20 +86,6 @@
             }
           }
         ]
-      }
-    },
-    {
-      "type": "action",
-      "context": "entities",
-      "id": "self",
-      "method": "setDelta",
-      "argument": {
-        "type": "simple",
-        "argument" : {
-          "x" : 0,
-          "y" : 0,
-          "angle" : 0
-        }
       }
     },
     {

@@ -1,5 +1,6 @@
 import Logger from '../../api/layer1/Logger.js';
 import Clone from '../../api/layer1/Clone.js';
+import Ia from '../../api/layer3/Ia.js';
 import IdGenerator from '../../api/layer1/IdGenerator.js';
 import EntitiesFactory from './EntitiesFactory.js';
 
@@ -254,6 +255,24 @@ export default class Action {
         properties: objectConf,
         id: objectId
       }
+    );
+
+    return objectId;
+  }
+  /**
+   * Generate an Ia
+   * @method createSceneObject
+   * @param {object} configuration - object conf
+   * @param {string} id - id
+   * @return {string} objectId
+   */
+  createIaObject(configuration, id) {
+    const objectId = id !== 'auto' ? id : IdGenerator.generate();
+    const objectConf = Clone.cloneDataObject(configuration);
+
+    this.resources.ias[objectId] = new Ia(
+      objectId,
+      objectConf
     );
 
     return objectId;

@@ -35,6 +35,7 @@ export default class Game {
       bitmaps: [],
       audios: [],
       audioContext: new window.AudioContext(),
+      ias: [],
       entities: [],
       entityGroups: {},
       texts: [],
@@ -46,6 +47,7 @@ export default class Game {
       animations: [],
       audioProfils: [],
       entityProfils: [],
+      iaProfils: [],
       keyboardProfils: [],
       mouseProfiles: [],
       textProfils: [],
@@ -118,6 +120,7 @@ export default class Game {
     LoadUtils.jsonLoader({
       url: `${this.configUrl}/levels/${name}.json`,
       onLoad: (levelConfig, reference) => {
+        this.levelConfig = levelConfig;
         this.level = levelConfig.levelInfo;
         this.resources.entityGroups = levelConfig.entityGroups;
         this.startProperties = {
@@ -282,18 +285,43 @@ export default class Game {
               );
             }
 
-            this.loader.addPourcentLoaded(10);
+            this.loader.addPourcentLoaded(8);
           },
           (entityProfil) => {
             this.loader.upTextInfo(`La configuration de l'objet ${entityProfil.name} a été chargé.`);
           }
         );
 
+        // Load ias
+        LoadUtils.loadContent(
+          `${this.configUrl}resources/iaProfils/`,
+          levelConfig.iaProfils,
+          {
+            type: 'jsonLoader',
+            context: null
+          },
+          (iaProfils) => {
+            this.resources.iaProfils = iaProfils;
+            // Generation des objets
+            const length = this.levelConfig.ias.length;
+            for (let x = 0; x < length; x++) {
+              this.actionSystem.createIaObject(
+                this.resources.iaProfils[this.levelConfig.ias[x].objectConf],
+                this.levelConfig.ias[x].id
+              );
+            }
+
+            this.loader.addPourcentLoaded(2);
+          },
+          (iaProfil) => {
+            this.loader.upTextInfo(`La configuration de l'objet ${iaProfil.name} a été chargé.`);
+          }
+        );
+
         // Load Command systeme
         if (navigator.userAgent.match(/(android|iphone|blackberry|symbian|symbianos|symbos|netfront|model-orange|javaplatform|iemobile|windows phone|samsung|htc|opera mobile|opera mobi|opera mini|presto|huawei|blazer|bolt|doris|fennec|gobrowser|iris|maemo browser|mib|cldc|minimo|semc-browser|skyfire|teashark|teleca|uzard|uzardweb|meego|nokia|bb10|playbook)/gi)) {
-          Logger.log(`mode tactil`);
+          Logger.log('mode tactil');
         } else {
-          // Mouse -- 1.0
           // Keyboard
           LoadUtils.loadContent(
             `${this.configUrl}resources/controlerProfils/keyboards/`,
@@ -420,6 +448,11 @@ export default class Game {
       // Call of entities graphic system
       for (let x = 0; x < length; x++) {
         this.resources.entities[inPhysic[x]].updatePhysicPosition();
+      }
+      length = this.levelConfig.ias.length;
+      // Call of entities graphic system
+      for (let x = 0; x < length; x++) {
+        this.resources.ias[this.levelConfig.ias[x].id].updateStatus();
       }
 
       this.resources.physicInterface.updateEngine(framerate, 6, 2);

@@ -47,7 +47,7 @@ export default class PhysicEntity {
       x: 0,
       y: 0
     };
-    this.angleConstraint = properties.angleConstraint !== undefined ? properties.angleConstraint : false;
+    this.angularConstraint = properties.angularConstraint !== undefined ? properties.angularConstraint : false;
     this.angularInertia = properties.rotateInertia !== undefined ? properties.rotateInertia : 1;
     this.mass = properties.mass !== undefined ? properties.mass : 1;
     this.dynamic = properties.dynamic !== undefined ? properties.dynamic : false;
@@ -73,7 +73,7 @@ export default class PhysicEntity {
     this.graphicEntity = graphicEntity;
   }
   /**
-   * Set physic interface reference @Refactor
+   * Set physic interface reference
    * @method setPhysicInterface
    * @param {physicInterface} physicInterface - Reference of the physic interface
    * @return {void}
@@ -255,6 +255,7 @@ export default class PhysicEntity {
           size = GeometricMath.getPolygonSize(hitbox.hitbox.vertices);
           break;
         default:
+          Logger.log(hitbox.hitbox);
           Logger.log('Hitbox not defined');
           break;
       }
@@ -339,7 +340,7 @@ export default class PhysicEntity {
     let maxY = 0;
 
     if (length > 0) {
-      switch (this.hitboxes[0].fixture.shape) {
+      switch (this.hitboxes[0].fixture.type) {
         case 'circle':
           minX = this.hitboxes[0].fixture.x;
           maxX = this.hitboxes[0].fixture.x - this.hitboxes[0].fixture.radius;
@@ -365,7 +366,7 @@ export default class PhysicEntity {
     }
 
     for (let x = 0; x < length; x++) {
-      switch (this.hitboxes[x].fixture.shape) {
+      switch (this.hitboxes[x].fixture.type) {
         case 'circle':
           minX = Math.min(minX, this.hitboxes[x].fixture.x - this.hitboxes[x].fixture.radius);
           maxX = Math.max(maxX, this.hitboxes[x].fixture.x + this.hitboxes[x].fixture.radius);
@@ -402,7 +403,7 @@ export default class PhysicEntity {
    * @return {void}
    */
   addFixtureToBody(collisionGeometry) {
-    switch (collisionGeometry.fixture.shape) {
+    switch (collisionGeometry.fixture.type) {
       default:
         Logger.log('Ce type de geometry est inconnu');
         break;

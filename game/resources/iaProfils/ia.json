@@ -1,0 +1,24 @@
+{
+  "name": "ia",
+  "speedReflection": 20,
+  "perimeter": {
+    "x": null,
+    "y": null,
+    "dx": 100,
+    "dy": 100
+  },
+  "omniscient": true,
+  "config": [
+    {
+      "type": "action",
+      "context": "ias",
+      "id": "self",
+      "method": "setPhysicInterface",
+      "argument": {
+        "type": "resource",
+        "context": "physicInterface",
+        "id" : false
+      }
+    }
+  ]
+}

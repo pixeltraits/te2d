@@ -15,6 +15,12 @@
     "pixelFactor": 0.05,
     "cameraId": "6de04c99-d92b-419f-ac4d-5552581554ab"
   },
+  "iaProfils": [
+    {
+      "name" : "ia",
+      "content" : "ia.json"
+    }
+  ],
   "physicProfils": [
     {
       "name" : "physicProfils",
@@ -121,8 +127,18 @@
       "content" : "playerPhysic.json"
     },
     {
+      "name" : "playerYunPhysic",
+      "content" : "playerYunPhysic.json"
+    },
+    {
       "name" : "camera",
       "content" : "camera.json"
+    }
+  ],
+  "ias": [
+    {
+      "id" : "6de04c99-d92b-419f-ac4d-5552581554df",
+      "objectConf" : "ia"
     }
   ],
   "entities":[
@@ -161,6 +177,10 @@
     {
       "id" : "50ib636f-8779-27d1-9fcb-ff98c8553dec",
       "objectConf" : "playerPhysic"
+    },
+    {
+      "id" : "50ib636f-8779-27d1-9fcb-ff98c8553dxw",
+      "objectConf" : "playerYunPhysic"
     }
   ],
   "texts":[
@@ -343,6 +363,30 @@
     {
       "type" : "action",
       "context": "entities",
+      "id": "50ib636f-8779-27d1-9fcb-ff98c8553dxw",
+      "method": "setPosition",
+      "argument": {
+        "type": "simple",
+        "argument" : {
+          "x" : 200,
+          "y" : 120
+        }
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "50ib636f-8779-27d1-9fcb-ff98c8553dxw",
+      "method": "addToPhysicContext",
+      "argument": {
+        "type" : "resource",
+        "context": "scene",
+        "id": "physic"
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
       "id": "50ib636f-8779-47d5-9fcb-ff98c8583dec",
       "method": "setPosition",
       "argument": {
@@ -386,6 +430,17 @@
         "type" : "resource",
         "context": "scene",
         "id": "graphic"
+      }
+    },
+    {
+      "type" : "action",
+      "context": "ias",
+      "id": "6de04c99-d92b-419f-ac4d-5552581554df",
+      "method": "setPhysicEntity",
+      "argument": {
+        "type" : "resource",
+        "context": "entities",
+        "id": "50ib636f-8779-27d1-9fcb-ff98c8553dxw"
       }
     }
   ]
