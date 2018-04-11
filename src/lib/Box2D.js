@@ -1,4 +1,4 @@
-import { Box2D } from './box2d.js';
+import { Box2D } from './box2dBase.js';
 
 const B2Vec2 = Box2D.Common.Math.b2Vec2;
 const B2BodyDef = Box2D.Dynamics.b2BodyDef;

@@ -43,15 +43,58 @@ export default class PhysicBox2D extends PhysicInterface {
     };
 
     // Physic context configuration
-    const listener = new B2ContactListener();
-    listener.BeginContact = collisionStart;
     this.pixelMetterFactor = pixelFactor;
+    this.collisionCallbacks = [];
 
     this.physicContext = new B2World(
       new B2Vec2(gravity.x, gravity.y),
       true
     );
+
+    const listener = new B2ContactListener();
+    listener.BeginContact = collisionStart;
     this.physicContext.SetContactListener(listener);
+  }
+  /**
+   * Add Collision Listener
+   * @method addCollisionListener
+   * @param {string} id - Entity id
+   * @param {function} callback - callback
+   * @param {string} type - type
+   * @return {void}
+   */
+  addCollisionListener(id, callback, type) {
+    const callbackProperties = {
+      id: id,
+      callback: callback,
+      type: type
+    };
+
+    this.collisionCallbacks.push(callbackProperties);
+
+    this.updateCollisionListener();
+  }
+  /**
+   * Update Collision Listener
+   * @method updateCollisionListener
+   * @return {void}
+   */
+  updateCollisionListener() {
+    let collisionStartListener;
+    let collisionEndListener;
+
+
+      const listener = new B2ContactListener();
+      listener.BeginContact = (contacts) => {
+        this.collisionCallbacks.every((callbackProperties) => {
+        });
+      };
+      listener.EndContact = (contacts) => {
+        this.collisionCallbacks.every((callbackProperties) => {
+        });
+      };
+
+      this.physicContext.SetContactListener(listener);
   }
   /**
    * Get a body
