@@ -95,27 +95,24 @@ export default class LoadUtils {
    * Create xhr object and load json ressource with ajax.
    * @method jsonLoader
    * @param {ajaxRequest} ajaxRequest - ajaxrequest
-   * @return {void}
+   * @return {jsonObject} - Json object
    */
-  static jsonLoader(ajaxRequest) {
-    const requestType = typeof ajaxRequest.type !== 'undefined' ? ajaxRequest.type : 'GET';
-    const requestData = typeof ajaxRequest.data !== 'undefined' ? ajaxRequest.data : null;
-    const requestRef = typeof ajaxRequest.ref !== 'undefined' ? ajaxRequest.ref : '';
-    const requestOnload = ajaxRequest.onLoad;
-    const requestUrl = ajaxRequest.url;
-    const xhr = new XMLHttpRequest();
-
+  static async jsonLoader(ajaxRequest) {
     try {
-      xhr.onreadystatechange = () => {
-        if (xhr.readyState === 4 && (xhr.status === 200 || xhr.status === 0)) {
-          const content = JSON.parse(xhr.responseText);
-          requestOnload(content, requestRef);
-        }
+      const requestUrl = ajaxRequest.url;
+      const headers = new Headers({
+        'Content-type': 'application/json'
+      });
+      const requestProperties = {
+        method: typeof ajaxRequest.type !== 'undefined' ? ajaxRequest.type : 'GET',
+        headers: headers,
+        mode: 'cors',
+        body: typeof ajaxRequest.data !== 'undefined' ? ajaxRequest.data : null,
+        cache: 'default'
       };
 
-      xhr.open(requestType, requestUrl, true);
-      xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-      xhr.send(requestData);
+      let jsonData = await fetch(requestUrl, requestProperties);
+      return JSON.parse(jsonData);
     } catch (e) {
       Logger.log('An ajax request have an error : ', e.message);
       Logger.log('Request parameters : ', ajaxRequest);
