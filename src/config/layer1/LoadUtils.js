@@ -6,40 +6,28 @@ import Logger from '../../api/layer1/Logger.js';
  */
 export default class LoadUtils {
   /**
-   * Load contents configuration
-   * @method loadContent
+   * Make promise array
+   * @method getPromiseArray
    * @param {string} url - url
    * @param {array} list - list
-   * @param {contentLoader} contentLoader - content loader
-   * @param {function} allContentLoad - all content load
-   * @param {function} oneContentLoad - one content load
-   * @return {void}
+   * @return {promise[]} - promiseArray
    */
-  static loadContent(url, list, contentLoader, allContentLoad, oneContentLoad) {
+  static getPromiseArray(url, list) {
     try {
-      const contents = [];
-      const length = list.length;
-      let y = 0;
+      const promiseArray = [];
+      const lengthList = list.length;
 
-      if (length > 0) {
-        for (let x = 0; x < length; x++) {
-          this[contentLoader.type]({
+      for (let x = 0; x < lengthList; x++) {
+        promiseArray.push(new Promise(() => {
+          const content = await LoadUtils.jsonLoader(url + list[x].content);
+          return {
             ref: list[x].name,
-            url: url + list[x].content,
-            onLoad: (content, reference) => {
-              contents[reference] = content;
-              oneContentLoad(contents[reference]);
-              y++;
-              if (y >= length) {
-                allContentLoad(contents);
-              }
-            },
-            context: contentLoader.context
-          });
-        }
-      } else {
-        allContentLoad([]);
+            content: content
+          };
+        }));
       }
+
+      return promiseArray;
     } catch (e) {
       Logger.log(e.message);
     }

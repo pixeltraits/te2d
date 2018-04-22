@@ -21,7 +21,7 @@ export default class Game {
    * @param {function} onLoad - Function callback onload
    * @return {void}
    */
-  constructor(configUrl, gameConfigUrl, onLoad) {
+  async constructor(configUrl, gameConfigUrl, onLoad) {
     this.configUrl = configUrl;
     this.lang = 'fr';
     this.widthGame = 800;
@@ -61,51 +61,47 @@ export default class Game {
     this.collisionSystem = new Collision(this.resources.entities, this.resources.physicProfils, this.actionSystem);
 
     // Load game config file
-    LoadUtils.jsonLoader({
-      url: this.configUrl + gameConfigUrl,
-      onLoad: (gameConfig, reference) => {
-        this.lang = gameConfig.lang !== 'undefined' ? gameConfig.lang : this.lang;
-        this.widthGame = gameConfig.widthGame !== 'undefined' ? gameConfig.widthGame : this.widthGame;
-        this.heightGame = gameConfig.heightGame !== 'undefined' ? gameConfig.heightGame : this.heightGame;
-        this.displayMode = gameConfig.displayMode !== 'undefined' ? gameConfig.displayMode : this.displayMode;
-        this.canvasId = gameConfig.canvasId;
-
-        this.camera = new Camera(
-          {
-            name: gameConfig.cameraName,
-            scale: 1,
-            canvasId: this.canvasId,
-            displayMode: this.displayMode,
-            dx: this.widthGame,
-            dy: this.heightGame
-          },
-          'default'
-        );
-
-        LoadUtils.jsonLoader({
-          url: this.configUrl + gameConfig.loaderConfig,
-          onLoad: (bitmapConfig, reference) => {
-            LoadUtils.bitmapLoader({
-              url: this.configUrl + bitmapConfig.bitmapUrl,
-              onLoad: (bitmap, reference) => {
-                const cameraSize = this.camera.getSize();
-                this.loader = new Loader(
-                  bitmap,
-                  bitmapConfig,
-                  {
-                    dx: cameraSize.dx,
-                    dy: cameraSize.dy,
-                    context: this.camera.ctx
-                  },
-                  () => {}
-                );
-                onLoad();
-              }
-            });
-          }
-        });
-      }
+    const gameConfig = await LoadUtils.jsonLoader({
+      url: this.configUrl + gameConfigUrl
     });
+
+    this.lang = gameConfig.lang !== 'undefined' ? gameConfig.lang : this.lang;
+    this.widthGame = gameConfig.widthGame !== 'undefined' ? gameConfig.widthGame : this.widthGame;
+    this.heightGame = gameConfig.heightGame !== 'undefined' ? gameConfig.heightGame : this.heightGame;
+    this.displayMode = gameConfig.displayMode !== 'undefined' ? gameConfig.displayMode : this.displayMode;
+    this.canvasId = gameConfig.canvasId;
+
+    this.camera = new Camera(
+      {
+        name: gameConfig.cameraName,
+        scale: 1,
+        canvasId: this.canvasId,
+        displayMode: this.displayMode,
+        dx: this.widthGame,
+        dy: this.heightGame
+      },
+      'default'
+    );
+
+    const bitmapConfig = await LoadUtils.jsonLoader({
+      url: this.configUrl + gameConfig.loaderConfig
+    });
+
+    const bitmap = await LoadUtils.bitmapLoader({
+      url: this.configUrl + bitmapConfig.bitmapUrl
+    });
+
+    const cameraSize = this.camera.getSize();
+    this.loader = new Loader(
+      bitmap,
+      bitmapConfig,
+      {
+        dx: cameraSize.dx,
+        dy: cameraSize.dy,
+        context: this.camera.ctx
+      },
+      () => {}
+    );
   }
   /**
    * Load contents configuration
@@ -114,270 +110,270 @@ export default class Game {
    * @param {function} onLoad - onLoad
    * @return {void}
    */
-  loadLevel(name, onLoad) {
+  async loadLevel(name, onLoad) {
     this.loader.setOnCompleteMethod(onLoad);
 
-    LoadUtils.jsonLoader({
-      url: `${this.configUrl}/levels/${name}.json`,
-      onLoad: (levelConfig, reference) => {
-        this.levelConfig = levelConfig;
-        this.level = levelConfig.levelInfo;
-        this.resources.entityGroups = levelConfig.entityGroups;
-        this.startProperties = {
-          startActions: levelConfig.startActions,
-          startObjects: levelConfig.entities
-        };
+    const levelConfig = await LoadUtils.jsonLoader({
+      url: `${this.configUrl}/levels/${name}.json`
+    });
 
-        // Load Texts
+    this.levelConfig = levelConfig;
+    this.level = levelConfig.levelInfo;
+    this.resources.entityGroups = levelConfig.entityGroups;
+    this.startProperties = {
+      startActions: levelConfig.startActions,
+      startObjects: levelConfig.entities
+    };
+
+    // Load Texts
+    LoadUtils.loadContent(
+      (texts) => {
+        this.resources.texts = texts;
+        this.loader.addPourcentLoaded(10);
+      },
+      (text) => {
+        this.loader.upTextInfo(`Le text ${text.name} a été chargé.`);
+      }
+    );
+
+    const textPromiseArray = LoadUtils.getPromiseArray(`${this.configUrl}resources/texts/${this.lang}/`, levelConfig.texts);
+
+    .then(() => {
+
+    });
+
+    // Load Collisions
+    LoadUtils.loadContent(
+      `${this.configUrl}resources/physicProfils/`,
+      levelConfig.physicProfils,
+      {
+        type: 'jsonLoader',
+        context: null
+      },
+      (physicProfils) => {
+        this.resources.physicProfils = physicProfils;
+        this.loader.addPourcentLoaded(10);
+      },
+      (physicProfil) => {
+        this.loader.upTextInfo(`Les collisions ${physicProfil.name} ont été chargées.`);
+      }
+    );
+    // Load textProfils
+    LoadUtils.loadContent(
+      `${this.configUrl}resources/textProfils/`,
+      levelConfig.textProfils,
+      {
+        type: 'jsonLoader',
+        context: null
+      },
+      (textProfils) => {
+        this.resources.textProfils = textProfils;
+        this.loader.addPourcentLoaded(10);
+      },
+      (textProfil) => {
+        this.loader.upTextInfo(`Le design de text ${textProfil.name} a été chargé.`);
+      }
+    );
+    // Load bitmaps and theirs configurations
+    LoadUtils.loadContent(
+      `${this.configUrl}resources/bitmaps/`,
+      levelConfig.bitmaps,
+      {
+        type: 'bitmapLoader',
+        context: null
+      },
+      (bitmaps) => {
+        this.resources.bitmaps = bitmaps;
+        // load Configurations
         LoadUtils.loadContent(
-          `${this.configUrl}resources/texts/${this.lang}/`,
-          levelConfig.texts,
+          `${this.configUrl}resources/animations/`,
+          levelConfig.animations,
           {
             type: 'jsonLoader',
             context: null
           },
-          (texts) => {
-            this.resources.texts = texts;
-            this.loader.addPourcentLoaded(10);
-          },
-          (text) => {
-            this.loader.upTextInfo(`Le text ${text.name} a été chargé.`);
-          }
-        );
-        // Load Collisions
-        LoadUtils.loadContent(
-          `${this.configUrl}resources/physicProfils/`,
-          levelConfig.physicProfils,
-          {
-            type: 'jsonLoader',
-            context: null
-          },
-          (physicProfils) => {
-            this.resources.physicProfils = physicProfils;
-            this.loader.addPourcentLoaded(10);
-          },
-          (physicProfil) => {
-            this.loader.upTextInfo(`Les collisions ${physicProfil.name} ont été chargées.`);
-          }
-        );
-        // Load textProfils
-        LoadUtils.loadContent(
-          `${this.configUrl}resources/textProfils/`,
-          levelConfig.textProfils,
-          {
-            type: 'jsonLoader',
-            context: null
-          },
-          (textProfils) => {
-            this.resources.textProfils = textProfils;
-            this.loader.addPourcentLoaded(10);
-          },
-          (textProfil) => {
-            this.loader.upTextInfo(`Le design de text ${textProfil.name} a été chargé.`);
-          }
-        );
-        // Load bitmaps and theirs configurations
-        LoadUtils.loadContent(
-          `${this.configUrl}resources/bitmaps/`,
-          levelConfig.bitmaps,
-          {
-            type: 'bitmapLoader',
-            context: null
-          },
-          (bitmaps) => {
-            this.resources.bitmaps = bitmaps;
-            // load Configurations
+          (animations) => {
+            // Load animations group
             LoadUtils.loadContent(
               `${this.configUrl}resources/animations/`,
-              levelConfig.animations,
+              levelConfig.animationsGroups,
               {
                 type: 'jsonLoader',
                 context: null
               },
-              (animations) => {
-                // Load animations group
-                LoadUtils.loadContent(
-                  `${this.configUrl}resources/animations/`,
-                  levelConfig.animationsGroups,
-                  {
-                    type: 'jsonLoader',
-                    context: null
-                  },
-                  (animationsGroups) => {
-                    this.loader.addPourcentLoaded(10);
-                  },
-                  (animationsGroup) => {
-                    const tab = [];
-                    const length = animationsGroup.length;
-
-                    for (let x = 0; x < length; x++) {
-                      tab[x] = this.resources.animations[animationsGroup[x]][0];
-                    }
-                    this.resources.animations[animationsGroup.name] = tab;
-                    this.loader.upTextInfo(`Le groupe d'animation ${animationsGroup.name} a été chargé.`);
-                  }
-                );
+              (animationsGroups) => {
                 this.loader.addPourcentLoaded(10);
               },
-              (animation) => {
-                animation.bitmap = this.resources.bitmaps[animation.bitmap];
-                this.resources.animations[animation.name] = [animation];
-                this.loader.upTextInfo(`L'animation ${animation.name} a bien été chargé.`);
-              }
-            );
-            this.loader.addPourcentLoaded(10);
-          },
-          (bitmap) => {
-            this.loader.upTextInfo(`L'image ${bitmap.name} a été chargé.`);
-          }
-        );
+              (animationsGroup) => {
+                const tab = [];
+                const length = animationsGroup.length;
 
-        // Load audio files and theirs configurations
-        LoadUtils.loadContent(
-          `${this.configUrl}resources/audios/`,
-          levelConfig.audios,
-          {
-            type: 'audioLoader',
-            context: this.resources.audioContext
-          },
-          (audios) => {
-            this.resources.audios = audios;
-            // load profils
-            LoadUtils.loadContent(
-              `${this.configUrl}resources/audioProfils/`,
-              levelConfig.audioProfils,
-              {
-                type: 'jsonLoader',
-                context: null
-              },
-              (audioProfils) => {
-                this.resources.audioProfils = audioProfils;
-                this.loader.addPourcentLoaded(10);
-              },
-              (audioProfil) => {
-                audioProfil.audio = this.resources.audios[audioProfil.audio];
-                this.loader.upTextInfo(`La configuration du fichier audio ${audioProfil.name} a été chargé.`);
-              }
-            );
-            this.loader.addPourcentLoaded(10);
-          },
-          (audio) => {
-            this.loader.upTextInfo(`Le fichier audio ${audio.name} a été chargé.`);
-          }
-        );
-
-        // Load objects of scene
-        LoadUtils.loadContent(
-          `${this.configUrl}resources/entityProfils/`,
-          levelConfig.entityProfils,
-          {
-            type: 'jsonLoader',
-            context: null
-          },
-          (entityProfils) => {
-            this.resources.entityProfils = entityProfils;
-            // Generation des objets
-            const length = levelConfig.entities.length;
-            for (let x = 0; x < length; x++) {
-              this.actionSystem.createSceneObject(
-                this.resources.entityProfils[levelConfig.entities[x].objectConf],
-                levelConfig.entities[x].id
-              );
-            }
-
-            this.loader.addPourcentLoaded(8);
-          },
-          (entityProfil) => {
-            this.loader.upTextInfo(`La configuration de l'objet ${entityProfil.name} a été chargé.`);
-          }
-        );
-
-        // Load ias
-        LoadUtils.loadContent(
-          `${this.configUrl}resources/iaProfils/`,
-          levelConfig.iaProfils,
-          {
-            type: 'jsonLoader',
-            context: null
-          },
-          (iaProfils) => {
-            this.resources.iaProfils = iaProfils;
-            // Generation des objets
-            const length = this.levelConfig.ias.length;
-            for (let x = 0; x < length; x++) {
-              this.actionSystem.createIaObject(
-                this.resources.iaProfils[this.levelConfig.ias[x].objectConf],
-                this.levelConfig.ias[x].id
-              );
-            }
-
-            this.loader.addPourcentLoaded(2);
-          },
-          (iaProfil) => {
-            this.loader.upTextInfo(`La configuration de l'objet ${iaProfil.name} a été chargé.`);
-          }
-        );
-
-        // Load Command systeme
-        if (navigator.userAgent.match(/(android|iphone|blackberry|symbian|symbianos|symbos|netfront|model-orange|javaplatform|iemobile|windows phone|samsung|htc|opera mobile|opera mobi|opera mini|presto|huawei|blazer|bolt|doris|fennec|gobrowser|iris|maemo browser|mib|cldc|minimo|semc-browser|skyfire|teashark|teleca|uzard|uzardweb|meego|nokia|bb10|playbook)/gi)) {
-          Logger.log('mode tactil');
-        } else {
-          // Keyboard
-          LoadUtils.loadContent(
-            `${this.configUrl}resources/controlerProfils/keyboards/`,
-            levelConfig.keyboard,
-            {
-              type: 'jsonLoader',
-              context: null
-            },
-            (players) => {
-              this.loader.addPourcentLoaded(10);
-            },
-            (player) => {
-              this.resources.controlers.keyboard[player.config.player] = new Keyboard(
-                window,
-                (keyInfo) => {
-                  if (typeof player.keys[keyInfo.code] !== 'undefined') {
-                    const length = player.keys[keyInfo.code].down.length;
-
-                    for (let x = 0; x < length; x++) {
-                      this.actionSystem.setAction(player.keys[keyInfo.code].down[x], '', '');
-                    }
-                  }
-                },
-                (keyInfo) => {
-                  if (typeof player.keys[keyInfo.code] !== 'undefined') {
-                    const length = player.keys[keyInfo.code].up.length;
-
-                    for (let x = 0; x < length; x++) {
-                      this.actionSystem.setAction(player.keys[keyInfo.code].up[x], '', '');
-                    }
-                  }
+                for (let x = 0; x < length; x++) {
+                  tab[x] = this.resources.animations[animationsGroup[x]][0];
                 }
-              );
-              this.loader.upTextInfo(`Les commandes de ${player.name} a été chargé.`);
-            }
+                this.resources.animations[animationsGroup.name] = tab;
+                this.loader.upTextInfo(`Le groupe d'animation ${animationsGroup.name} a été chargé.`);
+              }
+            );
+            this.loader.addPourcentLoaded(10);
+          },
+          (animation) => {
+            animation.bitmap = this.resources.bitmaps[animation.bitmap];
+            this.resources.animations[animation.name] = [animation];
+            this.loader.upTextInfo(`L'animation ${animation.name} a bien été chargé.`);
+          }
+        );
+        this.loader.addPourcentLoaded(10);
+      },
+      (bitmap) => {
+        this.loader.upTextInfo(`L'image ${bitmap.name} a été chargé.`);
+      }
+    );
+
+    // Load audio files and theirs configurations
+    LoadUtils.loadContent(
+      `${this.configUrl}resources/audios/`,
+      levelConfig.audios,
+      {
+        type: 'audioLoader',
+        context: this.resources.audioContext
+      },
+      (audios) => {
+        this.resources.audios = audios;
+        // load profils
+        LoadUtils.loadContent(
+          `${this.configUrl}resources/audioProfils/`,
+          levelConfig.audioProfils,
+          {
+            type: 'jsonLoader',
+            context: null
+          },
+          (audioProfils) => {
+            this.resources.audioProfils = audioProfils;
+            this.loader.addPourcentLoaded(10);
+          },
+          (audioProfil) => {
+            audioProfil.audio = this.resources.audios[audioProfil.audio];
+            this.loader.upTextInfo(`La configuration du fichier audio ${audioProfil.name} a été chargé.`);
+          }
+        );
+        this.loader.addPourcentLoaded(10);
+      },
+      (audio) => {
+        this.loader.upTextInfo(`Le fichier audio ${audio.name} a été chargé.`);
+      }
+    );
+
+    // Load objects of scene
+    LoadUtils.loadContent(
+      `${this.configUrl}resources/entityProfils/`,
+      levelConfig.entityProfils,
+      {
+        type: 'jsonLoader',
+        context: null
+      },
+      (entityProfils) => {
+        this.resources.entityProfils = entityProfils;
+        // Generation des objets
+        const length = levelConfig.entities.length;
+        for (let x = 0; x < length; x++) {
+          this.actionSystem.createSceneObject(
+            this.resources.entityProfils[levelConfig.entities[x].objectConf],
+            levelConfig.entities[x].id
           );
         }
 
-        // Creation of the graphic scene
-        this.resources.scene.graphic = new Scene(
-          {
-            dx: this.level.widthScene,
-            dy: this.level.heightScene
-          },
-          this.level.ratioScene
-        );
-        // Creation of the physic scene
-        this.resources.scene.physic = new Scene(
-          {
-            dx: this.level.widthScene,
-            dy: this.level.heightScene
-          },
-          this.level.ratioScene
-        );
+        this.loader.addPourcentLoaded(8);
+      },
+      (entityProfil) => {
+        this.loader.upTextInfo(`La configuration de l'objet ${entityProfil.name} a été chargé.`);
       }
-    });
+    );
+
+    // Load ias
+    LoadUtils.loadContent(
+      `${this.configUrl}resources/iaProfils/`,
+      levelConfig.iaProfils,
+      {
+        type: 'jsonLoader',
+        context: null
+      },
+      (iaProfils) => {
+        this.resources.iaProfils = iaProfils;
+        // Generation des objets
+        const length = this.levelConfig.ias.length;
+        for (let x = 0; x < length; x++) {
+          this.actionSystem.createIaObject(
+            this.resources.iaProfils[this.levelConfig.ias[x].objectConf],
+            this.levelConfig.ias[x].id
+          );
+        }
+
+        this.loader.addPourcentLoaded(2);
+      },
+      (iaProfil) => {
+        this.loader.upTextInfo(`La configuration de l'objet ${iaProfil.name} a été chargé.`);
+      }
+    );
+
+    // Load Command systeme
+    if (navigator.userAgent.match(/(android|iphone|blackberry|symbian|symbianos|symbos|netfront|model-orange|javaplatform|iemobile|windows phone|samsung|htc|opera mobile|opera mobi|opera mini|presto|huawei|blazer|bolt|doris|fennec|gobrowser|iris|maemo browser|mib|cldc|minimo|semc-browser|skyfire|teashark|teleca|uzard|uzardweb|meego|nokia|bb10|playbook)/gi)) {
+      Logger.log('mode tactil');
+    } else {
+      // Keyboard
+      LoadUtils.loadContent(
+        `${this.configUrl}resources/controlerProfils/keyboards/`,
+        levelConfig.keyboard,
+        {
+          type: 'jsonLoader',
+          context: null
+        },
+        (players) => {
+          this.loader.addPourcentLoaded(10);
+        },
+        (player) => {
+          this.resources.controlers.keyboard[player.config.player] = new Keyboard(
+            window,
+            (keyInfo) => {
+              if (typeof player.keys[keyInfo.code] !== 'undefined') {
+                const length = player.keys[keyInfo.code].down.length;
+
+                for (let x = 0; x < length; x++) {
+                  this.actionSystem.setAction(player.keys[keyInfo.code].down[x], '', '');
+                }
+              }
+            },
+            (keyInfo) => {
+              if (typeof player.keys[keyInfo.code] !== 'undefined') {
+                const length = player.keys[keyInfo.code].up.length;
+
+                for (let x = 0; x < length; x++) {
+                  this.actionSystem.setAction(player.keys[keyInfo.code].up[x], '', '');
+                }
+              }
+            }
+          );
+          this.loader.upTextInfo(`Les commandes de ${player.name} a été chargé.`);
+        }
+      );
+    }
+
+    // Creation of the graphic scene
+    this.resources.scene.graphic = new Scene(
+      {
+        dx: this.level.widthScene,
+        dy: this.level.heightScene
+      },
+      this.level.ratioScene
+    );
+    // Creation of the physic scene
+    this.resources.scene.physic = new Scene(
+      {
+        dx: this.level.widthScene,
+        dy: this.level.heightScene
+      },
+      this.level.ratioScene
+    );
   }
   /**
    * Start the loaded level
