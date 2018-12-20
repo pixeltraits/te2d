@@ -59,7 +59,7 @@ class TypescriptIsBetterLikeThat {
     let standardFile = fileContent;
 
     let nextIndex = 0;
-    let startReferenceString = 'export';
+    let startReferenceString = 'import';
     let endReferenceRegex = /';|";/g;
     let identifierLength = standardFile.split(startReferenceString).length - 1;
 
@@ -68,20 +68,22 @@ class TypescriptIsBetterLikeThat {
         let referenceIndex = standardFile.indexOf(startReferenceString, nextIndex);
 
         if (referenceIndex != -1 && typeof referenceIndex != `undefined`) {
-
           let endReferenceIndex = referenceIndex + standardFile.substring(referenceIndex).search(endReferenceRegex);
-          let parameterReference = standardFile.substring(referenceIndex, endReferenceIndex + endReferenceIndex.length);
-          let quoteCharacter = parameterReference.substring(parameterReference.length - 4);
-          let parameterModifiy = parameterReference.replace(endReferenceRegex, `.js${quoteCharacter};`);
+          let parameterReference = standardFile.substring(referenceIndex, endReferenceIndex + 2);
+          let quoteCharacter = parameterReference.substring(parameterReference.length - 2);
+          let parameterModifiy = parameterReference.replace(endReferenceRegex, `.js${quoteCharacter}`);
           nextIndex = endReferenceIndex;
+          console.log(parameterReference, quoteCharacter, parameterModifiy)
           standardFile = standardFile.replace(parameterReference, parameterModifiy);
         }
       }
     }
 
+    //console.log(standardFile)
     return standardFile;
   }
 
 }
 
+//TypescriptIsBetterLikeThat.readFile('./lib/Box2D.js');
 TypescriptIsBetterLikeThat.readDirectory('./lib');

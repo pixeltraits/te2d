@@ -8,7 +8,6 @@ import {
   b2MassData,
   b2PolygonShape,
   b2CircleShape,
-  b2DebugDraw,
   b2ContactListener
 } from '../../../lib/Box2D.js';
 
