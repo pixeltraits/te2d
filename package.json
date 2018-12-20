@@ -12,16 +12,17 @@
   "dependencies": {
     "async": "^2.6.0",
     "body-parser": "1.18.2",
+    "box2d": "git+https://github.com/flyover/box2d.ts.git#master",
     "csurf": "1.9.0",
     "ejs": "2.5.7",
-    "short-unique-id": "1.1.1",
-    "box2d-es6": "1.0.2",
     "express": "4.16.2",
     "express-ejs-layouts": "2.3.1",
+    "fs-extra": "^7.0.1",
     "less-middleware": "2.2.1",
     "morgan": "1.9.0",
     "options": "0.0.6",
-    "serve-favicon": "2.4.5"
+    "serve-favicon": "2.4.5",
+    "short-unique-id": "1.1.1"
   },
   "devDependencies": {
     "grunt": "1.0.2",

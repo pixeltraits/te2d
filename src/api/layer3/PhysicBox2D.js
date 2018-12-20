@@ -1,16 +1,16 @@
 import {
-  B2Vec2,
-  B2BodyDef,
-  B2Body,
-  B2FixtureDef,
-  B2Fixture,
-  B2World,
-  B2MassData,
-  B2PolygonShape,
-  B2CircleShape,
-  B2DebugDraw,
-  B2ContactListener
-} from '../../lib/Box2D.js';
+  b2Body,
+  b2Vec2,
+  b2BodyDef,
+  b2FixtureDef,
+  b2Fixture,
+  b2World,
+  b2MassData,
+  b2PolygonShape,
+  b2CircleShape,
+  b2DebugDraw,
+  b2ContactListener
+} from '../../../lib/Box2D.js';
 
 import PhysicInterface from './PhysicInterface.js';
 
@@ -32,7 +32,7 @@ export default class PhysicBox2D extends PhysicInterface {
     super(collisionStart, collisionEnd, gravity, pixelFactor);
 
     // Correctif de box2D
-    B2Body.prototype.SetTransform = function(xf, angle) {
+    b2Body.prototype.SetTransform = function(xf, angle) {
       this.SetPositionAndAngle(
         {
           x: xf.x,
@@ -43,12 +43,12 @@ export default class PhysicBox2D extends PhysicInterface {
     };
 
     // Physic context configuration
-    const listener = new B2ContactListener();
+    const listener = new b2ContactListener();
     listener.BeginContact = collisionStart;
     this.pixelMetterFactor = pixelFactor;
 
-    this.physicContext = new B2World(
-      new B2Vec2(gravity.x, gravity.y),
+    this.physicContext = new b2World(
+      new b2Vec2(gravity.x, gravity.y),
       true
     );
     this.physicContext.SetContactListener(listener);
@@ -67,12 +67,12 @@ export default class PhysicBox2D extends PhysicInterface {
    * @return {body} body - body
    */
   getBody(id, x, y, angle, mass, angularConstraint, angularInertia, dynamic) {
-    const bodyDef = new B2BodyDef();
+    const bodyDef = new b2BodyDef();
 
     if (!dynamic) {
-      bodyDef.type = B2Body.b2_staticBody;
+      bodyDef.type = b2Body.b2_staticBody;
     } else {
-      bodyDef.type = B2Body.b2_dynamicBody;
+      bodyDef.type = b2Body.b2_dynamicBody;
     }
 
     bodyDef.position.x = this.pixelToMetter(x);
@@ -148,7 +148,7 @@ export default class PhysicBox2D extends PhysicInterface {
    * @return {fixture} fixture - fixture
    */
   getCircle(id, x, y, radius, angle, sensor, restitution, friction, density, bodyRef) {
-    const fixDef = new B2FixtureDef();
+    const fixDef = new b2FixtureDef();
 
     fixDef.density = density;
     fixDef.friction = friction;
@@ -156,7 +156,7 @@ export default class PhysicBox2D extends PhysicInterface {
     fixDef.isSensor = sensor;
     fixDef.userData = id;
 
-    fixDef.shape = new B2CircleShape();
+    fixDef.shape = new b2CircleShape();
     fixDef.shape.m_p.Set(this.pixelToMetter(x), this.pixelToMetter(y));
     fixDef.shape.m_radius(radius);
 
@@ -176,12 +176,12 @@ export default class PhysicBox2D extends PhysicInterface {
    * @return {polygon} polygon - polygon
    */
   getPolygon(id, vertices, angle, sensor, restitution, friction, density, bodyRef) {
-    const fixDef = new B2FixtureDef();
+    const fixDef = new b2FixtureDef();
     const polygonPoints = [];
     const verticesLength = vertices.length;
 
     for (let x = 0; x < verticesLength; x++) {
-      polygonPoints[x] = new B2Vec2();
+      polygonPoints[x] = new b2Vec2();
       polygonPoints[x].Set(vertices[x].x, vertices[x].y);
     }
 
@@ -192,7 +192,7 @@ export default class PhysicBox2D extends PhysicInterface {
     fixDef.userData = id;
     fixDef.angle = angle;
 
-    fixDef.shape = new B2PolygonShape();
+    fixDef.shape = new b2PolygonShape();
     fixDef.shape.SetAsArray(polygonPoints, verticesLength);
 
     return bodyRef.CreateFixture(fixDef);
@@ -304,7 +304,7 @@ export default class PhysicBox2D extends PhysicInterface {
       y: 0
     };
 
-    bodyRef.ApplyForce(new B2Vec2(force.x, force.y), bodyRef.GetWorldCenter());
+    bodyRef.ApplyForce(new b2Vec2(force.x, force.y), bodyRef.GetWorldCenter());
   }
   /**
    * Set velocity of a body
@@ -331,7 +331,7 @@ export default class PhysicBox2D extends PhysicInterface {
       y: this.pixelToMetter(vector.y)
     };
 
-    bodyRef.ApplyForce(new B2Vec2(force.x, force.y), bodyRef.GetWorldCenter());
+    bodyRef.ApplyForce(new b2Vec2(force.x, force.y), bodyRef.GetWorldCenter());
   }
   /**
    * Get velocity of a body

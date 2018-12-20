@@ -19,6 +19,7 @@ app.use('/public/css/', express.static(path.join(__dirname, '/build/css')));
 app.use('/public/js/', express.static(path.join(__dirname, '/build/js')));
 app.use('/public/game/', express.static(path.join(__dirname, '/game')));
 app.use('/public/te2d/', express.static(path.join(__dirname, '/src')));
+app.use('/public/lib/', express.static(path.join(__dirname, '/lib')));
 
 app.use('/', index);
 
