@@ -21,7 +21,7 @@ export default class Game {
    * @param {function} onLoad - Function callback onload
    * @return {void}
    */
-  async constructor(configUrl, gameConfigUrl, onLoad) {
+  constructor(configUrl, gameConfigUrl, onLoad) {
     this.configUrl = configUrl;
     this.lang = 'fr';
     this.widthGame = 800;
@@ -59,7 +59,8 @@ export default class Game {
 
     this.actionSystem = new Action(this.resources);
     this.collisionSystem = new Collision(this.resources.entities, this.resources.physicProfils, this.actionSystem);
-
+  }
+  async prepareGame() {
     // Load game config file
     const gameConfig = await LoadUtils.jsonLoader({
       url: this.configUrl + gameConfigUrl
@@ -136,11 +137,11 @@ export default class Game {
       }
     );
 
-    const textPromiseArray = LoadUtils.getPromiseArray(`${this.configUrl}resources/texts/${this.lang}/`, levelConfig.texts);
+    //const textPromiseArray = LoadUtils.getPromiseArray(`${this.configUrl}resources/texts/${this.lang}/`, levelConfig.texts);
 
-    .then(() => {
+    //.then(() => {
 
-    });
+    //});
 
     // Load Collisions
     LoadUtils.loadContent(

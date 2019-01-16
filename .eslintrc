@@ -9,7 +9,7 @@
   "rules": {
     "comma-dangle": ["error", "never"],
     "import/extensions": ["always", {ignorePackages: true} ],
-    "linebreak-style": ["error", "unix"],
+    "linebreak-style": ["error", "windows"],
     "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
     "max-len": ["error", { "code": 120 }],
     "prefer-destructuring": ["error", { "object": false, "array": false }],
