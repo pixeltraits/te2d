@@ -7,7 +7,7 @@ import {
   b2PolygonShape,
   b2CircleShape,
   b2ContactListener
-} from '../../../lib/Box2D.js';
+} from '../../lib/Box2D.js';
 
 import PhysicInterface from './PhysicInterface.js';
 

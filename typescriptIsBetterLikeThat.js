@@ -85,5 +85,5 @@ class TypescriptIsBetterLikeThat {
 
 }
 
-//TypescriptIsBetterLikeThat.readFile('./lib/Box2D.js');
-TypescriptIsBetterLikeThat.readDirectory('./lib');
+TypescriptIsBetterLikeThat.readFile('./src/lib/Box2D.js');
+//TypescriptIsBetterLikeThat.readDirectory('./lib');

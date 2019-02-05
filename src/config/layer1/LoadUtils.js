@@ -5,8 +5,19 @@ import Logger from '../../api/layer1/Logger.js';
  * @class LoadUtils
  */
 export default class LoadUtils {
-  static async loadContent() {
+  static async loadContent(url, list, contentLoader, oneContentLoad) {
+    const contents = {};
+    const length = list.length;
 
+    for (let x = 0; x < length; x++) {
+      contents[list[x].name] = await this[contentLoader.type]({
+        url: url + list[x].content,
+        context: contentLoader.context
+      });
+      oneContentLoad(contents[list[x].name]);
+    }
+
+    return contents;
   }
   /**
    * Create Image object and load Bitmap ressource with ajax.
@@ -14,26 +25,28 @@ export default class LoadUtils {
    * @param {ajaxRequest} ajaxRequest - ajaxrequest
    * @return {void}
    */
-  static audioLoader(ajaxRequest) {
-    const requestType = typeof ajaxRequest.type !== 'undefined' ? ajaxRequest.type : 'GET';
-    const requestRef = typeof ajaxRequest.ref !== 'undefined' ? ajaxRequest.ref : '';
-    const requestOnload = ajaxRequest.onLoad;
+  static async audioLoader(ajaxRequest) {
+    const requestContext = ajaxRequest.context;
     const requestUrl = ajaxRequest.url;
-    const xhr = new XMLHttpRequest();
+    const headers = new Headers({
+      'Content-type': 'arraybuffer'
+    });
+    const requestProperties = {
+      method: typeof ajaxRequest.type !== 'undefined' ? ajaxRequest.type : 'GET',
+      headers: headers,
+      mode: 'cors',
+      cache: 'default'
+    };
+    let response = null;
 
     try {
-      xhr.open(requestType, requestUrl, true);
-      xhr.responseType = 'arraybuffer';
-      xhr.onload = () => {
-        ajaxRequest.context.decodeAudioData(xhr.response, (buffer) => {
-          requestOnload(buffer, requestRef);
-        });
-      };
-      xhr.send();
+      response = await fetch(requestUrl, requestProperties);
     } catch (e) {
       Logger.log('An ajax request(Audio) have an error : ', e.message);
       Logger.log('Request parameters : ', ajaxRequest);
     }
+
+    return await requestContext.decodeAudioData(response);
   }
   /**
    * Create Image object and load Bitmap ressource with ajax.
@@ -41,19 +54,31 @@ export default class LoadUtils {
    * @param {ajaxRequest} ajaxRequest - ajaxrequest
    * @return {void}
    */
-  static bitmapLoader(ajaxRequest) {
-    const requestRef = typeof ajaxRequest.ref !== 'undefined' ? ajaxRequest.ref : '';
-    const requestOnload = ajaxRequest.onLoad;
-    const requestUrl = ajaxRequest.url;
+  static async bitmapLoader(ajaxRequest) {
     const bitmap = new Image();
+    const requestUrl = ajaxRequest.url;
+    const headers = new Headers({
+      'Content-type': 'image/png'
+    });
+    const requestProperties = {
+      method: typeof ajaxRequest.type !== 'undefined' ? ajaxRequest.type : 'GET',
+      headers: headers,
+      mode: 'cors',
+      cache: 'default'
+    };
+    let response = null;
 
     try {
-      bitmap.src = requestUrl;
-      bitmap.onload = requestOnload(bitmap, requestRef);
+      response = await fetch(requestUrl, requestProperties);
     } catch (e) {
+      return null;
       Logger.log('An ajax request(Bitmap) have an error : ', e.message);
       Logger.log('Request parameters : ', ajaxRequest);
     }
+
+    bitmap.src = URL.createObjectURL(response.blob());
+
+    return bitmap;
   }
   /**
    * Create xhr object and load json ressource with ajax.
