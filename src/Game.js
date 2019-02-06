@@ -21,8 +21,9 @@ export default class Game {
    * @param {function} onLoad - Function callback onload
    * @return {void}
    */
-  constructor(configUrl, gameConfigUrl, onLoad) {
+  constructor(configUrl, gameConfigUrl) {
     this.configUrl = configUrl;
+    this.gameConfigUrl = gameConfigUrl;
     this.lang = 'fr';
     this.widthGame = 800;
     this.heightGame = 600;
@@ -64,7 +65,7 @@ export default class Game {
   async prepareGame() {
     // Load game config file
     const gameConfig = await LoadUtils.jsonLoader({
-      url: this.configUrl + gameConfigUrl
+      url: this.configUrl + this.gameConfigUrl
     });
 
     this.lang = gameConfig.lang !== 'undefined' ? gameConfig.lang : this.lang;
@@ -102,7 +103,9 @@ export default class Game {
         dy: cameraSize.dy,
         context: this.camera.ctx
       },
-      () => {}
+      () => {
+        this.startLevel();
+      }
     );
   }
   /**

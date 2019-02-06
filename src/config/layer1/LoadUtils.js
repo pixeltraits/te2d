@@ -29,7 +29,7 @@ export default class LoadUtils {
     const requestContext = ajaxRequest.context;
     const requestUrl = ajaxRequest.url;
     const headers = new Headers({
-      'Content-type': 'arraybuffer'
+      'Content-type': 'application/octet-stream'
     });
     const requestProperties = {
       method: typeof ajaxRequest.type !== 'undefined' ? ajaxRequest.type : 'GET',
@@ -46,7 +46,10 @@ export default class LoadUtils {
       Logger.log('Request parameters : ', ajaxRequest);
     }
 
-    return await requestContext.decodeAudioData(response);
+    const arrayBuffer = await response.arrayBuffer();
+    const audioData = await requestContext.decodeAudioData(arrayBuffer);
+
+    return audioData;
   }
   /**
    * Create Image object and load Bitmap ressource with ajax.
@@ -71,12 +74,13 @@ export default class LoadUtils {
     try {
       response = await fetch(requestUrl, requestProperties);
     } catch (e) {
-      return null;
       Logger.log('An ajax request(Bitmap) have an error : ', e.message);
       Logger.log('Request parameters : ', ajaxRequest);
+      return null;
     }
 
-    bitmap.src = URL.createObjectURL(response.blob());
+    const imageBlob = await response.blob();
+    bitmap.src = URL.createObjectURL(imageBlob);
 
     return bitmap;
   }
@@ -98,15 +102,15 @@ export default class LoadUtils {
       body: typeof ajaxRequest.data !== 'undefined' ? ajaxRequest.data : null,
       cache: 'default'
     };
-    let jsonData = null;
+    let response = null;
 
     try {
-      jsonData = await fetch(requestUrl, requestProperties);
+      response = await fetch(requestUrl, requestProperties);
     } catch (e) {
       Logger.log('An ajax request have an error : ', e.message);
       Logger.log('Request parameters : ', ajaxRequest);
     }
 
-    return JSON.parse(jsonData);
+    return await response.json();
   }
 }

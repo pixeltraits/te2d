@@ -140,6 +140,10 @@ export default class PhysicEntity {
    * @return {void}
    */
   setPosition(position) {
+    if(this.name == "playerPhysic"){
+      //console.log(position)
+    }
+
     this.position = position;
     this.updateGraphicEntityPosition();
 

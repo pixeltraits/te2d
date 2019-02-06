@@ -21,7 +21,7 @@ export default class Loader {
     this.dx = bitmapConfig.dx;
     this.infoFont = bitmapConfig.infoFont;
     this.pourcentFont = bitmapConfig.pourcentFont;
-    this.onComplete = onComplete !== 'undefined' ? onComplete : () => {};
+    this.onComplete = typeof onComplete !== 'undefined' ? onComplete : () => {};
 
     // Bitmap ressource of loader
     this.bitmapLoader = bitmapLoader;

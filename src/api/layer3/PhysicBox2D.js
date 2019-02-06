@@ -29,7 +29,7 @@ export default class PhysicBox2D extends PhysicInterface {
     super(collisionStart, collisionEnd, gravity, pixelFactor);
 
     // Correctif de box2D
-    b2Body.prototype.SetTransform = function(xf, angle) {
+    /*b2Body.prototype.SetTransform = function(xf, angle) {
       this.SetPositionAndAngle(
         {
           x: xf.x,
@@ -37,7 +37,7 @@ export default class PhysicBox2D extends PhysicInterface {
         },
         angle
       );
-    };
+    };*/
 
     // Physic context configuration
     this.pixelMetterFactor = pixelFactor;

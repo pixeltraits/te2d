@@ -1,12 +1,22 @@
 import Game from '../te2d/Game.js';
 
-window.onload = () => {
+window.onload = async () => {
   const myGame = new Game('public/game/', 'config.json');
-  myGame.prepareGame().then(() => {
-    myGame.loadLevel('theworld').then(() => myGame.startLevel()).catch(() => {
-      console.log('Erreur lors du chargement du Level.');
-    });
-  }).catch((error) => {
-    console.log('Erreur lors du chargement du Jeu.');
-  });
+
+  try {
+    await myGame.prepareGame();
+  } catch (error) {
+    console.log('Erreur lors du chargement du Jeu.', error);
+  }
+
+  try {
+    await myGame.loadLevel(
+      'theworld',
+      () => {
+        myGame.startLevel();
+      }
+    );
+  } catch (error) {
+    console.log('Erreur lors du chargement du Level.');
+  }
 };
