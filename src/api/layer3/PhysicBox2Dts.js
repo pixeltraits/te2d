@@ -1,4 +1,4 @@
-/*import {
+import {
   b2Body,
   b2Vec2,
   b2BodyDef,
@@ -7,8 +7,7 @@
   b2PolygonShape,
   b2CircleShape,
   b2ContactListener
-} from '../../lib/Box2D.js';*/
-import { Box2D } from '../../lib/Box2D.js';
+} from '../../lib/Box2Dts.js';
 
 import PhysicInterface from './PhysicInterface.js';
 
@@ -28,42 +27,17 @@ export default class PhysicBox2D extends PhysicInterface {
    */
   constructor(collisionStart, collisionEnd, gravity, pixelFactor) {
     super(collisionStart, collisionEnd, gravity, pixelFactor);
-    //Box2D implementation
-    this.b2Vec2 = Box2D.Common.Math.b2Vec2;
-    this.b2BodyDef = Box2D.Dynamics.b2BodyDef;
-    this.b2Body = Box2D.Dynamics.b2Body;
-    this.b2FixtureDef = Box2D.Dynamics.b2FixtureDef;
-    this.b2Fixture = Box2D.Dynamics.b2Fixture;
-    this.b2World = Box2D.Dynamics.b2World;
-    this.b2MassData = Box2D.Collision.Shapes.b2MassData;
-    this.b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape;
-    this.b2CircleShape = Box2D.Collision.Shapes.b2CircleShape;
-    this.b2DebugDraw = Box2D.Dynamics.b2DebugDraw;
-    /*this.b2Body.prototype.SetTransform = function (xf, angle) {//Correctif
-      this.SetPositionAndAngle({x:xf.x, y:xf.y}, angle);
-    };*/
-
-    // Correctif de box2D
-    this.b2Body.prototype.SetTransform = function(xf, angle) {
-      this.SetPositionAndAngle(
-        {
-          x: xf.x,
-          y: xf.y
-        },
-        angle
-      );
-    };
 
     // Physic context configuration
     this.pixelMetterFactor = pixelFactor;
     this.collisionCallbacks = [];
 
-    this.physicContext = new this.b2World(
+    this.physicContext = new b2World(
       new this.b2Vec2(gravity.x, gravity.y),
       true
     );
 
-    const listener = new Box2D.Dynamics.b2ContactListener();
+    const listener = new b2ContactListener();
     listener.BeginContact = collisionStart;
     this.physicContext.SetContactListener(listener);
   }
@@ -95,18 +69,17 @@ export default class PhysicBox2D extends PhysicInterface {
     let collisionStartListener;
     let collisionEndListener;
 
+    const listener = new b2ContactListener();
+    listener.BeginContact = (contacts) => {
+      this.collisionCallbacks.every((callbackProperties) => {
+      });
+    };
+    listener.EndContact = (contacts) => {
+      this.collisionCallbacks.every((callbackProperties) => {
+      });
+    };
 
-      const listener = new this.b2ContactListener();
-      listener.BeginContact = (contacts) => {
-        this.collisionCallbacks.every((callbackProperties) => {
-        });
-      };
-      listener.EndContact = (contacts) => {
-        this.collisionCallbacks.every((callbackProperties) => {
-        });
-      };
-
-      this.physicContext.SetContactListener(listener);
+    this.physicContext.SetContactListener(listener);
   }
   /**
    * Get a body
@@ -122,12 +95,12 @@ export default class PhysicBox2D extends PhysicInterface {
    * @return {body} body - body
    */
   getBody(id, x, y, angle, mass, angularConstraint, angularInertia, dynamic) {
-    const bodyDef = new this.b2BodyDef();
+    const bodyDef = new b2BodyDef();
 
     if (!dynamic) {
-      bodyDef.type = this.b2Body.b2_staticBody;
+      bodyDef.type = b2Body.b2_staticBody;
     } else {
-      bodyDef.type = this.b2Body.b2_dynamicBody;
+      bodyDef.type = b2Body.b2_dynamicBody;
     }
 
     bodyDef.position.x = this.pixelToMetter(x);
@@ -203,7 +176,7 @@ export default class PhysicBox2D extends PhysicInterface {
    * @return {fixture} fixture - fixture
    */
   getCircle(id, x, y, radius, angle, sensor, restitution, friction, density, bodyRef) {
-    const fixDef = new this.b2FixtureDef();
+    const fixDef = new b2FixtureDef();
 
     fixDef.density = density;
     fixDef.friction = friction;
@@ -211,7 +184,7 @@ export default class PhysicBox2D extends PhysicInterface {
     fixDef.isSensor = sensor;
     fixDef.userData = id;
 
-    fixDef.shape = new this.b2CircleShape();
+    fixDef.shape = new b2CircleShape();
     fixDef.shape.m_p.Set(this.pixelToMetter(x), this.pixelToMetter(y));
     fixDef.shape.m_radius(radius);
 
@@ -231,12 +204,12 @@ export default class PhysicBox2D extends PhysicInterface {
    * @return {polygon} polygon - polygon
    */
   getPolygon(id, vertices, angle, sensor, restitution, friction, density, bodyRef) {
-    const fixDef = new this.b2FixtureDef();
+    const fixDef = new b2FixtureDef();
     const polygonPoints = [];
     const verticesLength = vertices.length;
 
     for (let x = 0; x < verticesLength; x++) {
-      polygonPoints[x] = new this.b2Vec2();
+      polygonPoints[x] = new b2Vec2();
       polygonPoints[x].Set(vertices[x].x, vertices[x].y);
     }
 
@@ -247,7 +220,7 @@ export default class PhysicBox2D extends PhysicInterface {
     fixDef.userData = id;
     fixDef.angle = angle;
 
-    fixDef.shape = new this.b2PolygonShape();
+    fixDef.shape = new b2PolygonShape();
     fixDef.shape.SetAsArray(polygonPoints, verticesLength);
 
     return bodyRef.CreateFixture(fixDef);
@@ -359,7 +332,7 @@ export default class PhysicBox2D extends PhysicInterface {
       y: 0
     };
 
-    bodyRef.ApplyForce(new this.b2Vec2(force.x, force.y), bodyRef.GetWorldCenter());
+    bodyRef.ApplyForce(new b2Vec2(force.x, force.y), bodyRef.GetWorldCenter());
   }
   /**
    * Set velocity of a body
@@ -386,7 +359,7 @@ export default class PhysicBox2D extends PhysicInterface {
       y: this.pixelToMetter(vector.y)
     };
 
-    bodyRef.ApplyForce(new this.b2Vec2(force.x, force.y), bodyRef.GetWorldCenter());
+    bodyRef.ApplyForce(new b2Vec2(force.x, force.y), bodyRef.GetWorldCenter());
   }
   /**
    * Get velocity of a body

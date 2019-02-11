@@ -80,14 +80,6 @@ export default class Camera extends PhysicEntity {
     }
   }
   /**
-   * The camera take the full display of the screen
-   * @method activeFullscreen
-   * @return {void}
-   */
-  activeFullscreen() {
-    this.activeFullwindow();
-  }
-  /**
    * The camera take the full display of the window browser
    * @method activeFullwindow
    * @return {void}
@@ -176,6 +168,22 @@ export default class Camera extends PhysicEntity {
     this.ctx.font = `${this.fpsFont.size}px ${this.fpsFont.font}`;
     this.ctx.fillStyle = this.fpsFont.style;
     this.ctx.fillText(this.fps, this.fpsPosition.x, this.fpsPosition.y);
+  }
+  /**
+   * Active fullscreen
+   * @method activeFullscreen
+   * @return {void}
+   */
+  activeFullscreen() {
+    this.canvas.requestFullscreen();
+  }
+  /**
+   * Exit fullscreen
+   * @method exitFullscreen
+   * @return {void}
+   */
+  exitFullscreen() {
+    this.canvas.exitFullscreen();
   }
   /**
    * Show the framerate performance on display

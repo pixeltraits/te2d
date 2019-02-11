@@ -109,6 +109,22 @@ export default class Game {
     );
   }
   /**
+   * Active fullscreen
+   * @method activeFullscreen
+   * @return {void}
+   */
+  activeFullscreen() {
+    this.camera.activeFullscreen();
+  }
+  /**
+   * Exit fullscreen
+   * @method exitFullscreen
+   * @return {void}
+   */
+  exitFullscreen() {
+    this.camera.exitFullscreen();
+  }
+  /**
    * Load contents configuration
    * @method loadLevel
    * @param {string} name - name

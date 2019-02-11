@@ -19,4 +19,10 @@ window.onload = async () => {
   } catch (error) {
     console.log('Erreur lors du chargement du Level.');
   }
+
+  const canvas = document.getElementById('canvas');
+
+  canvas.addEventListener('click', (event) => {
+    myGame.activeFullscreen();
+  });
 };
