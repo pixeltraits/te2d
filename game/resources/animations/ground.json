@@ -6,7 +6,7 @@
   "y" : 346,
   "dx" : 256,
   "dy" : 32,
-  "repeatX" : 2,
+  "repeatX" : 4,
   "repeatY" : 1,
   "frames" : 0,
   "fps" : 33,

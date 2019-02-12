@@ -25,6 +25,15 @@ export default class Ia {
     this.speedReflection = properties.speedReflection !== undefined ? properties.speedReflection : 20;
   }
   /**
+   * Set physic entity reference
+   * @method setPhysicEntity
+   * @param {physicEntity} physicEntity - Reference of the physic entity
+   * @return {void}
+   */
+  (physicEntity) {
+    this.physicEntity = physicEntity;
+  }
+  /**
    * Set physic interface reference
    * @method setPhysicInterface
    * @param {physicInterface} physicInterface - Reference of the physic interface

@@ -155,11 +155,47 @@
       "objectConf" : "groundPhysic"
     },
     {
-      "id" : "plateformLeft",
+      "id" : "plateform1",
       "objectConf" : "plateformPhysic"
     },
     {
-      "id" : "plateformRight",
+      "id" : "plateform2",
+      "objectConf" : "plateformPhysic"
+    },
+    {
+      "id" : "plateform3",
+      "objectConf" : "plateformPhysic"
+    },
+    {
+      "id" : "plateform4",
+      "objectConf" : "plateformPhysic"
+    },
+    {
+      "id" : "plateform21",
+      "objectConf" : "plateformPhysic"
+    },
+    {
+      "id" : "plateform22",
+      "objectConf" : "plateformPhysic"
+    },
+    {
+      "id" : "plateform23",
+      "objectConf" : "plateformPhysic"
+    },
+    {
+      "id" : "plateform31",
+      "objectConf" : "plateformPhysic"
+    },
+    {
+      "id" : "plateform32",
+      "objectConf" : "plateformPhysic"
+    },
+    {
+      "id" : "plateform33",
+      "objectConf" : "plateformPhysic"
+    },
+    {
+      "id" : "plateform34",
       "objectConf" : "plateformPhysic"
     },
     {
@@ -199,20 +235,20 @@
     {
       "type" : "action",
       "context": "entities",
-      "id": "plateformRight",
+      "id": "plateform1",
       "method": "setPosition",
       "argument": {
         "type": "simple",
         "argument" : {
-          "x" : 370,
-          "y" : 400
+          "x" : 100,
+          "y" : 450
         }
       }
     },
     {
       "type" : "action",
       "context": "entities",
-      "id": "plateformRight",
+      "id": "plateform1",
       "method": "addToPhysicContext",
       "argument": {
         "type" : "resource",
@@ -223,20 +259,236 @@
     {
       "type" : "action",
       "context": "entities",
-      "id": "plateformLeft",
+      "id": "plateform2",
       "method": "setPosition",
       "argument": {
         "type": "simple",
         "argument" : {
-          "x" : 120,
-          "y" : 400
+          "x" : 350,
+          "y" : 450
         }
       }
     },
     {
       "type" : "action",
       "context": "entities",
-      "id": "plateformLeft",
+      "id": "plateform2",
+      "method": "addToPhysicContext",
+      "argument": {
+        "type" : "resource",
+        "context": "scene",
+        "id": "physic"
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "plateform3",
+      "method": "setPosition",
+      "argument": {
+        "type": "simple",
+        "argument" : {
+          "x" : 600,
+          "y" : 450
+        }
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "plateform3",
+      "method": "addToPhysicContext",
+      "argument": {
+        "type" : "resource",
+        "context": "scene",
+        "id": "physic"
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "plateform4",
+      "method": "setPosition",
+      "argument": {
+        "type": "simple",
+        "argument" : {
+          "x" : 850,
+          "y" : 450
+        }
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "plateform4",
+      "method": "addToPhysicContext",
+      "argument": {
+        "type" : "resource",
+        "context": "scene",
+        "id": "physic"
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "plateform21",
+      "method": "setPosition",
+      "argument": {
+        "type": "simple",
+        "argument" : {
+          "x" : 230,
+          "y" : 350
+        }
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "plateform21",
+      "method": "addToPhysicContext",
+      "argument": {
+        "type" : "resource",
+        "context": "scene",
+        "id": "physic"
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "plateform22",
+      "method": "setPosition",
+      "argument": {
+        "type": "simple",
+        "argument" : {
+          "x" : 480,
+          "y" : 350
+        }
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "plateform22",
+      "method": "addToPhysicContext",
+      "argument": {
+        "type" : "resource",
+        "context": "scene",
+        "id": "physic"
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "plateform23",
+      "method": "setPosition",
+      "argument": {
+        "type": "simple",
+        "argument" : {
+          "x" : 730,
+          "y" : 350
+        }
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "plateform23",
+      "method": "addToPhysicContext",
+      "argument": {
+        "type" : "resource",
+        "context": "scene",
+        "id": "physic"
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "plateform31",
+      "method": "setPosition",
+      "argument": {
+        "type": "simple",
+        "argument" : {
+          "x" : 100,
+          "y" : 250
+        }
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "plateform31",
+      "method": "addToPhysicContext",
+      "argument": {
+        "type" : "resource",
+        "context": "scene",
+        "id": "physic"
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "plateform32",
+      "method": "setPosition",
+      "argument": {
+        "type": "simple",
+        "argument" : {
+          "x" : 350,
+          "y" : 250
+        }
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "plateform32",
+      "method": "addToPhysicContext",
+      "argument": {
+        "type" : "resource",
+        "context": "scene",
+        "id": "physic"
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "plateform33",
+      "method": "setPosition",
+      "argument": {
+        "type": "simple",
+        "argument" : {
+          "x" : 600,
+          "y" : 250
+        }
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "plateform33",
+      "method": "addToPhysicContext",
+      "argument": {
+        "type" : "resource",
+        "context": "scene",
+        "id": "physic"
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "plateform34",
+      "method": "setPosition",
+      "argument": {
+        "type": "simple",
+        "argument" : {
+          "x" : 850,
+          "y" : 250
+        }
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "plateform34",
       "method": "addToPhysicContext",
       "argument": {
         "type" : "resource",
@@ -276,7 +528,7 @@
       "argument": {
         "type": "simple",
         "argument" : {
-          "x" : 592,
+          "x" : 1070,
           "y" : 70
         }
       }
@@ -344,7 +596,7 @@
       "argument": {
         "type": "simple",
         "argument" : {
-          "x" : 300,
+          "x" : 100,
           "y" : 120
         }
       }
@@ -368,8 +620,8 @@
       "argument": {
         "type": "simple",
         "argument" : {
-          "x" : 200,
-          "y" : 120
+          "x" : 60,
+          "y" : 400
         }
       }
     },

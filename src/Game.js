@@ -466,7 +466,7 @@ export default class Game {
       length = this.levelConfig.ias.length;
       // Call of entities graphic system
       for (let x = 0; x < length; x++) {
-        this.resources.ias[this.levelConfig.ias[x].id].updateStatus();
+        //this.resources.ias[this.levelConfig.ias[x].id].updateStatus();
       }
 
       this.resources.physicInterface.updateEngine(framerate, 6, 2);
