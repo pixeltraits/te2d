@@ -1,9 +1,9 @@
 {
-  "name" : "yun",
-  "type" : "GraphicEntity",
-  "dz" : 0,
-  "z" : 3,
-  "config" : [
+  "name": "backgroundDoom",
+  "type": "GraphicEntity",
+  "dz": 0,
+  "z": 2,
+  "config": [
     {
       "type" : "action",
       "context" : "entities",
@@ -17,7 +17,7 @@
             "content" : {
               "type" : "resource",
               "context" : "animations",
-              "id" : "yun"
+              "id" : "doomWall"
             }
           },
           {

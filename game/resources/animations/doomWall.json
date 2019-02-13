@@ -1,0 +1,14 @@
+{
+  "name" : "doomWall",
+  "bitmap" : "doom",
+  "reverse" : false,
+  "x" : 1,
+  "y" : 2341,
+  "dx" : 64,
+  "dy" : 64,
+  "repeatX" : 10,
+  "repeatY" : 2,
+  "frames" : 0,
+  "fps" : 33,
+  "sens" : "h"
+}

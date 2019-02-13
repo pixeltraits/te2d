@@ -1,0 +1,115 @@
+{
+  "name": "groundDoomPhysic",
+  "type": "PhysicEntity",
+  "dynamic": false,
+  "angle": 0,
+  "config": [
+    {
+      "type": "action",
+      "context": "entities",
+      "id": "self",
+      "method": "setPhysicInterface",
+      "argument": {
+        "type": "resource",
+        "context": "physicInterface",
+        "id" : false
+      }
+    },
+    {
+      "type": "action",
+      "context": "entities",
+      "id": "self",
+      "method": "addHitbox",
+      "argument": {
+        "type" : "object",
+        "properties" : [
+          {
+            "name" : "hitbox",
+            "content" : {
+              "type": "simple",
+              "argument" : {
+                "id" : "1",
+                "name" : "hitboxGround",
+                "sensor" : false,
+                "restitution" : 0,
+                "friction" : 0,
+                "density" : 1,
+                "angle": 0,
+                "type" : "box",
+                "color" : "blue",
+                "borderColor" : "green",
+                "borderSize" : 2,
+                "x" : 0,
+                "y" : 0,
+                "dx" : 1024,
+                "dy" : 17
+              }
+            }
+          },
+          {
+            "name" : "graphicEntity",
+            "content" : {
+              "type" : "newObject",
+              "context" : false,
+              "argument" : {
+                "name": "hitboxGround",
+                "type": "GraphicEntity",
+                "dz": 0,
+                "z": 4
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type" : "action",
+      "context" : "entities",
+      "id" : "self",
+      "method" : "setGraphicEntity",
+      "argument" : {
+        "type" : "newObject",
+        "context" : "entityProfils",
+        "id" : "groundDoom",
+        "config" : [
+          {
+            "type" : "action",
+            "context": "entities",
+            "id": "self",
+            "method": "addToScene",
+            "argument": {
+              "type" : "resource",
+              "context": "scene",
+              "id": "graphic"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "action",
+      "context": "entities",
+      "id": "self",
+      "method": "setDelta",
+      "argument": {
+        "type": "simple",
+        "argument" : {
+          "x" : 0,
+          "y" : 0,
+          "angle" : 0
+        }
+      }
+    },
+    {
+      "type" : "action",
+      "context" : "entities",
+      "id" : "self",
+      "method" : "hide",
+      "argument" : {
+        "type" : "resource",
+        "context": "scene",
+        "id": "graphic"
+      }
+    }
+  ]
+}

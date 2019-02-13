@@ -12,7 +12,7 @@
         {
           "type": "action",
           "context": "entities",
-          "id": "50ib636f-8779-27d1-9fcb-ff98c8553dec",
+          "id": "doneEntities",
           "method": "setWalk",
           "argument": {
             "type": "simple",
@@ -28,7 +28,7 @@
         {
           "type": "action",
           "context": "entities",
-          "id": "50ib636f-8779-27d1-9fcb-ff98c8553dec",
+          "id": "doneEntities",
           "method": "unsetWalk",
           "argument": {
             "type": "simple",
@@ -46,7 +46,7 @@
         {
           "type": "action",
           "context": "entities",
-          "id": "50ib636f-8779-27d1-9fcb-ff98c8553dec",
+          "id": "doneEntities",
           "method": "setWalk",
           "argument": {
             "type": "simple",
@@ -62,7 +62,7 @@
         {
           "type": "action",
           "context": "entities",
-          "id": "50ib636f-8779-27d1-9fcb-ff98c8553dec",
+          "id": "doneEntities",
           "method": "unsetWalk",
           "argument": {
             "type": "simple",
@@ -141,7 +141,7 @@
         {
           "type": "action",
           "context": "entities",
-          "id": "50ib636f-8779-27d1-9fcb-ff98c8553dec",
+          "id": "doneEntities",
           "method": "spring",
           "argument": {
             "type": "simple",

@@ -1,9 +1,10 @@
 {
-  "name" : "yun",
-  "type" : "GraphicEntity",
-  "dz" : 0,
-  "z" : 3,
-  "config" : [
+  "name": "wall",
+  "type": "GraphicEntity",
+  "zAuto": false,
+  "dz": 0,
+  "z": 3,
+  "config": [
     {
       "type" : "action",
       "context" : "entities",
@@ -17,7 +18,7 @@
             "content" : {
               "type" : "resource",
               "context" : "animations",
-              "id" : "yun"
+              "id" : "frontierDoom"
             }
           },
           {

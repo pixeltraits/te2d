@@ -17,7 +17,7 @@ class Connection {
             yun = acs.generatePreObject2('yun');
             self.player2.obj = acs['objectScene'][yun];
             self.player2.pseudo = pseudo;
-            self.player = acs['objectScene']['50ib636f-8779-27d1-9fcb-ff98c8553dec'];
+            self.player = acs['objectScene']['doneEntities'];
             self.socket.on('sendPositionToMe', function(position) {
                 self.player2.obj.setPosition({
                     "x" : position.x,

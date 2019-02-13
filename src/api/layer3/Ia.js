@@ -13,6 +13,7 @@ export default class Ia {
    */
   constructor(id, properties) {
     this.id = id;
+    this.target = null;
     this.timer = new Timer(3000);
     this.name = properties.name;
     this.perimeter = properties.perimeter !== undefined ? properties.perimeter : {x:0,y:0,dx:0,dy:0};
@@ -25,13 +26,13 @@ export default class Ia {
     this.speedReflection = properties.speedReflection !== undefined ? properties.speedReflection : 20;
   }
   /**
-   * Set physic entity reference
-   * @method setPhysicEntity
+   * Set target entity reference
+   * @method setTarget
    * @param {physicEntity} physicEntity - Reference of the physic entity
    * @return {void}
    */
-  (physicEntity) {
-    this.physicEntity = physicEntity;
+  setTarget(physicEntity) {
+    this.target = physicEntity;
   }
   /**
    * Set physic interface reference

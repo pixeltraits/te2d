@@ -1,0 +1,62 @@
+{
+  "name": "groundDoom",
+  "type": "GraphicEntity",
+  "zAuto": false,
+  "dz": 0,
+  "z": 3,
+  "config": [
+    {
+      "type" : "action",
+      "context" : "entities",
+      "id" : "self",
+      "method" : "setBitmap",
+      "argument" : {
+        "type" : "object",
+        "properties" : [
+          {
+            "name" : "animations",
+            "content" : {
+              "type" : "resource",
+              "context" : "animations",
+              "id" : "groundDoom"
+            }
+          },
+          {
+            "name" : "animationCallbacks",
+            "content" : {
+              "type" : "simple",
+              "argument" : []
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type" : "action",
+      "context" : "entities",
+      "id" : "self",
+      "method" : "setAudio",
+      "argument" : {
+        "type" : "object",
+        "properties" : [
+          {
+            "name" : "audioConf",
+            "content" : {
+              "type" : "resource",
+              "context" : "audioProfils",
+              "id" : "level"
+            }
+          },
+          {
+            "name" : "audioContext",
+            "content" : {
+              "type" : "resource",
+              "context" : "audioContext",
+              "id" : false
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

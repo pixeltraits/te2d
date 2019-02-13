@@ -1,0 +1,427 @@
+{
+  "levelInfo": {
+    "name": "doom",
+    "widthCam": 600,
+    "heightCam": 600,
+    "widthScene": 2000,
+    "heightScene": 2000,
+    "ratioScene": 300,
+    "xCam": 49,
+    "yCam": 300,
+    "gravity": {
+      "x": 0,
+      "y": 100
+    },
+    "pixelFactor": 0.05,
+    "cameraId": "6de04c99-d92b-419f-ac4d-5552581554ab"
+  },
+  "iaProfils": [
+    {
+      "name" : "ia",
+      "content" : "ia.json"
+    }
+  ],
+  "physicProfils": [
+    {
+      "name" : "physicProfils",
+      "content" : "theworld.json"
+    }
+  ],
+  "bitmaps": [
+    {
+      "name" : "caracters",
+      "content" : "caracters.png"
+    },
+    {
+      "name" : "level",
+      "content" : "level.png"
+    },
+    {
+      "name" : "doom",
+      "content" : "doom.png"
+    }
+  ],
+  "animations": [
+    {
+      "name" : "done",
+      "content" : "done.json"
+    },
+    {
+      "name" : "yun",
+      "content" : "yun.json"
+    },
+    {
+      "name" : "starSky",
+      "content" : "starSky.json"
+    },
+    {
+      "name" : "ground",
+      "content" : "ground.json"
+    },
+    {
+      "name" : "groundDoom",
+      "content" : "groundDoom.json"
+    },
+    {
+      "name" : "plateform",
+      "content" : "plateform.json"
+    },
+    {
+      "name" : "doomWall",
+      "content" : "doomWall.json"
+    },
+    {
+      "name" : "frontierDoom",
+      "content" : "frontierDoom.json"
+    }
+  ],
+  "animationsGroups":[
+  ],
+  "audios":[
+    {
+      "name" : "level",
+      "content" : "level.mp3"
+    },
+    {
+      "name" : "jump",
+      "content" : "jump.mp3"
+    }
+  ],
+  "audioProfils":[
+    {
+      "name" : "level",
+      "content" : "level.json"
+    },
+    {
+      "name" : "jump",
+      "content" : "jump.json"
+    }
+  ],
+  "keyboard":[
+    {
+      "name" : "playerOne",
+      "content" : "playerOne.json"
+    }
+  ],
+  "entityGroups":{
+    "layer1" : [
+      "50ib636f-8779-47d5-9fcb-ff98c8583dec",
+      "doneEntities"
+    ]
+  },
+  "entityProfils":[
+    {
+      "name" : "background",
+      "content" : "background.json"
+    },
+    {
+      "name" : "backgroundDoom",
+      "content" : "backgroundDoom.json"
+    },
+    {
+      "name" : "done",
+      "content" : "done.json"
+    },
+    {
+      "name" : "yun",
+      "content" : "yun.json"
+    },
+    {
+      "name" : "ground",
+      "content" : "ground.json"
+    },
+    {
+      "name" : "plateform",
+      "content" : "plateform.json"
+    },
+    {
+      "name" : "groundPhysic",
+      "content" : "groundPhysic.json"
+    },
+    {
+      "name" : "wall",
+      "content" : "wall.json"
+    },
+    {
+      "name" : "groundDoom",
+      "content" : "groundDoom.json"
+    },
+    {
+      "name" : "groundDoomPhysic",
+      "content" : "groundDoomPhysic.json"
+    },
+    {
+      "name" : "frontierWallPhysic",
+      "content" : "frontierWallPhysic.json"
+    },
+    {
+      "name" : "plateformPhysic",
+      "content" : "plateformPhysic.json"
+    },
+    {
+      "name" : "playerPhysic",
+      "content" : "playerPhysic.json"
+    },
+    {
+      "name" : "playerYunPhysic",
+      "content" : "playerYunPhysic.json"
+    },
+    {
+      "name" : "camera",
+      "content" : "camera.json"
+    }
+  ],
+  "ias": [
+    {
+      "id" : "6de04c99-d92b-419f-ac4d-5552581554df",
+      "objectConf" : "ia"
+    }
+  ],
+  "entities":[
+    {
+      "id" : "6de04c99-d92b-419f-ac4d-5552581554ab",
+      "objectConf" : "camera"
+    },
+    {
+      "id" : "back",
+      "objectConf" : "backgroundDoom"
+    },
+    {
+      "id" : "firstGround",
+      "objectConf" : "groundDoomPhysic"
+    },
+    {
+      "id" : "leftWall",
+      "objectConf" : "frontierWallPhysic"
+    },
+    {
+      "id" : "topWall",
+      "objectConf" : "groundDoomPhysic"
+    },
+    {
+      "id" : "rightWall",
+      "objectConf" : "groundPhysic"
+    },
+    {
+      "id" : "doneEntities",
+      "objectConf" : "playerPhysic"
+    },
+    {
+      "id" : "50ib636f-8779-27d1-9fcb-ff98c8553dxw",
+      "objectConf" : "playerYunPhysic"
+    }
+  ],
+  "texts":[
+    {
+      "name" : "game",
+      "content" : "game.json"
+    }
+  ],
+  "textProfils":[
+    {
+      "name" : "exemple",
+      "content" : "exemple.json"
+    }
+  ],
+  "startActions":[
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "topWall",
+      "method": "setPosition",
+      "argument": {
+        "type": "simple",
+        "argument" : {
+          "x" : 50,
+          "y" : 416
+        }
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "topWall",
+      "method": "addToPhysicContext",
+      "argument": {
+        "type" : "resource",
+        "context": "scene",
+        "id": "physic"
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "rightWall",
+      "method": "setPosition",
+      "argument": {
+        "type": "simple",
+        "argument" : {
+          "x" : 1070,
+          "y" : 70
+        }
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "rightWall",
+      "method": "setAngle",
+      "argument": {
+        "type": "simple",
+        "argument" : 1.57
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "rightWall",
+      "method": "addToPhysicContext",
+      "argument": {
+        "type" : "resource",
+        "context": "scene",
+        "id": "physic"
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "leftWall",
+      "method": "setPosition",
+      "argument": {
+        "type": "simple",
+        "argument" : {
+          "x" : 50,
+          "y" : 423
+        }
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "leftWall",
+      "method": "setAngle",
+      "argument": {
+        "type": "simple",
+        "argument" : 0
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "leftWall",
+      "method": "addToPhysicContext",
+      "argument": {
+        "type" : "resource",
+        "context": "scene",
+        "id": "physic"
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "doneEntities",
+      "method": "setPosition",
+      "argument": {
+        "type": "simple",
+        "argument" : {
+          "x" : 100,
+          "y" : 420
+        }
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "doneEntities",
+      "method": "addToPhysicContext",
+      "argument": {
+        "type" : "resource",
+        "context": "scene",
+        "id": "physic"
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "50ib636f-8779-27d1-9fcb-ff98c8553dxw",
+      "method": "setPosition",
+      "argument": {
+        "type": "simple",
+        "argument" : {
+          "x" : 100,
+          "y" : 400
+        }
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "50ib636f-8779-27d1-9fcb-ff98c8553dxw",
+      "method": "addToPhysicContext",
+      "argument": {
+        "type" : "resource",
+        "context": "scene",
+        "id": "physic"
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "firstGround",
+      "method": "setPosition",
+      "argument": {
+        "type": "simple",
+        "argument" : {
+          "x" : 50,
+          "y" : 550
+        }
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "firstGround",
+      "method": "addToPhysicContext",
+      "argument": {
+        "type" : "resource",
+        "context": "scene",
+        "id": "physic"
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "back",
+      "method": "setPosition",
+      "argument": {
+        "type": "simple",
+        "argument" : {
+          "x" : 66,
+          "y" : 422
+        }
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "back",
+      "method": "addToScene",
+      "argument": {
+        "type" : "resource",
+        "context": "scene",
+        "id": "graphic"
+      }
+    },
+    {
+      "type" : "action",
+      "context": "ias",
+      "id": "6de04c99-d92b-419f-ac4d-5552581554df",
+      "method": "setPhysicEntity",
+      "argument": {
+        "type" : "resource",
+        "context": "entities",
+        "id": "50ib636f-8779-27d1-9fcb-ff98c8553dxw"
+      }
+    }
+  ]
+}

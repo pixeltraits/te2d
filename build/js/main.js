@@ -11,7 +11,7 @@ window.onload = async () => {
 
   try {
     await myGame.loadLevel(
-      'theworld',
+      'doom',
       () => {
         myGame.startLevel();
       }

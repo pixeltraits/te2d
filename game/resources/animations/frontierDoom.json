@@ -1,0 +1,14 @@
+{
+  "name" : "frontierDoom",
+  "bitmap" : "doom",
+  "reverse" : false,
+  "x" : 25,
+  "y" : 2143,
+  "dx" : 16,
+  "dy" : 64,
+  "repeatX" : 1,
+  "repeatY" : 2,
+  "frames" : 0,
+  "fps" : 33,
+  "sens" : "h"
+}

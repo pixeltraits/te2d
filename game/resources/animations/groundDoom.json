@@ -1,0 +1,14 @@
+{
+  "name" : "groundDoom",
+  "bitmap" : "doom",
+  "reverse" : false,
+  "x" : 265,
+  "y" : 2497,
+  "dx" : 64,
+  "dy" : 16,
+  "repeatX" : 10,
+  "repeatY" : 1,
+  "frames" : 0,
+  "fps" : 33,
+  "sens" : "h"
+}
