@@ -12,7 +12,9 @@
 Features:
     -Afficher des animations, image par image
     -Possibilité de dessiner des formes géométriques
-    -Style des formes géométrique personalisable
+    -Style des formes géométriques personalisable
+    -Les collisions peuvent enclencher des actions
+    -Gestion, affichage et stylisation des textes
     -
     -Possibilité d'enclencher des actions à la fin d'une animation
     -Création de groupe d'animation
@@ -23,15 +25,24 @@ Features:
     -Possibilité de mettre des sons dans le jeu
     -Support du moteur physique Box2D, configurable via l'API directement
         -Gestion des hitbox de type BOX, CIRCLE, POLYGON
+        -Hitbox solid
+        -Capteur
         -Detection des collisions
         -Gestion des variables physiques(Gravité, friction, vitesse...)
     -Possibilité de relier les élément physique aux éléments visuel
+    -Possibilité de modifier la positione et la taille de la caméra
+    -Possibilité d'ajouter des hitbox à la caméra
     -Support du clavier comme controler
     -Support d'un gameplay pour plateformer 2D
+    -L'API peut générer des UUID
     -API entièrement développé avec les dernières features Javascript
     
 Features à venir:
+    -Gestion d'un scrolling camera intégré
+    -IA pouvant gérer le path finding
     -Gestion des ombres et des lumières
+    -Support des manettes Xbox One
+    -Support de la souris
     -Support du gameplay 2.5D (Beat them all)
     -Support du gameplay Point and click
     -Support du gameplay 2D vu dessus(Zelda)
