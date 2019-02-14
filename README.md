@@ -9,13 +9,12 @@
     -atom-ide-ui : 0.4.0
     -ide-typescript : 0.6.1
 
-Features:
+Features(v0.8):
     -Afficher des animations, image par image
     -Possibilité de dessiner des formes géométriques
     -Style des formes géométriques personalisable
     -Les collisions peuvent enclencher des actions
     -Gestion, affichage et stylisation des textes
-    -
     -Possibilité d'enclencher des actions à la fin d'une animation
     -Création de groupe d'animation
     -Position et angle des images configurable
@@ -37,15 +36,17 @@ Features:
     -L'API peut générer des UUID
     -API entièrement développé avec les dernières features Javascript
     
-Features à venir:
+Features à venir(v0.9):
     -Gestion d'un scrolling camera intégré
     -IA pouvant gérer le path finding
     -Gestion des ombres et des lumières
     -Support des manettes Xbox One
     -Support de la souris
+Features à venir(v1.0):
     -Support du gameplay 2.5D (Beat them all)
     -Support du gameplay Point and click
     -Support du gameplay 2D vu dessus(Zelda)
+Features à venir(v2.0):
     -Gestion des animations via un squelette(Support spine)
     -Possibilité de jouer en ligne
     -Gestion des menus facilité
