@@ -31,6 +31,7 @@ Features(v0.8):
     -Possibilité de relier les élément physique aux éléments visuel
     -Possibilité de modifier la positione et la taille de la caméra
     -Possibilité d'ajouter des hitbox à la caméra
+    -Possibilité d'afficher le nombre de FPS
     -Support du clavier comme controler
     -Support d'un gameplay pour plateformer 2D
     -L'API peut générer des UUID
