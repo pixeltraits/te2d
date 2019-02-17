@@ -1,0 +1,13 @@
+{
+  "name": "shadow",
+  "type": "Shadow",
+  "dz": 0,
+  "z": 100,
+  "shadowSize": {
+    "dx": 600,
+    "dy": 600
+  },
+  "shadowColor": "rgba(0, 0, 0, 0.5)",
+  "config": [
+  ]
+}

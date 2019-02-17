@@ -32,6 +32,18 @@ export default class PhysicInterface {
     throw new Error(`Wrong implementation of => ${this.constructor.name}, getBody()`);
   }
   /**
+   * Set distance joint between two bodies
+   * @method setDistanceJoint
+   * @param {bodyRef} bodyA - Body reference
+   * @param {bodyRef} bodyB - Body Reference
+   * @param {position} anchorAPosition - Anchor position
+   * @param {position} anchorBPosition - Anchor position
+   * @return {joint} joint
+   */
+  setDistanceJoint(bodyA, bodyB, anchorAPosition, anchorBPosition) {
+    throw new Error(`Wrong implementation of => ${this.constructor.name}, setDistanceJoint()`);
+  }
+  /**
    * Get a box fixture
    * @method getBox
    * @param {string} id
@@ -47,12 +59,13 @@ export default class PhysicInterface {
    * @param {body} bodyRef
    * @return {fixture}
    */
-  getBox(id, x, y, dx, dy, angle, sensor, restitution, friction, density, bodyRef) {
+  getBox(bodyId, fixtureId, x, y, dx, dy, angle, sensor, restitution, friction, density, bodyRef) {
     throw new Error(`Wrong implementation of => ${this.constructor.name}, getBox()`);
   }
   /**
    * Get an circle fixture
    * @method getCircle
+   * @param {string} id
    * @param {string} id
    * @param {number} x
    * @param {number} y
@@ -65,7 +78,7 @@ export default class PhysicInterface {
    * @param {body} bodyRef
    * @return {fixture}
    */
-  getCircle(id, x, y, radius, angle, sensor, restitution, friction, density, bodyRef) {
+  getCircle(bodyId, fixtureId, x, y, radius, angle, sensor, restitution, friction, density, bodyRef) {
     throw new Error(`Wrong implementation of => ${this.constructor.name}, getCircle()`);
   }
   /**
@@ -83,7 +96,7 @@ export default class PhysicInterface {
    * @param {body} bodyRef
    * @return {fixture}
    */
-  getPolygon(id, x, y, vertices, angle, sensor, restitution, friction, density, bodyRef) {
+  getPolygon(bodyId, fixtureId, x, y, vertices, angle, sensor, restitution, friction, density, bodyRef) {
     throw new Error(`Wrong implementation of => ${this.constructor.name}, getPolygon()`);
   }
   /**

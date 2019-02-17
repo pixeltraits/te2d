@@ -1,7 +1,7 @@
 {
-  "name": "plateformPhysic",
-  "type": "PhysicEntity",
-  "dynamic": false,
+  "name": "lightDone",
+  "type": "Light",
+  "dynamic": true,
   "angle": 0,
   "config": [
     {
@@ -28,8 +28,8 @@
             "content" : {
               "type": "simple",
               "argument" : {
-                "id" : "8",
-                "name" : "hitboxGround",
+                "id" : "10",
+                "name" : "lightDoom",
                 "sensor" : false,
                 "restitution" : 0,
                 "friction" : 0,
@@ -41,8 +41,8 @@
                 "borderSize" : 2,
                 "x" : 0,
                 "y" : 0,
-                "dx" : 125,
-                "dy" : 27
+                "dx" : 16,
+                "dy" : 30
               }
             }
           },
@@ -60,44 +60,6 @@
             }
           }
         ]
-      }
-    },
-    {
-      "type" : "action",
-      "context" : "entities",
-      "id" : "self",
-      "method" : "setGraphicEntity",
-      "argument" : {
-        "type" : "newObject",
-        "context" : "entityProfils",
-        "id" : "plateform",
-        "config" : [
-          {
-            "type" : "action",
-            "context": "entities",
-            "id": "self",
-            "method": "addToScene",
-            "argument": {
-              "type" : "resource",
-              "context": "scene",
-              "id": "graphic"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "type": "action",
-      "context": "entities",
-      "id": "self",
-      "method": "setDelta",
-      "argument": {
-        "type": "simple",
-        "argument" : {
-          "x" : 0,
-          "y" : 0,
-          "angle" : 0
-        }
       }
     },
     {

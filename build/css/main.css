@@ -1,1 +1,11 @@
-body{overflow:hidden;margin:0;background:black}.friends{position:absolute;z-index:10;top:0;left:0}
+body {
+    overflow: hidden;
+    margin: 0;
+    background: white;
+}
+.friends {
+    position: absolute;
+    z-index: 10;
+    top: 0;
+    left: 0;
+}

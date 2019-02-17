@@ -28,7 +28,7 @@
             "content" : {
               "type": "simple",
               "argument" : {
-                "id" : "1",
+                "id" : "4",
                 "name" : "hitboxGround",
                 "sensor" : false,
                 "restitution" : 0,

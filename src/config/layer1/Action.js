@@ -195,13 +195,13 @@ export default class Action {
       } else {
         objectReference = this.resources[actionClone.context];
       }
-      id = this.createSceneObject(objectReference, 'auto');
+      id = this.createSceneObject(objectReference, actionClone.newObjectId);
       this.setObjectOfSceneConfig(objectReference.config, id);
       if (typeof actionClone.config !== 'undefined') {
         this.setObjectOfSceneConfig(actionClone.config, id);
       }
     } else {
-      id = this.createSceneObject(actionClone.argument, 'auto');
+      id = this.createSceneObject(actionClone.argument, actionClone.newObjectId);
     }
 
     return this.resources.entities[id];
@@ -246,7 +246,7 @@ export default class Action {
    * @return {string} objectId
    */
   createSceneObject(configuration, id) {
-    const objectId = id !== 'auto' ? id : IdGenerator.generate();
+    const objectId = typeof id !== 'undefined' ? id : IdGenerator.generate();
     const objectConf = Clone.cloneDataObject(configuration);
 
     this.resources.entities[objectId] = EntitiesFactory.getInstance(
@@ -267,7 +267,7 @@ export default class Action {
    * @return {string} objectId
    */
   createIaObject(configuration, id) {
-    const objectId = id !== 'auto' ? id : IdGenerator.generate();
+    const objectId = typeof id !== 'undefined' ? id : IdGenerator.generate();
     const objectConf = Clone.cloneDataObject(configuration);
 
     this.resources.ias[objectId] = new Ia(

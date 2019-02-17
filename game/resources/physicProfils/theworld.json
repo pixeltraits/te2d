@@ -5,10 +5,38 @@
     "y": 100 
   },
   "pixelFactor": 0.05,
-  "active" : {
-  },
   "start": {
+    "lightDoom": {
+      "cameraShadow": [
+        {
+          "type": "action",
+          "context": "entities",
+          "id": "shadowDoom",
+          "method": "addLight",
+          "argument": {
+            "type": "resource",
+            "context": "entities",
+            "id" : "self"
+          }
+        }
+      ]
+    }
   },
   "end": {
+    "lightDoom": {
+      "cameraShadow": [
+        {
+          "type": "action",
+          "context": "entities",
+          "id": "shadowDoom",
+          "method": "deleteLight",
+          "argument": {
+            "type": "resource",
+            "context": "entities",
+            "id" : "self"
+          }
+        }
+      ]
+    }
   }
 }

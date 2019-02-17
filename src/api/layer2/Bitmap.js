@@ -56,6 +56,39 @@ export default class Bitmap {
     canvasCtx.translate(-center.x, -center.y);
   }
   /**
+   * Remove pixel from bitmap with another bitmap
+   * @method removePixelsWithBitmap
+   * @param {canvas} source - Canvas source
+   * @param {canvas} template - Position of bitmap
+   * @param {position} templatePosition - Angle of bitmap
+   * @param {number} templateAngle - Size of bitmap
+   * @return {void}
+   */
+  static removePixelsWithBitmap(sourceContext, template, templatePosition, templateAngle) {
+    const center = templatePosition;
+
+    sourceContext.translate(center.x, center.y);
+    sourceContext.rotate(templateAngle);
+
+    sourceContext.globalCompositeOperation = 'destination-out';
+    sourceContext.drawImage(
+      template,
+      0,
+      0,
+      template.width,
+      template.height,
+      0,
+      0,
+      template.width,
+      template.height
+    );
+    sourceContext.globalCompositeOperation = 'source-over';
+
+    sourceContext.rotate(-templateAngle);
+    sourceContext.translate(-center.x, -center.y);
+
+  }
+  /**
    * Determinate the number of repeat texture to show
    * @method getRepBitmap
    * @private

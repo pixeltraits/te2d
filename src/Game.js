@@ -59,7 +59,6 @@ export default class Game {
     };
 
     this.actionSystem = new Action(this.resources);
-    this.collisionSystem = new Collision(this.resources.entities, this.resources.physicProfils, this.actionSystem);
   }
 
   async prepareGame() {
@@ -76,7 +75,7 @@ export default class Game {
 
     this.camera = new Camera(
       {
-        name: gameConfig.cameraName,
+        name: '',
         scale: 1,
         canvasId: this.canvasId,
         displayMode: this.displayMode,
@@ -399,6 +398,7 @@ export default class Game {
    * @return {void}
    */
   startLevel() {
+    this.collisionSystem = new Collision(this.resources.entities, this.resources.physicProfils, this.actionSystem);
     this.resources.physicInterface = new PhysicBox2D(
       (contact) => {
         this.collisionSystem.collisionStart(contact);

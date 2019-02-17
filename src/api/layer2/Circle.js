@@ -47,8 +47,6 @@ export default class Circle extends Geometry {
    * @return {void}
    */
   show(position, angle, canvasSize, canvasCtx) {
-    super.show(position, angle, canvasSize, canvasCtx);
-
     const center = {
       x: position.x + this.radius,
       y: position.y + this.radius

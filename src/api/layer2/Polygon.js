@@ -47,8 +47,6 @@ export default class Polygon extends Geometry {
    * @return {void}
    */
   show(position, angle, canvasSize, canvasCtx) {
-    super.show(position, angle, canvasSize, canvasCtx);
-
     const center = {
       x: position.x + (this.size.dx / 2),
       y: position.y + (this.size.dy / 2)
@@ -60,14 +58,15 @@ export default class Polygon extends Geometry {
 
     canvasCtx.beginPath();
 
+    canvasCtx.moveTo(
+      this.vertices[0].x,
+      this.vertices[0].y
+    );
     for (let x = 0; x < verticesLength; x++) {
-      canvasCtx.moveTo(
-        this.vertices[x].x + position.x,
-        this.vertices[x].y + position.y
-      );
+      canvasCtx.lineTo(this.vertices[x].x, this.vertices[x].y);
     }
 
-    canvasCtx.lineTo(this.vertices[0].x + position.x, this.vertices[0].y + position.y);
+    canvasCtx.lineTo(this.vertices[0].x, this.vertices[0].y);
     canvasCtx.closePath();
 
     canvasCtx.fillStyle = this.color;

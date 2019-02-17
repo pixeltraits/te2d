@@ -55,6 +55,7 @@ export default class PhysicEntity {
     /* Physic ressource */
     this.physicBody = null;
     this.physicInterface = null;
+    this.joints = [];
 
     /* Physic fixture */
     this.hitboxes = [];
@@ -413,6 +414,7 @@ export default class PhysicEntity {
         break;
       case 'circle':
         this.physicInterface.getCircle(
+          this.id,
           collisionGeometry.fixture.id,
           collisionGeometry.fixture.x,
           collisionGeometry.fixture.y,
@@ -427,6 +429,7 @@ export default class PhysicEntity {
         break;
       case 'box':
         this.physicInterface.getBox(
+          this.id,
           collisionGeometry.fixture.id,
           collisionGeometry.fixture.x,
           collisionGeometry.fixture.y,
@@ -442,6 +445,7 @@ export default class PhysicEntity {
         break;
       case 'polygon':
         this.physicInterface.getPolygon(
+          this.id,
           collisionGeometry.fixture.id,
           collisionGeometry.fixture.vertices,
           collisionGeometry.fixture.angle,
@@ -495,6 +499,40 @@ export default class PhysicEntity {
     }
   }
   /**
+   * Get physic body reference
+   * @method getPhysicBody
+   * @return {bodyDef} - physic body Reference
+   */
+  getPhysicBody() {
+    return this.physicBody;
+  }
+  /**
+   * Set joint
+   * @method getPhysicBody
+   * @param {joint} joint - joint properties
+   * @return {void}
+   */
+  setJoint(joint) {
+    const jointRef = this.physicInterface.setDistanceJoint(
+      this.physicBody,
+      joint.physicEntity.getPhysicBody(),
+      joint.anchorAPosition,
+      joint.anchorBPosition
+    );
+
+    this.saveJointReference(jointRef);
+    joint.physicEntity.saveJointReference(jointRef);
+  }
+  /**
+   * Save joint reference
+   * @method saveJointReference
+   * @param {jointDef} jointRef - joint reference
+   * @return {void}
+   */
+  saveJointReference(jointRef) {
+    this.joints.push(jointRef);
+  }
+  /**
    * Add the physic entity to the Scene
    * @method addToScene
    * @private
@@ -544,6 +582,17 @@ export default class PhysicEntity {
       );
       this.scene = null;
     }
+  }
+  /**
+   * Get hitbox
+   * @method getHitbox
+   * @param {number} hitboxId
+   * @return {hitbox}
+   */
+  getHitbox(hitboxId) {
+    return this.hitboxes.find((hitbox) => {
+      return hitbox.id === hitboxId;
+    });
   }
   /**
    * Set angle of the physic position

@@ -3,6 +3,8 @@ import GraphicEntity from '../../api/layer4/GraphicEntity.js';
 import PhysicEntity from '../../api/layer4/PhysicEntity.js';
 import Camera from '../../api/layer5/Camera.js';
 import Player2D from '../../api/layer5/Player2D.js';
+import Shadow from '../../api/layer5/Shadow.js';
+import Light from '../../api/layer5/Light.js';
 
 /**
  * Load Bitmap ressource.
@@ -29,11 +31,17 @@ export default class EntitiesFactory {
       case 'Camera':
         newObject = new Camera(data.properties, data.id);
         break;
+      case 'Shadow':
+        newObject = new Shadow(data.properties, data.id);
+        break;
+      case 'Light':
+        newObject = new Light(data.properties, data.id);
+        break;
       case 'Player2D':
         newObject = new Player2D(data.properties, data.id);
         break;
       default:
-        Logger.log('undefined');
+        Logger.log('Unknown class factory');
         break;
     }
 

@@ -115,6 +115,14 @@
       "content" : "background.json"
     },
     {
+      "name" : "shadow",
+      "content" : "shadow.json"
+    },
+    {
+      "name" : "lightDone",
+      "content" : "lightDone.json"
+    },
+    {
       "name" : "backgroundDoom",
       "content" : "backgroundDoom.json"
     },
@@ -183,6 +191,10 @@
       "objectConf" : "camera"
     },
     {
+      "id" : "lightForDone",
+      "objectConf" : "lightDone"
+    },
+    {
       "id" : "back",
       "objectConf" : "backgroundDoom"
     },
@@ -227,6 +239,30 @@
     {
       "type" : "action",
       "context": "entities",
+      "id": "6de04c99-d92b-419f-ac4d-5552581554ab",
+      "method": "setPosition",
+      "argument": {
+        "type": "simple",
+        "argument" : {
+          "x" : 0,
+          "y" : 300
+        }
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "6de04c99-d92b-419f-ac4d-5552581554ab",
+      "method": "addToPhysicContext",
+      "argument": {
+        "type" : "resource",
+        "context": "scene",
+        "id": "physic"
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
       "id": "topWall",
       "method": "setPosition",
       "argument": {
@@ -241,6 +277,30 @@
       "type" : "action",
       "context": "entities",
       "id": "topWall",
+      "method": "addToPhysicContext",
+      "argument": {
+        "type" : "resource",
+        "context": "scene",
+        "id": "physic"
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "lightForDone",
+      "method": "setPosition",
+      "argument": {
+        "type": "simple",
+        "argument" : {
+          "x" : 250,
+          "y" : 460
+        }
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "lightForDone",
       "method": "addToPhysicContext",
       "argument": {
         "type" : "resource",
@@ -324,8 +384,8 @@
       "argument": {
         "type": "simple",
         "argument" : {
-          "x" : 100,
-          "y" : 420
+          "x" : 200,
+          "y" : 460
         }
       }
     },
@@ -421,6 +481,45 @@
         "type" : "resource",
         "context": "entities",
         "id": "50ib636f-8779-27d1-9fcb-ff98c8553dxw"
+      }
+    },
+    {
+      "type" : "action",
+      "context": "entities",
+      "id": "doneEntities",
+      "method": "setJoint",
+      "argument": {
+        "type" : "object",
+        "properties": [
+          {
+            "name": "physicEntity",
+            "content": {
+              "type": "resource",
+              "context": "entities",
+              "id": "lightForDone"
+            }
+          },
+          {
+            "name": "anchorAPosition",
+            "content": {
+              "type": "simple",
+              "argument": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            }
+          },
+          {
+            "name": "anchorBPosition",
+            "content": {
+              "type": "simple",
+              "argument": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            }
+          }
+        ]
       }
     }
   ]

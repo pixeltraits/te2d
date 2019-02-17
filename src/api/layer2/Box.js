@@ -37,8 +37,6 @@ export default class Box extends Geometry {
    * @return {void}
    */
   show(position, angle, canvasSize, canvasCtx) {
-    super.show(position, angle, canvasSize, canvasCtx);
-
     const center = {
       x: position.x,
       y: position.y

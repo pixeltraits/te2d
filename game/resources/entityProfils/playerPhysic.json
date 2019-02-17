@@ -30,7 +30,7 @@
             "content" : {
               "type" : "simple",
               "argument" : {
-                "id" : "1",
+                "id" : "9",
                 "name" : "hitboxPlayer",
                 "sensor" : false,
                 "restitution" : 0,

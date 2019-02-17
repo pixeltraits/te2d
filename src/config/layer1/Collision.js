@@ -20,13 +20,13 @@ export default class Collision {
   }
   /**
    * Generate an objectofscene
-   * @method collisionStart
+   * @method collisionEnd
    * @param {contact} contact - contact
    * @return {void}
    */
   collisionStart(contact) {
-    this.collisionEffects(contact.m_fixtureA.m_userData, contact.m_fixtureB.m_userData, 'active');
-    this.collisionEffects(contact.m_fixtureB.m_userData, contact.m_fixtureA.m_userData, 'active');
+    this.collisionEffects(contact.m_fixtureA.m_userData, contact.m_fixtureB.m_userData, 'start');
+    this.collisionEffects(contact.m_fixtureB.m_userData, contact.m_fixtureA.m_userData, 'start');
   }
   /**
    * Generate an objectofscene
@@ -40,52 +40,31 @@ export default class Collision {
   }
   /**
    * Generate an objectofscene
-   * @method collisions
-   * @return {void}
-   */
-  collisions() {
-    const collisions = this.physicInterface.getCollision();
-    const lengthX = collisions.start.length;
-    const lengthY = collisions.active.length;
-    const lengthZ = collisions.end.length;
-
-    for (let x = 0; x < lengthX; x++) {
-      this.collisionEffects(collisions.start[x].bodyA, collisions.start[x].bodyB, 'start');
-      this.collisionEffects(collisions.start[x].bodyB, collisions.start[x].bodyA, 'start');
-    }
-    for (let y = 0; y < lengthY; y++) {
-      this.collisionEffects(collisions.active[y].bodyA, collisions.active[y].bodyB, 'active');
-      this.collisionEffects(collisions.active[y].bodyB, collisions.active[y].bodyA, 'active');
-    }
-    for (let z = 0; z < lengthZ; z++) {
-      this.collisionEffects(collisions.end[z].bodyA, collisions.end[z].bodyB, 'end');
-      this.collisionEffects(collisions.end[z].bodyB, collisions.end[z].bodyA, 'end');
-    }
-  }
-  /**
-   * Generate an objectofscene
    * @method collisionsEffects
-   * @param {string} hitboxA - id
-   * @param {string} hitboxB - id
+   * @param {hitboxInfos} hitboxInfosA
+   * @param {hitboxInfos} hitboxInfosB
    * @param {string} type - type
    * @return {void}
    */
-  collisionEffects(hitboxA, hitboxB, type) {
-    const lengthY = this.physicProfils.length;
+  collisionEffects(hitboxInfosA, hitboxInfosB, type) {
+    const hitboxA = this.entities[hitboxInfosA.bodyId].getHitbox(hitboxInfosA.fixtureId);
+    const hitboxB = this.entities[hitboxInfosB.bodyId].getHitbox(hitboxInfosB.fixtureId);
 
-    for (let y = 0; y < lengthY; y++) {
-      if (typeof this.physicProfils[y][type][this.entities[hitboxA].name] !== 'undefined') {
-        if (typeof this.physicProfils[y][type][this.entities[hitboxA].name][this.entities[hitboxB].name] !== 'undefined') {
-          const actions = Clone.cloneDataObject(
-            this.physicProfils[y][type][this.entities[hitboxA].name][this.entities[hitboxB].name]
-          );
+    Object.keys(this.physicProfils).forEach((physicProfil) => {
+      const hitboxAEffects = this.physicProfils[physicProfil][type][hitboxA.fixture.name];
+
+      if (typeof hitboxAEffects !== 'undefined') {
+        const hitboxABEffects = hitboxAEffects[hitboxB.fixture.name];
+
+        if (typeof hitboxABEffects !== 'undefined') {
+          const actions = Clone.cloneDataObject(hitboxABEffects);
           const length = actions.length;
 
           for (let x = 0; x < length; x++) {
-            this.actionSystem.setAction(actions[x], this.entities[hitboxA].parent.id, this.entities[hitboxB].parent.id);
+            this.actionSystem.setAction(actions[x], hitboxInfosA.bodyId, hitboxInfosB.bodyId);
           }
         }
       }
-    }
+    });
   }
 }
