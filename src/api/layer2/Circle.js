@@ -57,8 +57,8 @@ export default class Circle extends Geometry {
 
     canvasCtx.beginPath();
     canvasCtx.arc(
-      position.x,
-      position.y,
+      0,
+      0,
       this.radius,
       0,
       2 * Math.PI

@@ -2,7 +2,7 @@
   "name": "playerPhysic",
   "type": "Player2D",
   "inertie": 0,
-  "angularConstraint": true,
+  "angularConstraint": false,
   "mass": 0,
   "dynamic": true,
   "config": [
@@ -65,6 +65,45 @@
       }
     },
     {
+      "type": "action",
+      "context": "entities",
+      "id": "self",
+      "method": "setGravityPointGraphicEntity",
+      "argument": {
+        "type" : "object",
+        "properties" : [
+          {
+            "name" : "geometry",
+            "content" : {
+              "type" : "simple",
+              "argument" : {
+                "type": "circle",
+                "radius": 2,
+                "dx": 10,
+                "dy": 10,
+                "color": "red",
+                "borderColor": "red",
+                "borderSize": 0
+              }
+            }
+          },
+          {
+            "name" : "graphicEntity",
+            "content" : {
+              "type" : "newObject",
+              "context" : false,
+              "argument" : {
+                "name" : "pointPlyer",
+                "type" : "GraphicEntity",
+                "dz" : 0,
+                "z" : 10000000
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
       "type" : "action",
       "context" : "entities",
       "id" : "self",
@@ -92,7 +131,7 @@
       "type" : "action",
       "context" : "entities",
       "id" : "self",
-      "method" : "hide",
+      "method" : "show",
       "argument" : {
         "type" : "resource",
         "context": "scene",

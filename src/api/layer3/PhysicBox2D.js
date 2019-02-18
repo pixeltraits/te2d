@@ -36,6 +36,7 @@ export default class PhysicBox2D extends PhysicInterface {
     this.b2FixtureDef = Box2D.Dynamics.b2FixtureDef;
     this.b2Fixture = Box2D.Dynamics.b2Fixture;
     this.b2DistanceJointDef = Box2D.Dynamics.Joints.b2DistanceJointDef;
+    this.b2WeldJointDef = Box2D.Dynamics.Joints.b2WeldJointDef;
     this.b2World = Box2D.Dynamics.b2World;
     this.b2MassData = Box2D.Collision.Shapes.b2MassData;
     this.b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape;
@@ -212,6 +213,34 @@ export default class PhysicBox2D extends PhysicInterface {
     //joint.collideConnected = true;
     //joint.frequencyHz = 4.0;
     //joint.dampingRatio = 0.5;
+
+    //this.physicContext.CreateJoint(joint);
+
+    return joint;
+  }
+  /**
+   * Set weld joint between two bodies
+   * @method setWeldJoint
+   * @param {bodyRef} bodyA - Body reference
+   * @param {bodyRef} bodyB - Body Reference
+   * @param {position} anchorAPosition - Anchor position
+   * @param {position} anchorBPosition - Anchor position
+   * @return {joint} joint
+   */
+  setWeldJoint(bodyA, bodyB, anchorAPosition, anchorBPosition) {
+    const anchorA = new this.b2Vec2(anchorAPosition);
+    const anchorB = new this.b2Vec2(anchorBPosition);
+    const joint = new this.b2WeldJointDef();
+
+
+    joint.bodyA = bodyA;
+    joint.bodyB = bodyB;
+    joint.localAnchorA = anchorA;
+    joint.localAnchorB = anchorB;
+    joint.referenceAngle = 0 * Math.PI / 3;
+    joint.collideConnected = false;
+    joint.frequencyHz = 40;
+    joint.dampingRatio = 40;
 
     this.physicContext.CreateJoint(joint);
 

@@ -384,7 +384,7 @@
       "argument": {
         "type": "simple",
         "argument" : {
-          "x" : 200,
+          "x" : 235,
           "y" : 460
         }
       }
@@ -504,8 +504,8 @@
             "content": {
               "type": "simple",
               "argument": {
-                "x": 0.0,
-                "y": 0.0
+                "x": 15.0,
+                "y": 20.0
               }
             }
           },

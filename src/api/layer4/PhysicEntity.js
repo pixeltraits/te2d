@@ -1,5 +1,7 @@
 import GeometricMath from '../layer1/GeometricMath.js';
 import Logger from '../layer1/Logger.js';
+import GraphicEntity from './GraphicEntity.js';
+import Uuid from '../../lib/Uuid.js';
 
 /**
  * Physic Entity
@@ -56,6 +58,7 @@ export default class PhysicEntity {
     this.physicBody = null;
     this.physicInterface = null;
     this.joints = [];
+    this.gravityPointGraphicEntity = null;
 
     /* Physic fixture */
     this.hitboxes = [];
@@ -63,6 +66,10 @@ export default class PhysicEntity {
     /* Scene Entity reference */
     this.graphicEntity = null;
     this.scene = null;
+  }
+  setGravityPointGraphicEntity(graphicProperties) {
+    this.gravityPointGraphicEntity = graphicProperties.graphicEntity;
+    this.gravityPointGraphicEntity.setGeometry(graphicProperties.geometry);
   }
   /**
    * Set graphic entity reference
@@ -141,11 +148,10 @@ export default class PhysicEntity {
    * @return {void}
    */
   setPosition(position) {
-    if(this.name == "playerPhysic"){
-      //console.log(position)
-    }
-
     this.position = position;
+    if (this.gravityPointGraphicEntity) {
+      this.gravityPointGraphicEntity.setPosition(this.position);
+    }
     this.updateGraphicEntityPosition();
 
     this.updateHitboxesPosition();
@@ -305,6 +311,7 @@ export default class PhysicEntity {
 
     for (let x = 0; x < length; x++) {
       if (this.hitboxes[x].id === id) {
+        this.hitboxes[x].graphicEntity.deleteToScene();
         this.hitboxes.splice(x, 1);
         return;
       }
@@ -513,7 +520,7 @@ export default class PhysicEntity {
    * @return {void}
    */
   setJoint(joint) {
-    const jointRef = this.physicInterface.setDistanceJoint(
+    const jointRef = this.physicInterface.setWeldJoint(
       this.physicBody,
       joint.physicEntity.getPhysicBody(),
       joint.anchorAPosition,
@@ -645,6 +652,11 @@ export default class PhysicEntity {
     for (let x = 0; x < hitboxesLength; x++) {
       this.hitboxes[x].graphicEntity.addToScene(scene);
     }
+
+    console.log(this.gravityPointGraphicEntity)
+    if (this.gravityPointGraphicEntity) {
+      this.gravityPointGraphicEntity.addToScene(scene);
+    }
   }
   /**
    * Hide collision geometries
@@ -656,6 +668,10 @@ export default class PhysicEntity {
 
     for (let x = 0; x < hitboxesLength; x++) {
       this.hitboxes[x].graphicEntity.deleteToScene();
+    }
+
+    if (this.gravityPointGraphicEntity) {
+      this.gravityPointGraphicEntity.deleteToScene();
     }
   }
   /**
