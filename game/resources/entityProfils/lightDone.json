@@ -2,7 +2,9 @@
   "name": "lightDone",
   "type": "Light",
   "dynamic": true,
+  "inertie": 0,
   "angularConstraint": false,
+  "mass": 0,
   "angle": 0,
   "config": [
     {
@@ -34,7 +36,7 @@
                 "sensor" : false,
                 "restitution" : 0,
                 "friction" : 0,
-                "density" : 1,
+                "density" : 0,
                 "angle": 0,
                 "type" : "box",
                 "color" : "blue",

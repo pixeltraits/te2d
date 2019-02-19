@@ -1,0 +1,154 @@
+{
+  "name": "doomGamepad",
+  "gamepads": [
+    {
+      "buttons": [
+        {
+          "id": 0,
+          "method": "isPressedAndEqual",
+          "valueA": 1.0,
+          "valueB": null,
+          "actions": [
+            {
+              "type": "action",
+              "context": "entities",
+              "id": "doneEntities",
+              "method": "setWalk",
+              "argument": {
+                "type": "simple",
+                "argument": {
+                  "direction" : "left",
+                  "acc" : 1000,
+                  "speed" : 1000
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "axes": [
+        {
+          "id": 0,
+          "method": "isDirectionAndEqual",
+          "valueA": -1.0,
+          "valueB": null,
+          "actions": [
+            {
+              "type": "action",
+              "context": "entities",
+              "id": "doneEntities",
+              "method": "setWalk",
+              "argument": {
+                "type": "simple",
+                "argument": {
+                  "direction" : "left",
+                  "acc" : 1000,
+                  "speed" : 1000
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "buttons": [
+        {
+          "id": 0,
+          "method": "isPressedAndEqual",
+          "valueA": 1.0,
+          "valueB": null,
+          "actions": [
+            {
+              "type": "action",
+              "context": "entities",
+              "id": "doneEntities",
+              "method": "spring",
+              "argument": {
+                "type": "simple",
+                "argument": {
+                  "x" : 0,
+                  "y" : -700
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "axes": [
+        {
+          "id": 0,
+          "method": "isDirectionAndEqual",
+          "valueA": -1.0,
+          "valueB": null,
+          "actions": [
+            {
+              "type": "action",
+              "context": "entities",
+              "id": "doneEntities",
+              "method": "setWalk",
+              "argument": {
+                "type": "simple",
+                "argument": {
+                  "direction" : "left",
+                  "acc" : 1000,
+                  "speed" : 1000
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": 0,
+          "method": "isDirectionAndBetween",
+          "valueA": 0,
+          "valueB": 0.5,
+          "actions": [
+            {
+              "type": "action",
+              "context": "entities",
+              "id": "doneEntities",
+              "method": "unsetWalk",
+              "argument": {
+                "type": "simple",
+                "argument": "left"
+              }
+            },
+            {
+              "type": "action",
+              "context": "entities",
+              "id": "doneEntities",
+              "method": "unsetWalk",
+              "argument": {
+                "type": "simple",
+                "argument": "right"
+              }
+            }
+          ]
+        },
+        {
+          "id": 0,
+          "method": "isDirectionAndEqual",
+          "valueA": 1.0,
+          "valueB": null,
+          "actions": [
+            {
+              "type": "action",
+              "context": "entities",
+              "id": "doneEntities",
+              "method": "setWalk",
+              "argument": {
+                "type": "simple",
+                "argument": {
+                  "direction" : "right",
+                  "acc" :  1000,
+                  "speed" : 1000
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

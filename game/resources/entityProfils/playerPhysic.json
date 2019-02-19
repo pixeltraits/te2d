@@ -2,7 +2,7 @@
   "name": "playerPhysic",
   "type": "Player2D",
   "inertie": 0,
-  "angularConstraint": false,
+  "angularConstraint": true,
   "mass": 0,
   "dynamic": true,
   "config": [
@@ -35,7 +35,7 @@
                 "sensor" : false,
                 "restitution" : 0,
                 "friction" : 0,
-                "density" : 1,
+                "density" : 0,
                 "angle": 0,
                 "type" : "box",
                 "color" : "blue",

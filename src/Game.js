@@ -1,6 +1,7 @@
 import PhysicBox2D from './api/layer3/PhysicBox2D.js';
 import Camera from './api/layer5/Camera.js';
 import LoadUtils from './config/layer1/LoadUtils.js';
+import Gamepad from './api/layer3/Gamepad.js';
 import Loader from './config/layer1/Loader.js';
 import Keyboard from './api/layer3/Keyboard.js';
 import Scene from './api/layer4/Scene.js';
@@ -50,6 +51,7 @@ export default class Game {
       entityProfils: [],
       iaProfils: [],
       keyboardProfils: [],
+      gamepadProfil: null,
       mouseProfiles: [],
       textProfils: [],
       physicProfils: [],
@@ -152,6 +154,7 @@ export default class Game {
     this.loadObjectsScene();
     this.loadIas();
     this.loadCommandSystem();
+    this.loadGamepadsConfiguration();
 
     this.createGraphicScene();
     this.createPhysicScene();
@@ -274,7 +277,7 @@ export default class Game {
     this.loader.addPourcentLoaded(8);
   }
   async loadKeyboardConfiguration() {
-    await LoadUtils.loadContent(
+    this.resources.keyboardProfils = await LoadUtils.loadContent(
       `${this.configUrl}resources/controlerProfils/keyboards/`,
       this.levelConfig.keyboard,
       {
@@ -307,7 +310,24 @@ export default class Game {
       }
     );
 
-    this.loader.addPourcentLoaded(10);
+    this.loader.addPourcentLoaded(5);
+  }
+  async loadGamepadsConfiguration() {
+    const gamepad = await LoadUtils.loadContent(
+      `${this.configUrl}resources/controlerProfils/gamepads/`,
+      [this.levelConfig.gamepad],
+      {
+        type: 'jsonLoader',
+        context: null
+      },
+      (gamepad) => {
+        this.loader.upTextInfo(`Le gamepadProfil ${gamepad.name} a été chargé.`);
+      }
+    );
+
+    this.resources.gamepadProfil = gamepad[this.levelConfig.gamepad.name];
+
+    this.loader.addPourcentLoaded(5);
   }
   async loadAudioContents() {
     this.resources.audios = await LoadUtils.loadContent(
@@ -467,6 +487,36 @@ export default class Game {
       // Call of entities graphic system
       for (let x = 0; x < length; x++) {
         //this.resources.ias[this.levelConfig.ias[x].id].updateStatus();
+      }
+
+      if (this.resources.gamepadProfil) {
+        const gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
+        const gamepadsLength = this.resources.gamepadProfil.gamepads.length;
+
+        for (let gamepadsIndex = 0; gamepadsIndex < gamepadsLength; gamepadsIndex++) {
+          const gamepadButtons = this.resources.gamepadProfil.gamepads[gamepadsIndex].buttons;
+          const gamepadAxes = this.resources.gamepadProfil.gamepads[gamepadsIndex].axes;
+          const buttonsLength = gamepadButtons.length;
+          const axesLength = gamepadAxes.length;
+
+          for (let buttonsIndex = 0; buttonsIndex < buttonsLength; buttonsIndex++) {
+            if (Gamepad[gamepadButtons[buttonsIndex].method](gamepads[gamepadsIndex], gamepadButtons[buttonsIndex])) {
+              const actionsLength = gamepadButtons[buttonsIndex].actions.length;
+              for (let actionsIndex = 0; actionsIndex < actionsLength; actionsIndex++) {
+                this.actionSystem.setAction(gamepadButtons[buttonsIndex].actions[actionsIndex], '', '');
+              }
+            }
+          }
+
+          for (let axesIndex = 0; axesIndex < axesLength; axesIndex++) {
+            if (Gamepad[gamepadAxes[axesIndex].method](gamepads[gamepadsIndex], gamepadAxes[axesIndex])) {
+              const actionsLength = gamepadAxes[axesIndex].actions.length;
+              for (let actionsIndex = 0; actionsIndex < actionsLength; actionsIndex++) {
+                this.actionSystem.setAction(gamepadAxes[axesIndex].actions[actionsIndex], '', '');
+              }
+            }
+          }
+        }
       }
 
       this.resources.physicInterface.updateEngine(framerate, 6, 2);

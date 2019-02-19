@@ -7,24 +7,86 @@ import Logger from '../layer1/Logger.js';
 export default class Gamepad {
   /**
    * Get the state of gamepad button
-   * @method isPressed
+   * @method isPressedAndEqual
    * @param {Gamepad[]} gamepads - Navigator gamepads object
    * @param {number} player - Gamepad index
-   * @param {button} button - Gamepad button
+   * @param {Button} button - Gamepad button
    * @return {boolean}
    */
-  static isPressed(gamepads, player, button) {
-    let pressed = false;
-
-    if (!gamepads) {
-      return pressed;
+  static isPressedAndEqual(gamepad, buttonConfig) {
+    if (!gamepad) {
+      return false;
     }
 
-    const gamepad = gamepads[player];
-    const buttons = gamepads[player].buttons;
+    const gamepadButtonValue = gamepad.buttons[buttonConfig.id].value;
 
-    if (buttons[button.id].pressed)
+    if (gamepadButtonValue === buttonConfig.valueA) {
+      return true;
+    }
 
-    return pressed;
+    return false;
+  }
+  /**
+   * Get the state of gamepad button
+   * @method isPressedAndBetween
+   * @param {Gamepad[]} gamepads - Navigator gamepads object
+   * @param {number} player - Gamepad index
+   * @param {Button} button - Gamepad button
+   * @return {boolean}
+   */
+  static isPressedAndBetween(gamepad, buttonConfig) {
+    if (!gamepad) {
+      return false;
+    }
+
+    const gamepadButtonValue = gamepad.buttons[buttonConfig.id].value;
+
+    if (gamepadButtonValue > buttonConfig.valueA && gamepadButtonValue < buttonConfig.valueB) {
+      return true;
+    }
+
+    return false;
+  }
+  /**
+   * Get the state of gamepad button
+   * @method isPressedAndEqual
+   * @param {Gamepad[]} gamepads - Navigator gamepads object
+   * @param {number} player - Gamepad index
+   * @param {Button} button - Gamepad button
+   * @return {boolean}
+   */
+  static isDirectionAndEqual(gamepad, buttonConfig) {
+    if (!gamepad) {
+      return false;
+    }
+
+    const gamepadButtonValue = gamepad.axes[buttonConfig.id];
+
+    if (gamepadButtonValue === buttonConfig.valueA) {
+      return true;
+    }
+
+    return false;
+  }
+  /**
+   * Get the state of gamepad button
+   * @method isPressedAndBetween
+   * @param {Gamepad[]} gamepads - Navigator gamepads object
+   * @param {number} player - Gamepad index
+   * @param {Button} button - Gamepad button
+   * @return {boolean}
+   */
+  static isDirectionAndBetween(gamepad, buttonConfig) {
+    if (!gamepad) {
+      return false;
+    }
+
+    const gamepadButtonValue = gamepad.axes[buttonConfig.id];
+
+    if (gamepadButtonValue > buttonConfig.valueA && gamepadButtonValue < buttonConfig.valueB) {
+      return true;
+    }
+
+    return false;
   }
 }

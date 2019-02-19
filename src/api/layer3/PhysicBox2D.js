@@ -139,6 +139,8 @@ export default class PhysicBox2D extends PhysicInterface {
     bodyDef.fixedRotation = angularConstraint;
     bodyDef.mass = mass;
     bodyDef.userData = id;
+    bodyDef.linearDamping = 0.0;
+    bodyDef.angularDamping = 0.01;
     bodyDef.angularInertia = angularInertia;
 
     return this.addToPhysicContext(bodyDef);
@@ -237,10 +239,11 @@ export default class PhysicBox2D extends PhysicInterface {
     joint.bodyB = bodyB;
     joint.localAnchorA = anchorA;
     joint.localAnchorB = anchorB;
-    joint.referenceAngle = 0 * Math.PI / 3;
-    joint.collideConnected = false;
-    joint.frequencyHz = 40;
-    joint.dampingRatio = 40;
+    //joint.referenceAngle = 0 * Math.PI / 3;
+    joint.referenceAngle = joint.bodyB.GetAngle() - joint.bodyA.GetAngle();
+    joint.collideConnected = true;
+    //joint.frequencyHz = 1;
+    joint.dampingRatio = 1;
 
     this.physicContext.CreateJoint(joint);
 

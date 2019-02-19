@@ -2,7 +2,7 @@
   "name": "theworld",
   "gravity": {
     "x": 0,
-    "y": 100 
+    "y": 100
   },
   "pixelFactor": 0.05,
   "start": {
@@ -17,6 +17,47 @@
             "type": "resource",
             "context": "entities",
             "id" : "self"
+          }
+        }
+      ],
+      "hitboxPlayer": [
+        {
+          "type" : "action",
+          "context": "entities",
+          "id": "doneEntities",
+          "method": "setJoint",
+          "argument": {
+            "type" : "object",
+            "properties": [
+              {
+                "name": "physicEntity",
+                "content": {
+                  "type": "resource",
+                  "context": "entities",
+                  "id": "lightForDone"
+                }
+              },
+              {
+                "name": "anchorAPosition",
+                "content": {
+                  "type": "simple",
+                  "argument": {
+                    "x": 0.0,
+                    "y": 0.0
+                  }
+                }
+              },
+              {
+                "name": "anchorBPosition",
+                "content": {
+                  "type": "simple",
+                  "argument": {
+                    "x": 0.0,
+                    "y": 0.0
+                  }
+                }
+              }
+            ]
           }
         }
       ]
