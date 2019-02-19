@@ -40,10 +40,10 @@ Features(v0.8):
     -Support des manettes
     
 Features à venir(v0.9):
+    -Support de la souris
     -Gestion d'un scrolling camera intégré
     -IA pouvant gérer le path finding
     -Amélioration rendu de la lumière
-    -Support de la souris
 Features à venir(v1.0):
     -Support du gameplay 2.5D (Beat them all)
     -Support du gameplay Point and click
