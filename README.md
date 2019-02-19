@@ -37,12 +37,12 @@ Features(v0.8):
     -L'API peut générer des UUID
     -API entièrement développé avec les dernières features Javascript
     -Gestion des ombres et des lumières
+    -Support des manettes
     
 Features à venir(v0.9):
     -Gestion d'un scrolling camera intégré
     -IA pouvant gérer le path finding
     -Amélioration rendu de la lumière
-    -Support des manettes
     -Support de la souris
 Features à venir(v1.0):
     -Support du gameplay 2.5D (Beat them all)
