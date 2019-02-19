@@ -36,18 +36,19 @@ Features(v0.8):
     -Support d'un gameplay pour plateformer 2D
     -L'API peut générer des UUID
     -API entièrement développé avec les dernières features Javascript
+    -Gestion des ombres et des lumières
     
 Features à venir(v0.9):
     -Gestion d'un scrolling camera intégré
     -IA pouvant gérer le path finding
-    -Gestion des ombres et des lumières
-    -Support des manettes Xbox One
+    -Amélioration rendu de la lumière
+    -Support des manettes
     -Support de la souris
 Features à venir(v1.0):
     -Support du gameplay 2.5D (Beat them all)
     -Support du gameplay Point and click
     -Support du gameplay 2D vu dessus(Zelda)
 Features à venir(v2.0):
-    -Gestion des animations via un squelette(Support spine)
     -Possibilité de jouer en ligne
+    -Gestion des animations via un squelette(Support spine)
     -Gestion des menus facilité
